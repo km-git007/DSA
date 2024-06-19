@@ -9,12 +9,14 @@ public:
             if(a[j]==0)
             zeroes++;
 
-            while(zeroes>k)
+            if(zeroes>k)
             {
                 if(a[i]==0)
                 zeroes--;
                 i++;
             }
+            
+            if(zeroes<=k)
             maxLen=max(maxLen,j-i+1);
         }
         return maxLen;
