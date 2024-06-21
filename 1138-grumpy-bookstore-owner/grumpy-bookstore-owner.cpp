@@ -3,17 +3,14 @@ public:
     int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) 
     {
         int maxExtraSatisfaction=0,extraSatisfaction=0,satisfaction=0;
+        int i=0;
         for(int j=0;j<grumpy.size();j++)
         {
             if(grumpy[j]!=1)
             satisfaction+=customers[j];
-        }
-
-        int i=0;
-        for(int j=0;j<grumpy.size();j++)
-        {
-            if(grumpy[j]==1)
+            else
             extraSatisfaction+=customers[j];
+
             if(j-i+1==minutes)
             {
                 maxExtraSatisfaction=max(maxExtraSatisfaction,extraSatisfaction);
