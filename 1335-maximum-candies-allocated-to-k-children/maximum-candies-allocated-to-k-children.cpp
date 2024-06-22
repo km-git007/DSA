@@ -17,7 +17,7 @@ public:
     {
         long long end=*max_element(candies.begin(),candies.end());
         long long start=1;
-        long long result=-1;
+        long long result=0;
         while(start<=end)
         {
             long long mid=start+(end-start)/2;
@@ -29,6 +29,6 @@ public:
             else
                 end=mid-1;
         }  
-        return (result==-1)?0:result;
+        return result;
     }
 };
