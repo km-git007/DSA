@@ -2,11 +2,8 @@ class Solution {
 public:
     vector<string> commonChars(vector<string>& words) 
     {
-        vector<int> common(26,0);
-        for(char c : words[0])
-        common[c-'a']++;
-
-        for(int i=1;i<words.size();i++)
+        vector<int> common(26,INT_MAX);
+        for(int i=0;i<words.size();i++)
         {
             vector<int> freq(26,0);
             for(char c : words[i])
