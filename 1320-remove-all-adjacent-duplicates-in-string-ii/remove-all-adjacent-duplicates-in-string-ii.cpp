@@ -3,8 +3,7 @@ public:
     string removeDuplicates(string s, int k) 
     {
         stack<pair<char,int>> stack;
-        stack.push({s[0],1});
-        for(int i=1;i<s.length();i++)
+        for(int i=0;i<s.length();i++)
         {
             if(!stack.empty() && s[i]==stack.top().first)
             stack.top().second++;
