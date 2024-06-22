@@ -1,40 +1,34 @@
-class Solution{
-private:
-bool check(vector<int>& quantities , int n , int mid)
-{
-    int count = 0;
-    for(auto a : quantities)
-    {
-        if(a%mid == 0)count += (a/mid);
-        else count += (a/mid)+1;
-        if( count > n) return false;
-    }
-    return true;
-}
-
+class Solution {
 public:
-    int minimizedMaximum(int n, vector<int>& quantities) {
-        ios_base::sync_with_stdio(false);
-        cin.tie(NULL);
-        cout.tie(NULL);
-        int lo = 1;
-        int hi = *max_element(quantities.begin() , quantities.end());
-        int mid;
-        int ans;
-       
-        while(lo <= hi)
+    bool isValid(vector<int>& quantities,int stores,int productCap)
+    {
+        int storesServed=0;
+        for(int i=0;i<quantities.size();i++)
         {
-            mid = lo + (hi-lo)/2;
-            if( check(quantities , n , mid))
+            storesServed+=ceil(quantities[i]*1.0/productCap);
+            if(storesServed>stores)
+            return false;
+        }
+        return true;
+    }
+
+    int minimizedMaximum(int stores, vector<int>& quantities) 
+    {
+        int end=*max_element(quantities.begin(),quantities.end());
+        int start=1;
+        int res=-1;
+
+        while(start<=end)
+        {
+            int mid=start+(end-start)/2;
+            if(isValid(quantities,stores,mid))
             {
-                ans = mid;
-                hi = mid-1;
+                res=mid;
+                end=mid-1;
             }
             else
-            {
-                lo = mid+1;
-            }
-        }
-        return ans; 
+                start=mid+1;
+        }  
+        return res;
     }
 };
