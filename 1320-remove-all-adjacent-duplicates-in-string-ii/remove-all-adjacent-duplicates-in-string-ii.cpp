@@ -10,7 +10,7 @@ public:
             else
             stack.push({s[i],1});
 
-            while(!stack.empty() && stack.top().second==k)
+            if(!stack.empty() && stack.top().second==k)
             stack.pop();
         }
 
