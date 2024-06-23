@@ -2,7 +2,7 @@ class Solution {
 public:
     int longestSubarray(vector<int>& a, int limit) 
     {
-        list<int> minList,maxList;
+        deque<int> minList,maxList;
         int maxLen=0,i=0;
         for(int j=0;j<a.size();j++)
         {
