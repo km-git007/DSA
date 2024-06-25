@@ -5,7 +5,7 @@ public:
         if(low>high || high-low+1<k)
         return 0;
 
-        vector<int> map(26,0);
+        int map[26]={0};
         for(int i=low;i<=high;i++)
         map[s[i]-'a']++;
 
