@@ -19,11 +19,12 @@ class Solution {
         {
             if(curr.val==0)
             {
-                ListNode node=new ListNode(sum);
-                tail.next=node;
-                tail=node;
+                curr.val=sum;
+                tail.next=curr;
+                tail=curr;
                 sum=0;
             }
+            else
             sum+=curr.val;
             curr=curr.next;
         }
