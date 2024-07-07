@@ -11,7 +11,7 @@
 class Solution {
 public:
 
-    pair<ListNode*,ListNode*> reverseList(ListNode* head,int count)
+    ListNode* reverseList(ListNode* head,int count)
     {
         ListNode *curr=head,*prev=NULL;
         while(curr && count)
@@ -25,7 +25,7 @@ public:
 
         // making connection with the remaining list in the right side.
         head->next=curr;
-        return {prev,head};
+        return prev;
     }
 
     ListNode* reverseBetween(ListNode* head, int left, int right) 
@@ -40,10 +40,8 @@ public:
         for(int steps=0;steps<left-1;steps++)
         leftEnd=leftEnd->next;
 
-        pair<ListNode*,ListNode*> nodePair=reverseList(leftEnd->next,right-left+1);
-        ListNode* reversedHead=nodePair.first;
+        ListNode* reversedHead=reverseList(leftEnd->next,right-left+1);
         leftEnd->next=reversedHead;
-
         return dummy->next;  
     }
 };
