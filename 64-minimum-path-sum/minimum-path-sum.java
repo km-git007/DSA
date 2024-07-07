@@ -4,7 +4,7 @@ class Solution {
     private int n;
     private int m;
 
-    public int solve(int row,int col,int[][] grid,int[][] dp)
+    public int solve(int row,int col,int[][] grid)
     {
         if(row==n || col==m)
         return Integer.MAX_VALUE;
@@ -15,7 +15,7 @@ class Solution {
         if(dp[row][col]!=-1)
         return dp[row][col];
 
-        return dp[row][col]=grid[row][col]+Math.min(solve(row+1,col,grid,dp),solve(row,col+1,grid,dp));
+        return dp[row][col]=grid[row][col]+Math.min(solve(row+1,col,grid),solve(row,col+1,grid));
     }
 
     public int minPathSum(int[][] grid) 
@@ -27,6 +27,6 @@ class Solution {
         m=grid[0].length;
         n=grid.length;
 
-       return solve(0,0,grid,dp);
+       return solve(0,0,grid);
     }
 }
