@@ -11,31 +11,47 @@
 class Solution {
 public:
     
-    ListNode* mergeKLists(vector<ListNode*>& lists) 
+     ListNode* mergeTwoLists(ListNode* head1,ListNode* head2)
     {
-        if(lists.size()==0)
-        return NULL;
-
-        priority_queue<pair<int,ListNode*>,vector<pair<int,ListNode*>>,greater<pair<int,ListNode*>>> minHeap;
-        
-        for(ListNode* list : lists) 
-        if(list)
-        minHeap.push({list->val,list});
-
         ListNode* dummy=new ListNode(-1);
         ListNode* tail=dummy;
-        while(!minHeap.empty())
+        while(head1 && head2)
         {
-            ListNode* node=minHeap.top().second;
-            minHeap.pop();
-
-            tail->next=node;
+            if(head1->val<=head2->val)
+            {
+                tail->next=head1;
+                head1=head1->next;
+            }
+            else
+            {
+                tail->next=head2;
+                head2=head2->next;
+            }
             tail=tail->next;
-            node=node->next;
-
-            if(node)
-            minHeap.push({node->val,node});
         }
-        return dummy->next;
+        tail->next=(!head1)?head2:head1;
+
+        ListNode* newHead=dummy->next;
+        delete dummy;
+        return newHead;  
+    }
+
+    ListNode* mergeSort(vector<ListNode*>& list,int low,int high)
+    {
+        if(low==high)
+        return list[low];
+
+        int mid=low+(high-low)/2;
+        ListNode* left=mergeSort(list,low,mid);
+        ListNode* right=mergeSort(list,mid+1,high);
+        return mergeTwoLists(left,right);
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& list) 
+    {
+        if(list.size()==0)
+        return NULL;
+
+        return mergeSort(list,0,list.size()-1);
     }
 };
