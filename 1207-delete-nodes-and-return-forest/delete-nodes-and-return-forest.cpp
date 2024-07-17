@@ -12,19 +12,16 @@
 class Solution {
 public:
     vector<TreeNode*> ans;
-    TreeNode* solve(TreeNode* root, unordered_map<int,bool> map)
+    TreeNode* solve(TreeNode* root, unordered_set<int> set)
     {
         if(!root)
         return NULL;
 
-        root->left=solve(root->left,map);
-        root->right=solve(root->right,map);
+        root->left=solve(root->left,set);
+        root->right=solve(root->right,set);
 
-        if(map[root->val])
+        if(set.count(root->val))
         {
-            if(!root->left && !root->right)  // Leaf Node.
-            return NULL;
-
             if(root->left)
             ans.push_back(root->left);
 
@@ -39,14 +36,14 @@ public:
 
     vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) 
     {
-        unordered_map<int,bool> map;
+        unordered_set<int> set;
         for(int i=0;i<to_delete.size();i++)
-        map[to_delete[i]]=true;
+        set.insert(to_delete[i]);
 
-        if(!map[root->val])    // adding the main root of the tree
+        if(!set.count(root->val))    // adding the main root of the tree
         ans.push_back(root);
 
-        solve(root,map);
+        solve(root,set);
         return ans;
     }
 };
