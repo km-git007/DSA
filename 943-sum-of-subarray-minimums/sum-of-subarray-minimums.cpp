@@ -48,9 +48,7 @@ public:
         long long sum=0;
         for(int i=0;i<arr.size();i++)
         {
-            long long leftCount=i-left[i];
-            long long rightCount=right[i]-i;
-            long long product=(leftCount*rightCount)%mod;
+            long long product=((i-left[i])*(right[i]-i))%mod;
             product=(product*arr[i])%mod;
             sum=(sum+product)%mod;
         }
