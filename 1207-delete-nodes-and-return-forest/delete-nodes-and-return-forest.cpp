@@ -12,7 +12,7 @@
 class Solution {
 public:
     vector<TreeNode*> ans;
-    TreeNode* solve(TreeNode* root, unordered_set<int> set)
+    TreeNode* solve(TreeNode* root, unordered_set<int> &set)
     {
         if(!root)
         return NULL;
