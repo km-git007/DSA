@@ -12,7 +12,8 @@ public:
             // negative element encountered
             else                            
             {
-                bool blast=false;           // to keep track of blast. For example asteroids=[10,-10]
+                // to keep track of blast. For example asteroids=[10,-10]
+                bool blast=false;           
 
                 // keep popping till you either empty the ans or you keep encountering a positive element at the   
                 // back of the the ans having value lesss then the abs value of the current negative element.
