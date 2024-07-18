@@ -1,31 +1,46 @@
 class Solution {
 public:
-    vector<int> asteroidCollision(vector<int>& ast) 
+    vector<int> asteroidCollision(vector<int>& asteroids) 
     {
         vector<int> ans;
-        int i=0;
-        while(i<ast.size())
+        for(int i=0;i<asteroids.size();i++)
         {
-            if(ans.size()==0 || ast[i]>0 || ans.back()*ast[i]>=0)
-            ans.push_back(ast[i]);
-            else
+            // positive element encountered then simply add it to the ans.
+            if(asteroids[i]>0)                    
+            ans.push_back(asteroids[i]);
+            
+            // negative element encountered
+            else                            
             {
-                bool bothExploded=false;
-                while(i<ast.size() && ast[i]<0 && ans.size()>0 && ans.back()>0 && abs(ast[i])>=ans.back())
+                bool blast=false;           // to keep track of blast. For example asteroids=[10,-10]
+
+                // keep popping till you either empty the ans or you keep encountering a positive element at the   
+                // back of the the ans having value lesss then the abs value of the current negative element.
+                while(!ans.empty() && ans.back()>0 && ans.back()<=abs(asteroids[i]))
                 {
-                    if(abs(ast[i])==ans.back())
+                    if(ans.back()==abs(asteroids[i]))
                     {
-                        bothExploded=true;
+                        blast=true;
                         ans.pop_back();
                         break;
                     }
                     ans.pop_back();
-                }          
-                if((ans.size()==0 || (ans.size()>0 && ans.back()<0)) && bothExploded==false)
-                ans.push_back(ast[i]);
+                }
+                
+                // add the current negative element to the ans if the ans is empty or you've encountered a 
+                // negative element at the back of the the ans and no blast has occured.
+                // again the same example --> asteroids=[10,-10]
+                // for above example even after the ans being empty '-10' won't be added to the ans.
+                if((ans.empty() || ans.back()<0) && !blast)
+                ans.push_back(asteroids[i]);
             }
-            i++;
         }
         return ans;
     }
+
+    // dry run on the below examples to get more clarity about the working of the above code.
+    // asteroids = [-2,-1,2,5]
+    // asteroids = [-2,3,-4,5,-8,6,-4]
+    // asteroids = [2,-2,4,5,-8]
+    // asteroids = [8,2,4,-4,-2,8]
 };
