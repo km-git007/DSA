@@ -1,7 +1,7 @@
 class Solution {
     
-    List<String> res=new ArrayList<>();
-    public static StringBuilder s=new StringBuilder();
+    private List<String> res=new ArrayList<>();
+    private StringBuilder s=new StringBuilder();
     public void solve(int open,int closed) 
     {
         if(open<0)
