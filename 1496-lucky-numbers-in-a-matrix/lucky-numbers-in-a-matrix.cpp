@@ -23,15 +23,14 @@ public:
             colMax.push_back(cMax);
         }
 
-        vector<int> luckyNumbers;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 if (matrix[i][j] == rowMin[i] && matrix[i][j] == colMax[j]) {
-                    luckyNumbers.push_back(matrix[i][j]);
+                    return{matrix[i][j]};
                 }
             }
         }
 
-        return luckyNumbers;
+        return {};
     }
 };
