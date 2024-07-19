@@ -1,35 +1,30 @@
 class Solution {
 public:
-    vector<int> luckyNumbers(vector<vector<int>>& matrix) {
-        int N = matrix.size(), M = matrix[0].size();
+    vector<int> luckyNumbers(vector<vector<int>>& matrix) 
+    {
+        int n=matrix.size(),m=matrix[0].size();
+        int maxRowMinimum=INT_MIN;
+        int minColMaximum=INT_MAX;
+        for(int i=0;i<n;i++)
+        {
+            int rowMin=INT_MAX;
+            for(int j=0;j<m;j++)
+            rowMin=min(matrix[i][j],rowMin);
 
-        vector<int> rowMin;
-        for (int i = 0; i < N; i++) {
-
-            int rMin = INT_MAX;
-            for (int j = 0; j < M; j++) {
-                rMin = min(rMin, matrix[i][j]);
-            }
-            rowMin.push_back(rMin);
+            maxRowMinimum=max(rowMin,maxRowMinimum);
         }
 
-        vector<int> colMax;
-        for (int i = 0; i < M; i++) {
+        for(int j=0;j<m;j++)
+        {
+            int colMax=INT_MIN;
+            for(int i=0;i<n;i++)
+            colMax=max(matrix[i][j],colMax);
 
-            int cMax = INT_MIN;
-            for (int j = 0; j < N; j++) {
-                cMax = max(cMax, matrix[j][i]);
-            }
-            colMax.push_back(cMax);
+            minColMaximum=min(colMax,minColMaximum);
         }
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (matrix[i][j] == rowMin[i] && matrix[i][j] == colMax[j]) {
-                    return{matrix[i][j]};
-                }
-            }
-        }
+        if(minColMaximum==maxRowMinimum)
+        return {minColMaximum};
 
         return {};
     }
