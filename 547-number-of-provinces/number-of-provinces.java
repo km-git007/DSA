@@ -1,15 +1,23 @@
 class Solution {
     private int vis[];
     int n;
-    private void dfs(int node,int[][] isConnected)
+    private void bfs(int node,int[][] isConnected)
     {
         vis[node]=1;
         // marking the current node.
-
-        for(int i=0;i<n;i++)
+        Queue<Integer> q=new ArrayDeque<>();
+        q.offer(node);
+        while(!q.isEmpty())
         {
-            if(isConnected[node][i]==1 && vis[i]==0)
-            dfs(i,isConnected);
+            int currNode=q.poll();
+            for(int i=0;i<n;i++)
+            {
+                if(isConnected[currNode][i]==1 && vis[i]==0)
+                {
+                    q.offer(i);
+                    vis[i]=1;
+                }
+            }
         }
     }
 
@@ -19,11 +27,12 @@ class Solution {
         vis=new int[n];
 
         int provinces=0;
+        // No need to create the adjacency matrix.
         for(int i=0;i<n;i++)
         {
             if(vis[i]==0)
             {
-                dfs(i,isConnected);
+                bfs(i,isConnected);
                 provinces++;
             }
         }
