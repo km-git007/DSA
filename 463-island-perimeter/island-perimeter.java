@@ -1,22 +1,39 @@
 class Solution {
-    private int n,m;
-    private int vis[][];
-    private int dfs(int row,int col,int[][] grid)
-    {
-        if(row>=n || row<0 || col>=m || col<0 || grid[row][col]==0)
-        return 1;
+    
+    // Directions for moving up, down, left, and right
+    private static final int[] rowDir = {-1, 1, 0, 0};
+    private static final int[] colDir = {0, 0, -1, 1};
+    int n,m;
+    int[][] vis;
+    private int bfs(int startRow, int startCol,int[][] grid) 
+    { 
+        vis[startRow][startCol]=1;
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{startRow, startCol}); 
 
-        if(vis[row][col]==1)
-        return 0;
-
-        vis[row][col]=1;
-        
-        int down=dfs(row+1,col,grid);
-        int up=dfs(row-1,col,grid);
-        int right=dfs(row,col+1,grid);
-        int left=dfs(row,col-1,grid);
-
-        return down+up+right+left;
+        int perimeter=0;       
+        while (!q.isEmpty()) 
+        {
+            int[] currCell=q.poll();
+            int currRow=currCell[0];
+            int currCol=currCell[1];
+                        
+            // Explore neighbors
+            for (int i=0;i<4;i++) 
+            {
+                int row=currRow+rowDir[i];
+                int col=currCol+colDir[i];
+                // Check if the new position is within bounds and not visited.
+                if(row>=0 && row<n && col>=0 && col<m && vis[row][col]==0 && grid[row][col]==1) 
+                {
+                    q.add(new int[]{row,col});
+                    vis[row][col]=1;
+                }
+                else if(row<0 || row>=n || col<0 || col>=m || grid[row][col]==0)
+                perimeter++;
+            }
+        }
+        return perimeter;
     }
 
     public int islandPerimeter(int[][] grid) 
@@ -30,7 +47,7 @@ class Solution {
             for(int j=0;j<m;j++)
             {
                 if(grid[i][j]==1 && vis[i][j]==0)
-                return dfs(i,j,grid);
+                return bfs(i,j,grid);
             }
             
         }
