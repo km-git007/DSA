@@ -7,7 +7,6 @@ class Solution {
     private int bfs(Queue<int[]> q,int[][] grid) 
     { 
         int dist=0,maxDist=0; 
-        boolean flag=false;
         while (!q.isEmpty()) 
         {
             int levelSize=q.size();
@@ -26,13 +25,12 @@ class Solution {
                     {
                         q.add(new int[]{row,col,dist+1});
                         grid[row][col]=1;
-                        flag=true;
                     }
                 }
             }
             dist++;
         }
-        return (flag)?maxDist:-1;
+        return maxDist;
     }
 
     public int maxDistance(int[][] grid) 
@@ -48,6 +46,9 @@ class Solution {
                 q.add(new int[]{i,j,0}); 
             }
         }
+
+        if(q.size()==0 || q.size()==n*m)
+        return -1;
         return bfs(q,grid);
     }
 }
