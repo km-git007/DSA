@@ -11,8 +11,7 @@ public:
             people.push_back(p);
         }
 
-        sort(people.begin(),people.end());
-        reverse(people.begin(),people.end());
+        sort(people.rbegin(),people.rend());
 
         vector<string> res;
         for(int i=0;i<people.size();i++)
