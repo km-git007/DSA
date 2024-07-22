@@ -6,16 +6,16 @@ class Solution {
     int n,m;
     private int bfs(Queue<int[]> q,int[][] grid) 
     { 
-        int dist=0,maxDist=0; 
+        int dist=-1;
         while (!q.isEmpty()) 
         {
             int levelSize=q.size();
+            dist++;
             for(int j=0;j<levelSize;j++)
             {
                 int[] currCell=q.poll();
                 int currRow=currCell[0];
                 int currCol=currCell[1];
-                maxDist=currCell[2]; 
                 for (int i=0;i<4;i++) 
                 {
                     int row=currRow+rowDir[i];
@@ -23,14 +23,13 @@ class Solution {
                     // Check if the new position is within bounds and not visited.
                     if(row>=0 && row<n && col>=0 && col<m && grid[row][col]==0) 
                     {
-                        q.add(new int[]{row,col,dist+1});
+                        q.add(new int[]{row,col});
                         grid[row][col]=1;
                     }
                 }
             }
-            dist++;
         }
-        return maxDist;
+        return dist;
     }
 
     public int maxDistance(int[][] grid) 
@@ -43,7 +42,7 @@ class Solution {
             for(int j=0;j<m;j++)
             {
                 if(grid[i][j]==1)
-                q.add(new int[]{i,j,0}); 
+                q.add(new int[]{i,j}); 
             }
         }
 
