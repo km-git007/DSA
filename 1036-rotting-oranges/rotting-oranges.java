@@ -6,30 +6,35 @@ class Solution {
     int n,m,freshCount;
     private int bfs(Queue<int[]> q,int[][] grid) 
     { 
-        int totalTime=0; 
+        int time=0; 
+        boolean hasRotten=false;
         while (!q.isEmpty()) 
         {
-            int[] currCell=q.poll();
-            int currRow=currCell[0];
-            int currCol=currCell[1]; 
-
-            int time=currCell[2];  
-            totalTime=Math.max(time,totalTime);
-
-            for (int i=0;i<4;i++) 
+            int levelSize=q.size();
+            hasRotten=false;
+            for(int j=0;j<levelSize;j++)
             {
-                int row=currRow+rowDir[i];
-                int col=currCol+colDir[i];
-                // Check if the new position is within bounds and not visited.
-                if(row>=0 && row<n && col>=0 && col<m && grid[row][col]==1) 
+                int[] currCell=q.poll();
+                int currRow=currCell[0];
+                int currCol=currCell[1]; 
+                for (int i=0;i<4;i++) 
                 {
-                    q.add(new int[]{row,col,time+1});
-                    grid[row][col]=2;
-                    freshCount--;
+                    int row=currRow+rowDir[i];
+                    int col=currCol+colDir[i];
+                    // Check if the new position is within bounds and not visited.
+                    if(row>=0 && row<n && col>=0 && col<m && grid[row][col]==1) 
+                    {
+                        q.add(new int[]{row,col});
+                        grid[row][col]=2;
+                        freshCount--;
+                        hasRotten=true;
+                    }
                 }
             }
+            if(hasRotten)
+            time++;
         }
-        return totalTime;
+        return time;
     }
 
     public int orangesRotting(int[][] grid) 
@@ -43,7 +48,7 @@ class Solution {
             for(int j=0;j<m;j++)
             {
                 if(grid[i][j]==2)
-                q.add(new int[]{i,j,0}); 
+                q.add(new int[]{i,j}); 
 
                 if(grid[i][j]==1)
                 freshCount++;
