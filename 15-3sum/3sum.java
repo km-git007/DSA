@@ -16,13 +16,10 @@ class Solution {
             int j=i+1,k=n-1;
             while(j<k)
             {
-                if(nums[i]+nums[j]+nums[k]==0)
+                int sum=nums[i]+nums[j]+nums[k];
+                if(sum==0)
                 {
-                    List<Integer> temp=new ArrayList<>();
-                    Collections.addAll(temp,nums[i],nums[j],nums[k]);
-                    ans.add(temp);
-                    // ans.add(Arrays.asList(nums[i], nums[j], nums[k]));
-
+                    ans.add(Arrays.asList(nums[i], nums[j], nums[k]));
                     j++;
                     k--;
 
@@ -31,8 +28,10 @@ class Solution {
                     while(j<k && nums[k]==nums[k+1])
                     k--;
                 }
-                else if(nums[i]+nums[j]+nums[k]<0)
+
+                else if(sum<0)
                 j++;
+
                 else
                 k--;
             }
