@@ -13,6 +13,9 @@ class Solution {
             if(i!=0 && nums[i]==nums[i-1])
             continue;
 
+            if(nums[i]>0)          // this optimizes the code
+            break;
+
             int j=i+1,k=n-1;
             while(j<k)
             {
