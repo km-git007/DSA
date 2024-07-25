@@ -14,17 +14,18 @@ class Solution {
     public int leastInterval(char[] tasks, int coolingTime) 
     {
         int n=tasks.length;
-        HashMap<Character,Integer> map = new HashMap<>();
+        int []frequencyMap=new int[26];
         for(char c : tasks)
-        map.put(c,map.getOrDefault(c,0) + 1);
+        frequencyMap[c-'A']++;
 
         // Compare based on the frequency.
         PriorityQueue<Task> maxHeap = new PriorityQueue<>((a,b) -> b.freq-a.freq);
 
-        for (Character key : map.keySet())
+        for(int i=0;i<26;i++)
         {
-            Task t=new Task(key,map.get(key));
-            maxHeap.add(t);
+            int frequency=frequencyMap[i];
+            if(frequency>0)
+            maxHeap.add(new Task((char)('A'+i),frequency));
         }
 
         int time=0;
