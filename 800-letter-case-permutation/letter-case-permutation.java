@@ -12,29 +12,18 @@ class Solution {
 
         char c=s.charAt(index);
 
+        // Append the current character and proceed
         sb.append(c);
         solve(index+1,s);
         sb.deleteCharAt(sb.length()-1);
 
-        char d=changeCase(c);
-        int result=Character.compare(c,d);
-        if(result!=0)
+        // Toggle case if the character is alphabetic
+        if (Character.isLetter(c)) 
         {
-            sb.append(d);
-            solve(index+1,s);
-            sb.deleteCharAt(sb.length()-1);
+            sb.append(Character.isUpperCase(c) ? Character.toLowerCase(c) : Character.toUpperCase(c));
+            solve(index + 1, s);
+            sb.deleteCharAt(sb.length() - 1);
         }
-    }
-
-    private char changeCase(char c) 
-    {
-        if(Character.isUpperCase(c))
-        return Character.toLowerCase(c);
-
-        if (Character.isLowerCase(c)) 
-        return Character.toUpperCase(c);
-
-        return c; // Non-alphabetic characters remain unchanged
     }
 
     public List<String> letterCasePermutation(String s) 
