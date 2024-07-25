@@ -1,16 +1,5 @@
 class Solution {
 
-    class Task
-    {
-        char id;
-        int freq;
-        Task(char id,int freq)
-        {
-            this.freq=freq;
-            this.id=id;
-        }
-    }
-
     public int leastInterval(char[] tasks, int coolingTime) 
     {
         int n=tasks.length;
@@ -19,13 +8,12 @@ class Solution {
         frequencyMap[c-'A']++;
 
         // Compare based on the frequency.
-        PriorityQueue<Task> maxHeap = new PriorityQueue<>((a,b) -> b.freq-a.freq);
-
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a,b) -> b-a);
         for(int i=0;i<26;i++)
         {
             int frequency=frequencyMap[i];
             if(frequency>0)
-            maxHeap.add(new Task((char)('A'+i),frequency));
+            maxHeap.add(frequency);
         }
 
         int time=0;
@@ -33,24 +21,23 @@ class Solution {
         {
             int cycleTime=coolingTime+1;
             int currTime=0;
-            List<Task> tasksList=new ArrayList<>();
+            List<Integer> coolingList=new ArrayList<>();
             while(currTime<cycleTime)
             {
                 if(!maxHeap.isEmpty())
                 {
-                    Task t=maxHeap.poll();
-                    t.freq--;
-                    if(t.freq>0)
-                    tasksList.add(t);
-                    System.out.print(t.id + " ");
+                    int freq=(int)maxHeap.poll();
+                    freq--;
+                    if(freq>0)
+                    coolingList.add(freq);
                 }
                 currTime++;
-                if(maxHeap.isEmpty() && tasksList.isEmpty())
+                if(maxHeap.isEmpty() && coolingList.isEmpty())
                 break;
             }
             time+=currTime;
-            for(Task task : tasksList)
-            maxHeap.add(task);
+            for(int f : coolingList)
+            maxHeap.add(f);
         }
         return time;
     }
