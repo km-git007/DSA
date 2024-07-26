@@ -21,7 +21,7 @@ class Solution {
 
     public int beautifulSubsets(int[] nums, int k) 
     {
-        Arrays.sort(nums);
+        // Arrays.sort(nums);
         return solve(0,nums,k)-1;
     }
 }
