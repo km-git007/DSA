@@ -10,7 +10,7 @@ class Solution {
             if(grumpy[j]==0)
             satisfiedCustomers+=cust[j];
 
-            if(grumpy[j]==1)
+            else                                          //(grumpy[j]==1)
             extraSatisfiedCustomers+=cust[j];
 
             if(j-i+1==minutes)
