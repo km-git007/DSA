@@ -7,7 +7,9 @@ class Solution {
         return 1;
 
         int subsets=solve(index+1,nums,k);
-        if(!map.containsKey(nums[index]+k) && !map.containsKey(nums[index]-k))
+        // if(!map.containsKey(nums[index]+k) && !map.containsKey(nums[index]-k))
+        // since array is sorted no need to find the larger element
+        if(!map.containsKey(nums[index]-k))
         {
             map.put(nums[index],map.getOrDefault(nums[index],0)+1);
             subsets+=solve(index+1,nums,k);
@@ -21,7 +23,7 @@ class Solution {
 
     public int beautifulSubsets(int[] nums, int k) 
     {
-        // Arrays.sort(nums);
+        Arrays.sort(nums);
         return solve(0,nums,k)-1;
     }
 }
