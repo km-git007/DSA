@@ -17,6 +17,7 @@ public:
         Node* tail=head;
         while(curr)
         {
+            Node* nextNode=curr->next;
             if(curr->child)
             {
                 Node* childNode=curr->child;
@@ -24,18 +25,19 @@ public:
 
                 Node* childTail=solve(childNode);
 
-                childTail->next=curr->next;
-                if(curr->next)
-                curr->next->prev=childTail;
+                childTail->next=nextNode;
+                if(nextNode)
+                nextNode->prev=childTail;
 
                 curr->next=childNode;
                 childNode->prev=curr;
 
                 tail=childTail;
             }
-
+            
+            curr=nextNode;
+            if(nextNode)
             tail=curr;
-            curr=curr->next;
         }
         return tail;
     }
