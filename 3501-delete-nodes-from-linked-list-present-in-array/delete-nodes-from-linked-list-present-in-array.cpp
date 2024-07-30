@@ -21,12 +21,14 @@ public:
             if(set.count(curr->val))
             {
                 prev->next=curr->next;
-                // prev=prev->next;
+                delete curr;
+                curr=prev->next;
             }
             else
+            {
                 prev=curr;
-
-            curr=curr->next;
+                curr=curr->next;
+            }
         }
         return dummy->next;
     }
