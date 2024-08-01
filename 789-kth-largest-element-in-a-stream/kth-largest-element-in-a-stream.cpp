@@ -9,11 +9,7 @@ public:
     {
         K=k;
         for(int ele : a)
-        {
-            minHeap.push(ele);
-            if(minHeap.size()>k)
-            minHeap.pop();
-        }
+        add(ele);
     }
     
     int add(int val) 
