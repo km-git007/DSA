@@ -24,22 +24,23 @@ class Solution {
         return i;
     }
 
-    private TreeNode solve(int[] preorder,int[] inorder,int start,int end,int index)
+    private int index=0;
+    private TreeNode solve(int[] preorder,int[] inorder,int start,int end)
     {
         if(start>end)
         return null;
 
-        TreeNode node=new TreeNode(preorder[index]);
-        int pos=find(inorder,start,end,preorder[index]);
+        TreeNode node=new TreeNode(preorder[index++]);
+        int pos=find(inorder,start,end,node.val);
 
-        node.left=solve(preorder,inorder,start,pos-1,index+1);
-        node.right=solve(preorder,inorder,pos+1,end,index+pos-start+1);
+        node.left=solve(preorder,inorder,start,pos-1);
+        node.right=solve(preorder,inorder,pos+1,end);
 
         return node;
     }
 
-    public TreeNode buildTree(int[] preorder,int[] inorder) 
+    public TreeNode buildTree(int[] preorder,int[] inorder) // O(n^2)  //O(n) space
     {
-        return solve(preorder,inorder,0,preorder.length-1,0);
+        return solve(preorder,inorder,0,preorder.length-1);
     }
 }
