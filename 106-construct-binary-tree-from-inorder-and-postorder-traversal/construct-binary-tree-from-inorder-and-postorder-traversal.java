@@ -14,24 +14,16 @@
  * }
  */
 class Solution {
-    private int find(int[] inorder,int start,int end,int target)
-    {
-        int i;
-        for(i=start;i<=end;i++)
-        if(inorder[i]==target)
-        break;
-
-        return i;
-    }
-
+    
     private int index;
+    private HashMap<Integer,Integer> map=new HashMap<>();
     private TreeNode solve(int[] postorder,int[] inorder,int start,int end)
     {
         if(start>end)
         return null;
 
         TreeNode node=new TreeNode(postorder[index--]);
-        int pos=find(inorder,start,end,node.val);
+        int pos=map.get(node.val);
 
         node.right=solve(postorder,inorder,pos+1,end);
         node.left=solve(postorder,inorder,start,pos-1);
@@ -41,7 +33,12 @@ class Solution {
 
     public TreeNode buildTree(int[] inorder,int[] postorder)
     {
-        index=inorder.length-1;
-        return solve(postorder,inorder,0,inorder.length-1);
+        int n=inorder.length;
+        index=n-1;
+
+        for(int i=0;i<n;i++)
+        map.put(inorder[i],i);
+
+        return solve(postorder,inorder,0,n-1);
     }
 }
