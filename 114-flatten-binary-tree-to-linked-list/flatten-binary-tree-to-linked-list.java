@@ -22,11 +22,8 @@ class Solution {
 
         while(root!=null)
         {
-            // LeftPart doesnt exist.
-            if(root.left==null)
-            root=root.right;
             // LeftPart exist.
-            else
+            if(root.left!=null)
             {
                 TreeNode curr=root.left;
                 while(curr.right!=null)
@@ -37,9 +34,9 @@ class Solution {
                 root.right=root.left;
                 // set root-left to null
                 root.left=null;
-                // move forward.
-                root=root.right;
             }
+            // move forward.
+            root=root.right;
         }
     }
 }
