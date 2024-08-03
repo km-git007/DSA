@@ -18,14 +18,9 @@ class Solution {
                 j--;
             }
 
-            if(sum==2)
+            if(sum>1) 
             {
-                ans="0"+ans;
-                carry=1;
-            }
-            else if(sum==3)
-            {
-                ans="1"+ans;
+                ans=Integer.toString(sum%2)+ans;
                 carry=1;
             }
             else
