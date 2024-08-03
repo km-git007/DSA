@@ -20,18 +20,34 @@ class Solution {
         if(root==null)
         return ans;
 
-        ArrayDeque<TreeNode> stack=new ArrayDeque<>();
-        stack.push(root);
-        while(!stack.isEmpty())
+        while(root!=null)
         {
-            TreeNode node=stack.pop();
-            ans.add(node.val);
-
-            if(node.right!=null)
-            stack.push(node.right);
-
-            if(node.left!=null)
-            stack.push(node.left);
+            // Left-Part doesn't exist.
+            if(root.left==null)
+            {
+                ans.add(root.val);
+                root=root.right;
+            }
+            // Left-Part does exist.
+            else
+            {
+                TreeNode curr=root.left;
+                while(curr.right!=null && curr.right!=root)
+                curr=curr.right;
+                // Left-Part not yet traversed.
+                if(curr.right==null)
+                {
+                    ans.add(root.val);
+                    curr.right=root;
+                    root=root.left;
+                }
+                // Left-Part already traversed.
+                else
+                {
+                    curr.right=null;
+                    root=root.right;
+                }
+            }
         }
         return ans;
     }
