@@ -1,17 +1,17 @@
 class Solution {
 public:
-    int maxDepth(string str) 
+    int maxDepth(string s) 
     {
         int maxDepth=0;
-        stack<int> s;
-        for(char c : str)
+        vector<int> stack;
+        for(char c : s)
         {
             if(c=='(')
-            s.push(c);
+            stack.push_back(c);
             else if(c==')')
-            s.pop();
+            stack.pop_back();
 
-            maxDepth=max((int)s.size(),maxDepth);
+            maxDepth=max((int)stack.size(),maxDepth);
         }
         return maxDepth;
     }
