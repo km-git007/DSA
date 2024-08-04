@@ -3,15 +3,15 @@ public:
     int maxDepth(string s) 
     {
         int maxDepth=0;
-        vector<int> stack;
+        int depth=0;
         for(char c : s)
         {
             if(c=='(')
-            stack.push_back(c);
+            depth++;
             else if(c==')')
-            stack.pop_back();
+            depth--;
 
-            maxDepth=max((int)stack.size(),maxDepth);
+            maxDepth=max(depth,maxDepth);
         }
         return maxDepth;
     }
