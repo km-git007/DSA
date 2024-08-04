@@ -19,14 +19,11 @@ class Solution {
         int count=0;
         for(int i=0;i<n;i++)
         {
-            for(int j=0;j<n;j++)
+            if(!vis[i])
             {
-                if(!vis[j] && isConnected[i][j]==1)
-                {
-                    vis[j]=true;
-                    solve(i,vis,isConnected);
-                    count++;
-                }
+                vis[i]=true;
+                solve(i,vis,isConnected);
+                count++;
             }
         }
         return count;
