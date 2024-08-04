@@ -1,36 +1,34 @@
 class Solution {
 public:
-    int calPoints(vector<string>& oper) 
+    int calPoints(vector<string>& operations) 
     {
-        stack<int> temp;
-        temp.push(stoi(oper[0]));
-        for(int i=1;i<oper.size();i++)
+        vector<int> temp;
+        temp.push_back(stoi(operations[0]));
+        for(int i=1;i<operations.size();i++)
         {
-            if(oper[i]=="C")
-                temp.pop();
-            else if(oper[i]=="D")
+            if(operations[i]=="C")
+                temp.pop_back();
+            else if(operations[i]=="D")
             {
-                int score=temp.top();
-                temp.push(2*score);
+                int score=temp.back();
+                temp.push_back(2*score);
             }
-            else if(oper[i]=="+")
+            else if(operations[i]=="+")
             {
-                int firstPreviousScore=temp.top();
-                temp.pop();
-                int secondPreviousScore=temp.top();
-                temp.push(firstPreviousScore);
-                temp.push(firstPreviousScore+secondPreviousScore);
+                int firstPreviousScore=temp.back();
+                temp.pop_back();
+                int secondPreviousScore=temp.back();
+                temp.push_back(firstPreviousScore);
+                temp.push_back(firstPreviousScore+secondPreviousScore);
             }
             else
-            temp.push(stoi(oper[i]));
+            temp.push_back(stoi(operations[i]));
         }
 
         int totalScore=0;
-        while(!temp.empty())
-        {
-            totalScore+=temp.top();
-            temp.pop();
-        }
+        for(int score : temp)
+        totalScore+=score;
+
         return totalScore;
     }
 };
