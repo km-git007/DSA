@@ -3,8 +3,7 @@ public:
     int calPoints(vector<string>& operations) 
     {
         vector<int> temp;
-        temp.push_back(stoi(operations[0]));
-        for(int i=1;i<operations.size();i++)
+        for(int i=0;i<operations.size();i++)
         {
             if(operations[i]=="C")
                 temp.pop_back();
