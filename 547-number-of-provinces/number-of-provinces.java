@@ -1,22 +1,13 @@
 class Solution {
-    private int vis[];
-    int n;
-    private void bfs(int node,int[][] isConnected)
+    private int n;
+    private void solve(int row,boolean[] vis,int[][] isConnected)
     {
-        vis[node]=1;
-        // marking the current node.
-        Queue<Integer> q=new ArrayDeque<>();
-        q.offer(node);
-        while(!q.isEmpty())
+        for(int col=0;col<n;col++)
         {
-            int currNode=q.poll();
-            for(int i=0;i<n;i++)
+            if(isConnected[row][col]==1 && !vis[col])
             {
-                if(isConnected[currNode][i]==1 && vis[i]==0)
-                {
-                    q.offer(i);
-                    vis[i]=1;
-                }
+                vis[col]=true;
+                solve(col,vis,isConnected);
             }
         }
     }
@@ -24,18 +15,20 @@ class Solution {
     public int findCircleNum(int[][] isConnected) 
     {
         n=isConnected.length;
-        vis=new int[n];
-
-        int provinces=0;
-        // No need to create the adjacency matrix.
+        boolean[] vis=new boolean[n];
+        int count=0;
         for(int i=0;i<n;i++)
         {
-            if(vis[i]==0)
+            for(int j=0;j<n;j++)
             {
-                bfs(i,isConnected);
-                provinces++;
+                if(!vis[j] && isConnected[i][j]==1)
+                {
+                    vis[j]=true;
+                    solve(i,vis,isConnected);
+                    count++;
+                }
             }
         }
-        return provinces;
+        return count;
     }
 }
