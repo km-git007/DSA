@@ -2,21 +2,21 @@ class Solution {
 public:
     int minOperations(vector<string>& logs) 
     {
-        stack<string> stack;
+        int folderDepth=0;
         for(const string& s : logs)
         {
             if(s=="../")
             {
-                if(!stack.empty())
-                stack.pop();
+                if(folderDepth!=0)
+                folderDepth--;
             }
 
             else if(s=="./")
             continue;
 
             else
-            stack.push(s);
+            folderDepth++;
         }
-        return (int)stack.size();
+        return folderDepth;
     }
 };
