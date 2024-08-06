@@ -12,13 +12,14 @@ class Solution {
         {
             if(nums[j]==maxElement)
             freq++;
+            // subarrays ending on jth index.
             while(freq==k)
             {
-                count+=n-j;       // subarrays starting from ith index.
                 if(nums[i]==maxElement)
                 freq--;
                 i++;
             }
+            count+=i;
         }
         return count;
     }
