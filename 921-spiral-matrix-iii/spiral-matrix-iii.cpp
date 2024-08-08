@@ -9,6 +9,7 @@ public:
         ans.push_back({rStart,cStart});
         while(ans.size()<m*n)
         {
+            // no of steps change when we take a right or when we go down
             if(dir==0 || dir==2)
             steps++;
 
@@ -19,8 +20,8 @@ public:
 
                 if(rStart>=0 && rStart<n && cStart>=0 && cStart<m)
                 ans.push_back({rStart,cStart});
-
             }
+            // changing the direction
             dir=(dir+1)%4;
         }
         return ans;
