@@ -1,21 +1,28 @@
 class Solution {
 public:
-    bool isPallindrome(string &s,int i,int j)
-    {
-        while(i<=j)
-        {
-            if(s[i]!=s[j])
-            return false;
 
-            i++;
-            j--;
+    int dp[1001][1001];
+    int isPallindrome(string &s,int i,int j)
+    {
+        if(dp[i][j]!=-1)
+        return dp[i][j];
+
+        int start=i,end=j;
+        while(start<=end)
+        {
+            if(s[start]!=s[end])
+            return dp[i][j]=0;
+
+            start++;
+            end--;
         }
-        return true;
+        return dp[i][j]=1;
     }
 
     string longestPalindrome(string s) 
     {
         int n=s.length();
+        memset(dp,-1,sizeof(dp));
         int maxLength=1,startIndex=-1;
         for(int i=0;i<s.length();i++)
         {
