@@ -1,24 +1,19 @@
 class Solution {
 public:
-    string decodeMessage(string key, string message) 
-    {
-        int myChar='a';
-        unordered_map<char,char> map;
-        for(char c : key)
-        {
-            if(c==' ' || map[c]!=0)
-            continue;
-            
-            map[c]=myChar;
-            myChar++;
-        }
-
-        for(int i=0;i<message.length();i++)
-        {
-            if(message[i]==' ')
-            continue;
-            message[i]=map[message[i]];
-        }
-        return message;
+    string decodeMessage(string key, string message) {
+        ios::sync_with_stdio(0);
+        cin.tie(0);
+        unordered_map<char,char> m;
+        char a='a';
+        for(int i=0;i<key.size();i++){
+            if(key[i]!=' ' && m.find(key[i])==m.end()){
+                m[key[i]]=a;
+                a++;
+            }
+        }m[' ']=' ';
+        string s="";
+        for(int i=0;i<message.size();i++){
+            s+=m[message[i]];
+        }return s;
     }
 };
