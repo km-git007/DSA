@@ -1,8 +1,6 @@
 class Solution {
-    private boolean isPallindrome(String s)
+    private boolean isPallindrome(String s,int start,int end)
     {
-        int start=0;
-        int end=s.length()-1;
         while(start<=end)
         {
             if(s.charAt(start++)!=s.charAt(end--))
@@ -23,9 +21,9 @@ class Solution {
 
         for(int i=index+1;i<=s.length();i++)
         {
-            String str=s.substring(index,i);
-            if(isPallindrome(str))
+            if(isPallindrome(s,index,i-1))
             {
+                String str=s.substring(index,i);
                 list.add(str);
                 solve(s,i);
                 list.remove(list.size()-1);
