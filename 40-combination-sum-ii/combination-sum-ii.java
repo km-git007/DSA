@@ -1,6 +1,6 @@
 class Solution {
-    private List<Integer> list;
-    private List<List<Integer>> ans;
+    private List<Integer> list=new ArrayList<>();
+    private List<List<Integer>> ans=new ArrayList<>();
     private void solve(int[] cand,int target,int index)
     {
         if(target==0)
@@ -22,10 +22,9 @@ class Solution {
             }
         }
     }
+    
     public List<List<Integer>> combinationSum2(int[] cand, int target) 
     {
-        ans=new ArrayList<>();
-        list=new ArrayList<>();
         Arrays.sort(cand);
 
         solve(cand,target,0);
