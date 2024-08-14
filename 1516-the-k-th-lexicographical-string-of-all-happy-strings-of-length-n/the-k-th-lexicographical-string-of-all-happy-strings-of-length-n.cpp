@@ -2,15 +2,18 @@ class Solution {
 public:
 
     vector<char> vec={'a','b','c'};
-    priority_queue<string> pq;
-    string s="";
+    string s="",ans;
+    int count=0;
     void solve(int n,int k)
     {
+        if(count==k)
+        return;
+
         if(n==0)
         {
-            pq.push(s);
-            if(pq.size()>k)
-            pq.pop();
+            count++;
+            if(count==k)
+            ans=s;
             return;
         }
 
@@ -29,8 +32,8 @@ public:
     {
         solve(n,k);
 
-        if(pq.size()<k)
+        if(count<k)
         return "";
-        return pq.top();
+        return ans;
     }
 };
