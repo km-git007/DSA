@@ -27,7 +27,6 @@ class Solution {
                 else
                 return false;
             }
-            System.out.println(bill);
         }
         return true;
     }
