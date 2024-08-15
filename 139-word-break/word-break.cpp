@@ -9,11 +9,13 @@ public:
         if(dp[start]!=-1)
         return dp[start];
 
-        for(int length=1;length<=s.length()-start;length++)
+        string curr="";
+        for(int i=start;i<s.length();i++)
         {
-            if(set.count(s.substr(start,length)))
+            curr.push_back(s[i]);
+            if(set.count(curr))
             {
-                if(solve(s,set,start+length))
+                if(solve(s,set,i+1))
                 return dp[start]=1;
             }
         }
