@@ -36,8 +36,9 @@ class SeatManager {
         while(queue.peek().isReserved!=false)
         queue.poll();
 
-        queue.peek().isReserved=true;
-        return queue.poll().seatNumber;
+        Seat reservedSeat=queue.poll();
+        reservedSeat.isReserved=true;
+        return reservedSeat.seatNumber;
     }
     
     public void unreserve(int seatNumber) 
