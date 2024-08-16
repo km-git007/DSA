@@ -7,10 +7,15 @@ class Solution {
         int minimum=arrays.get(0).get(0);
         for(int i=1;i<n;i++)
         {
-            int currMaxi=arrays.get(i).get(arrays.get(i).size()-1);
-            int currMini=arrays.get(i).get(0);
+            List<Integer> list=arrays.get(i);
+            int currMaxi=list.get(list.size()-1);
+            int currMini=list.get(0);
+
+            // updating ans;
             ans=Math.max(ans,Math.abs(currMaxi-minimum));
             ans=Math.max(ans,Math.abs(maximum-currMini));
+
+            // updating global max and min
             maximum=Math.max(maximum,currMaxi);
             minimum=Math.min(minimum,currMini);
         }
