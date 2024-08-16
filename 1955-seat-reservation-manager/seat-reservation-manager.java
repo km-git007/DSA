@@ -19,7 +19,7 @@ class SeatManager {
         for(int i=1;i<=n;i++)
         {
             Seat seat=new Seat(i,false);
-            queue.add(seat);
+            queue.offer(seat);
             seatArray[i]=seat;
         }
     }
@@ -45,7 +45,7 @@ class SeatManager {
     {
         Seat seat=seatArray[seatNumber];
         seat.isReserved=false;
-        queue.add(seat);
+        queue.offer(seat);
     }
 }
 
