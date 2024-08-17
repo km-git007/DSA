@@ -11,16 +11,13 @@ class SeatManager {
         } 
     }
     
-    Seat[] seatArray;
     PriorityQueue<Seat> queue=new PriorityQueue<>((a,b)->a.seatNumber-b.seatNumber);
     public SeatManager(int n) 
     {
-        seatArray=new Seat[n+1];
         for(int i=1;i<=n;i++)
         {
             Seat seat=new Seat(i,false);
             queue.offer(seat);
-            seatArray[i]=seat;
         }
     }
     
@@ -33,8 +30,7 @@ class SeatManager {
     
     public void unreserve(int seatNumber) 
     {
-        Seat seat=seatArray[seatNumber];
-        seat.isReserved=false;
+        Seat seat=new Seat(seatNumber,false);
         queue.offer(seat);
     }
 }
