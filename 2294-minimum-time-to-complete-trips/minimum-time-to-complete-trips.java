@@ -14,8 +14,7 @@ class Solution {
 
     public long minimumTime(int[] time, int totalTrips) 
     {
-        long timeSum=Long.MAX_VALUE;
-        long end=Math.max(timeSum,(long)totalTrips);
+        long end=Long.MAX_VALUE;
         long start=Arrays.stream(time).min().orElse(0);  // Find the minimum element in time
 
         long minimumTimeRequired=end;
