@@ -1,8 +1,8 @@
 class MyCircularDeque {
 
-    Node head,tail;
-    int length,size;
-    class Node{
+    private Node head,tail;
+    private int length,size;
+    private class Node{
 
         int val;
         Node next,prev;
