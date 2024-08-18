@@ -11,8 +11,8 @@ class Bank {
         if(account1>n || account2>n || balance[account1-1]<money)
         return false;
 
-        balance[account1-1]-=money;
-        balance[account2-1]+=money;
+        withdraw(account1,money);
+        deposit(account2,money);
         return true;
     }
     
