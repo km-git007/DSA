@@ -1,7 +1,7 @@
 class Solution {
 public:
     int n;
-    long long dp[100001][3];
+    long long dp[100001][2];
     long long solve(int index,int drinkA,vector<int>& energyDrinkA, vector<int>& energyDrinkB)
     {
         if(index>=n)
@@ -34,8 +34,11 @@ public:
     {
         n=energyDrinkA.size();
         memset(dp,-1,sizeof(dp));
+        // maxEnergyBoost gained when you start with A
         long long startWithA=solve(0,1,energyDrinkA,energyDrinkB);
+        // maxEnergyBoost gained when you start with A
         long long startWithB=solve(0,0,energyDrinkA,energyDrinkB);
+        // take max of the two values
         return max(startWithA,startWithB);
     }
 };
