@@ -1,7 +1,7 @@
 class Solution {
 public:
     int n;
-    long long dp[100001][2];
+    vector<vector<long long>> dp;
     long long solve(int index,int drinkA,vector<int>& energyDrinkA, vector<int>& energyDrinkB)
     {
         // when index goes out of bound return 0 since you can't obtain boost anymore
@@ -36,7 +36,8 @@ public:
     long long maxEnergyBoost(vector<int>& energyDrinkA, vector<int>& energyDrinkB) 
     {
         n=energyDrinkA.size();
-        memset(dp,-1,sizeof(dp));
+        dp=vector<vector<long long>>(n,vector<long long>(2,-1));
+
         // maxEnergyBoost gained when you start with A
         long long startWithA=solve(0,1,energyDrinkA,energyDrinkB);
         // maxEnergyBoost gained when you start with A
