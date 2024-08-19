@@ -3,31 +3,43 @@ class ATM {
     int[] banknotes;
     int[] money;
     boolean canWithdraw;
-    
     public ATM()
     {
         banknotes=new int[5];
         money=new int[]{20,50,100,200,500};
     }
     
-    private int[] getDenomination(int originalAmount,int[] banknotes)
+    private int[] getDenomination(int amount,int[] banknotes)
     {
         int[] denomination=new int[5];
-        int amount=originalAmount;
         int index=4;
         for(int i=4;i>=0;i--)
         {
             if(banknotes[i]==0)
             continue;
 
-            int notes=amount/money[i];
-            notes=Math.min(notes,banknotes[i]);
-            amount-=money[i]*notes;
-            denomination[i]=notes;
+            // available count of notes in the bank
+            int notesAvailable=banknotes[i];
 
+            // count of notes of particular denomination required to process the withdrawl
+            int notesRequired=amount/money[i];
+
+            // for example if amount=1700$ and 500$ notes available in bank is '2' then
+            // notesAvailable=2 and notesRequired=1700/500=3 hence actual count of the notes used to
+            // process the withdrawl will be minimum of the two.
+            int notesUsed=Math.min(notesRequired,notesAvailable);
+            amount-=money[i]*notesUsed;
+
+            // updating the denomination array with the count of the notesUsed.
+            denomination[i]=notesUsed;
+
+            // break when amount becomes <= 0.
             if(amount<=0)
             break;
         }
+
+        // if amount becomes exactly zero then the withdrawl request can be processed sucessfully
+        // hence update the canWithdraw flag to true.
         if(amount==0)
         canWithdraw=true;
         return denomination;
@@ -55,6 +67,7 @@ class ATM {
         // updating the notes in the bank
         for(int i=0;i<5;i++)
         banknotes[i]-=denomination[i];
+
         return denomination;
     }
 }
