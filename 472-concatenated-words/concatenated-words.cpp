@@ -14,14 +14,14 @@ public:
 
         for(int i=1;i<=n;i++)
         {
-            string s1=s.substr(0,i);
-            string s2=s.substr(i,n-i);
+            string prefix=s.substr(0,i);
+            string suffix=s.substr(i,n-i);
 
-            bool case1= set.count(s1)>0 && set.count(s2)>0;
+            bool case1= set.count(prefix)>0 && set.count(suffix)>0;
             if(case1)
             return map[s]=true;
 
-            bool case2= set.count(s1)>0 && check(s2,set);
+            bool case2= set.count(prefix)>0 && check(suffix,set);
             if(case2)
             return map[s]=true;
         }
