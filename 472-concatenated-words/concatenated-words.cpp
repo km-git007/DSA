@@ -17,12 +17,7 @@ public:
             string prefix=s.substr(0,i);
             string suffix=s.substr(i,n-i);
 
-            bool case1= set.count(prefix)>0 && set.count(suffix)>0;
-            if(case1)
-            return map[s]=true;
-
-            bool case2= set.count(prefix)>0 && check(suffix,set);
-            if(case2)
+            if((set.count(prefix)>0 && set.count(suffix)>0) || (set.count(prefix)>0 && check(suffix,set)))
             return map[s]=true;
         }
         return map[s]=false;
