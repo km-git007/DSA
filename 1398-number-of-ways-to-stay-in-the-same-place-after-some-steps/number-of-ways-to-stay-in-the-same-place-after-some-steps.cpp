@@ -7,7 +7,7 @@ public:
         if(position==1 && steps==0)
         return 1;
 
-        if(steps==0 || position<1)
+        if(steps==0)
         return 0;
 
         if(dp[steps][position]!=-1)
