@@ -1,5 +1,3 @@
-#include <vector>
-#include <algorithm>
 
 class ATM {
 public:
@@ -20,7 +18,7 @@ public:
         int index=4;
         for (int i=4;i>=0;i--) 
         {
-            if (banknotes[i] == 0)
+            if(banknotes[i]==0)
                 continue;
 
             // available count of notes in the bank
@@ -38,40 +36,41 @@ public:
             // updating the denomination array with the count of the notesUsed.
             denomination[i] = notesUsed;
 
-            // break when amount becomes <= 0.
-            if (amount <= 0)
+            // break when amount becomes equal 0.
+            if (amount == 0)
                 break;
         }
 
         // if amount becomes exactly zero then the withdrawal request can be processed successfully
         // hence update the canWithdraw flag to true.
-        if (amount == 0)
-            canWithdraw = true;
+        if(amount==0)
+        canWithdraw=true;
+
         return denomination;
     }
 
     void deposit(vector<int> banknotesCount) 
     {
         // simply deposit the notes in the bank.
-        for (int i = 4; i >= 0; i--)
+        for (int i=4;i>=0;i--) 
         banknotes[i]+=banknotesCount[i];
     }
 
     vector<int> withdraw(int amount) 
     {
         // set canWithdraw to false before each withdrawal request
-        canWithdraw = false;
+        canWithdraw=false;
 
         // getting the denominations for the given amount
-        vector<int> denomination = getDenomination(amount, banknotes);
+        vector<int> denomination=getDenomination(amount, banknotes);
 
         // if canWithdraw remains false means the withdrawal can't be processed
         if(!canWithdraw)
         return {-1};
 
         // updating the notes in the bank
-        for (int i = 0; i < 5; i++)
-        banknotes[i] -= denomination[i];
+        for (int i=4;i>=0;i--) 
+        banknotes[i]-=denomination[i];
 
         return denomination;
     }
