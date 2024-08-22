@@ -36,16 +36,14 @@ public:
             // updating the denomination array with the count of the notesUsed.
             denomination[i] = notesUsed;
 
-            // break when amount becomes equal 0.
-            if (amount == 0)
+            // if amount becomes exactly zero then the withdrawal request can be processed successfully
+            // hence update the canWithdraw flag to true and break.
+            if(amount==0)
+            {
+                canWithdraw=true;
                 break;
+            }
         }
-
-        // if amount becomes exactly zero then the withdrawal request can be processed successfully
-        // hence update the canWithdraw flag to true.
-        if(amount==0)
-        canWithdraw=true;
-
         return denomination;
     }
 
