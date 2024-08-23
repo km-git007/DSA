@@ -1,17 +1,19 @@
 class UndergroundSystem {
 
+    // stores the key(checkInStation + "_" + checkOutStation) and array{avgTime,trips} details as key value pair.
     HashMap<String,Double []> tripMap;
 
+    // stores the cardId and traveller's details as key value pair.
     HashMap<Integer,Traveller> checkInMap;
 
     private class Traveller{
 
-        int travellerId;
+        int cardId;
         int checkInTime;
         String checkInStation;
 
-        public Traveller(int travellerId, int checkInTime, String checkInStation) {
-            this.travellerId = travellerId;
+        public Traveller(int cardId, int checkInTime, String checkInStation) {
+            this.cardId = cardId;
             this.checkInStation = checkInStation;
             this.checkInTime = checkInTime;
         }
@@ -25,17 +27,28 @@ class UndergroundSystem {
 
     public void checkIn(int id, String stationName, int t)
     {
-        Traveller t1=new Traveller(id,t,stationName);
-        checkInMap.put(id,t1);
+        // create a new trip 
+        Traveller traveller=new Traveller(id,t,stationName);
+        // storing the traveller's trip details in the checkInMap.
+        checkInMap.put(id,traveller);
     }
 
     public void checkOut(int id, String stationName, int t)
     {
         Traveller traveller=checkInMap.get(id);
         String startStation=traveller.checkInStation;
+        // calculate the time taken to travel from checkInStation --> checkOutStation.
         double travelTime= t-traveller.checkInTime;
 
+        // since this trip is completed hence removing the current trip from the checkIn map.
+        checkInMap.remove(Integer.valueOf(id));
+
+        // generate a get including both station names.
         String key=startStation+"_"+stationName;
+
+        // if a value to this key exists then it means that trips have been made earlier on this 
+        // route{checkInStation --> checkOutStation}. So we already have the data about the 
+        // average travel time on this route and the number of trips taken, stored in the tripMap.
         if(tripMap.get(key)!=null){
             double currentAverageTime= tripMap.get(key)[0];
             double currentTrips= tripMap.get(key)[1];
@@ -44,12 +57,17 @@ class UndergroundSystem {
             return;
         }
 
+        // if a value corresponding tothe key doesnot exists means this is the first trip on this
+        // route{checkInStation --> checkOutStation}. hence put the values{travelTime,1} corresponding 
+        // to key in tripMap.
         tripMap.put(key,new Double[]{travelTime,1.00});
     }
 
     public double getAverageTime(String startStation, String endStation)
     {
+        // create a key
         String key=startStation+"_"+endStation;
+        // get the value corresponding to key
         return tripMap.get(key)[0];
     }
 }
