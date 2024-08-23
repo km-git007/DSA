@@ -9,13 +9,6 @@ class UndergroundSystem {
         int checkInTime;
         string checkInStation;
 
-        Traveller()
-        {
-            cardId = 000;
-            checkInStation = "checkInStation";
-            checkInTime = 007;
-        }
-
         Traveller(int cardId, int checkInTime, string checkInStation) {
             this->cardId = cardId;
             this->checkInStation = checkInStation;
@@ -27,30 +20,30 @@ class UndergroundSystem {
     unordered_map<string, pair<double, double>> tripMap;
 
     // stores the cardId and traveller's details as key-value pair.
-    unordered_map<int, Traveller> checkInMap;
+    unordered_map<int, Traveller*> checkInMap;
     
 
     public:
     UndergroundSystem() 
     {
         tripMap = unordered_map<string, pair<double, double>>();
-        checkInMap = unordered_map<int, Traveller>();
+        checkInMap = unordered_map<int, Traveller*>();
     }
 
     void checkIn(int id, string stationName, int t)
     {
         // create a new trip 
-        Traveller traveller(id, t, stationName);
+        Traveller *traveller=new Traveller(id, t, stationName);
         // storing the traveller's trip details in the checkInMap.
         checkInMap[id] = traveller;
     }
 
     void checkOut(int id, string stationName, int t)
     {
-        Traveller traveller = checkInMap[id];
-        string startStation = traveller.checkInStation;
+        Traveller *traveller = checkInMap[id];
+        string startStation = traveller->checkInStation;
         // calculate the time taken to travel from checkInStation --> checkOutStation.
-        double travelTime = t - traveller.checkInTime;
+        double travelTime = t - traveller->checkInTime;
 
         // since this trip is completed hence removing the current trip from the checkIn map.
         checkInMap.erase(id);
