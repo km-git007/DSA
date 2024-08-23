@@ -3,16 +3,16 @@ class UndergroundSystem {
     // stores the key(checkInStation + "_" + checkOutStation) and array{avgTime,trips} details as key value pair.
     HashMap<String,Double []> tripMap;
 
-    // stores the cardId and traveller's details as key value pair.
-    HashMap<Integer,Traveller> checkInMap;
+    // stores the cardId and Trip's details as key value pair.
+    HashMap<Integer,Trip> checkInMap;
 
-    private class Traveller{
+    private class Trip{
 
         int cardId;
         int checkInTime;
         String checkInStation;
 
-        public Traveller(int cardId, int checkInTime, String checkInStation) {
+        public Trip(int cardId, int checkInTime, String checkInStation) {
             this.cardId = cardId;
             this.checkInStation = checkInStation;
             this.checkInTime = checkInTime;
@@ -28,17 +28,17 @@ class UndergroundSystem {
     public void checkIn(int id, String stationName, int t)
     {
         // create a new trip 
-        Traveller traveller=new Traveller(id,t,stationName);
-        // storing the traveller's trip details in the checkInMap.
-        checkInMap.put(id,traveller);
+        Trip Trip=new Trip(id,t,stationName);
+        // storing the Trip's trip details in the checkInMap.
+        checkInMap.put(id,Trip);
     }
 
     public void checkOut(int id, String stationName, int t)
     {
-        Traveller traveller=checkInMap.get(id);
-        String startStation=traveller.checkInStation;
+        Trip trip=checkInMap.get(id);
+        String startStation=trip.checkInStation;
         // calculate the time taken to travel from checkInStation --> checkOutStation.
-        double travelTime= t-traveller.checkInTime;
+        double travelTime= t-trip.checkInTime;
 
         // since this trip is completed hence removing the current trip from the checkIn map.
         checkInMap.remove(Integer.valueOf(id));
