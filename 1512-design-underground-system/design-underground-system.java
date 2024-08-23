@@ -1,11 +1,5 @@
 class UndergroundSystem {
 
-    // stores the key(checkInStation + "_" + checkOutStation) and array{avgTime,trips} details as key value pair.
-    HashMap<String,Double []> tripMap;
-
-    // stores the cardId and Trip's details as key value pair.
-    HashMap<Integer,Trip> checkInMap;
-
     private class Trip{
 
         int cardId;
@@ -19,6 +13,12 @@ class UndergroundSystem {
         }
     }
 
+    // stores the key(checkInStation + "_" + checkOutStation) and array{avgTime,trips} details as key value pair.
+    private HashMap<String,Double []> tripMap;
+
+    // stores the cardId and Trip's details as key value pair.
+    private HashMap<Integer,Trip> checkInMap;
+
     public UndergroundSystem() 
     {
         tripMap=new HashMap<>();
@@ -28,9 +28,9 @@ class UndergroundSystem {
     public void checkIn(int id, String stationName, int t)
     {
         // create a new trip 
-        Trip Trip=new Trip(id,t,stationName);
-        // storing the Trip's trip details in the checkInMap.
-        checkInMap.put(id,Trip);
+        Trip trip=new Trip(id,t,stationName);
+        // storing the trip details in the checkInMap.
+        checkInMap.put(id,trip);
     }
 
     public void checkOut(int id, String stationName, int t)
