@@ -19,17 +19,17 @@ class ThroneInheritance {
     private HashMap<String,Person> personMap;
     private Person king;
 
-    private void  solve(Person person,List<String> inheritanceOrder)
+    private void preorderInheritanceOrder(Person person,List<String> inheritanceList)
     {
         if(person==null)
-            return;
+        return;
 
         if(person.isAlive)
-            inheritanceOrder.add(person.name);
+        inheritanceList.add(person.name);
 
         List<Person> childrenList=person.children;
         for(Person child : childrenList)
-            solve(child,inheritanceOrder);
+        preorderInheritanceOrder(child,inheritanceList);
     }
 
     public ThroneInheritance(String kingName)
@@ -57,9 +57,9 @@ class ThroneInheritance {
 
     public List<String> getInheritanceOrder()
     {
-        List<String> inheritanceOrder=new ArrayList<>();
-        solve(king,inheritanceOrder);
-        return inheritanceOrder;
+        List<String> inheritanceList=new ArrayList<>();
+        preorderInheritanceOrder(king,inheritanceList);
+        return inheritanceList;
     }
 }
 
