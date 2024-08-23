@@ -2,14 +2,14 @@
 class UndergroundSystem {
 
     private:
-    class Traveller {
+    class Trip {
 
         public:
         int cardId;
         int checkInTime;
         string checkInStation;
 
-        Traveller(int cardId, int checkInTime, string checkInStation) {
+        Trip(int cardId, int checkInTime, string checkInStation) {
             this->cardId = cardId;
             this->checkInStation = checkInStation;
             this->checkInTime = checkInTime;
@@ -19,31 +19,31 @@ class UndergroundSystem {
     // stores the key(checkInStation + "_" + checkOutStation) and pair{avgTime,trips} details as key-value pair.
     unordered_map<string, pair<double, double>> tripMap;
 
-    // stores the cardId and traveller's details as key-value pair.
-    unordered_map<int, Traveller*> checkInMap;
+    // stores the cardId and Trip's details as key-value pair.
+    unordered_map<int, Trip*> checkInMap;
     
 
     public:
     UndergroundSystem() 
     {
         tripMap = unordered_map<string, pair<double, double>>();
-        checkInMap = unordered_map<int, Traveller*>();
+        checkInMap = unordered_map<int, Trip*>();
     }
 
     void checkIn(int id, string stationName, int t)
     {
         // create a new trip 
-        Traveller *traveller=new Traveller(id, t, stationName);
-        // storing the traveller's trip details in the checkInMap.
-        checkInMap[id] = traveller;
+        Trip *trip=new Trip(id, t, stationName);
+        // storing the trip details in the checkInMap.
+        checkInMap[id] = trip;
     }
 
     void checkOut(int id, string stationName, int t)
     {
-        Traveller *traveller = checkInMap[id];
-        string startStation = traveller->checkInStation;
+        Trip *trip = checkInMap[id];
+        string startStation = trip->checkInStation;
         // calculate the time taken to travel from checkInStation --> checkOutStation.
-        double travelTime = t - traveller->checkInTime;
+        double travelTime = t - trip->checkInTime;
 
         // since this trip is completed hence removing the current trip from the checkIn map.
         checkInMap.erase(id);
