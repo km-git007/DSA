@@ -15,26 +15,39 @@
  */
 class Solution {
 
-    Deque<Integer> stack=new ArrayDeque<>();
-    private void solve(TreeNode root)
-    {
-        if(root==null)
-        return;
-
-        stack.push(root.val);
-
-        solve(root.right);
-        solve(root.left);
-    }
-
     public List<Integer> postorderTraversal(TreeNode root) 
     {
-        solve(root);
-
         List<Integer> ans=new ArrayList<>();
-        while(!stack.isEmpty())
-        ans.add(stack.pop());
+        // adds element in order(Root-Right-Left)
+        // we will have to reverse the ans at last.
+        while(root!=null)
+        {
+            if(root.right==null)
+            {
+                ans.add(root.val);
+                root=root.left;
+            }
+            else
+            {
+                TreeNode curr=root.right;
+                while(curr.left!=null && curr.left!=root)
+                curr=curr.left;
 
+                if(curr.left==null)
+                {
+                    ans.add(root.val);
+                    curr.left=root;
+                    root=root.right;
+                }
+                else if(curr.left==root)
+                {
+                    curr.left=null;
+                    root=root.left;
+                }
+            }
+        }
+
+        Collections.reverse(ans);
         return ans;
-    }
+    } 
 }
