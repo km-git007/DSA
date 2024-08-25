@@ -14,20 +14,27 @@
  * }
  */
 class Solution {
-    List<Integer> ans=new ArrayList<>();
+
+    Deque<Integer> stack=new ArrayDeque<>();
     private void solve(TreeNode root)
     {
         if(root==null)
         return;
 
-        solve(root.left);
+        stack.push(root.val);
+
         solve(root.right);
-        ans.add(root.val);
+        solve(root.left);
     }
 
     public List<Integer> postorderTraversal(TreeNode root) 
     {
         solve(root);
+
+        List<Integer> ans=new ArrayList<>();
+        while(!stack.isEmpty())
+        ans.add(stack.pop());
+
         return ans;
     }
 }
