@@ -22,7 +22,7 @@ class Solution {
         return ans;
 
         // Left->Right->Root
-        // we will add in order Root->Left->Right and then reverse the list
+        // we will add in order Root->Right->Left and then reverse the list
         ArrayDeque<TreeNode> stack=new ArrayDeque<>();
         stack.push(root);
         while(!stack.isEmpty())
