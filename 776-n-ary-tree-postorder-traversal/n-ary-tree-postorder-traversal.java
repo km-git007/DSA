@@ -19,29 +19,28 @@ class Node {
 
 class Solution {
 
-    private Deque<Integer> stack=new ArrayDeque<>();
-    private void solve(Node root)
-    {
-        if(root==null)
-        return;
-
-        // Node->Right->Left and then reverse the an List.
-        stack.add(root.val);
-
-        List<Node> offsprings=root.children;
-        // add from right to left in the stack
-        for(int i=offsprings.size()-1;i>=0;i--) 
-        solve(offsprings.get(i));
-    }
-
     public List<Integer> postorder(Node root) 
     {
-        solve(root);
         List<Integer> ans=new ArrayList<>();
+        if(root==null)
+        return ans;
 
+        // Left-to-Right->Root
+        // we will add in order Root->Right-to-Left and then reverse the list
+        Deque<Node> stack=new ArrayDeque<>();
+        stack.push(root);
         while(!stack.isEmpty())
-        ans.add(stack.pop());
+        {
+            Node node=stack.pop();
+            ans.add(node.val);
 
+            List<Node> offsprings=node.children;
+            //to add in the order Root->Right-to-Left in the list we must
+            // add from left to right in the stack
+            // so that the processing order in the next iteration is right to left
+            for(Node offspring : offsprings) 
+            stack.push(offspring);
+        }
         Collections.reverse(ans);
         return ans;
     }
