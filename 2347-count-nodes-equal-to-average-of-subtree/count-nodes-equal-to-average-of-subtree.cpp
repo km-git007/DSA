@@ -11,6 +11,8 @@
  */
 class Solution {
 public:
+
+    int result=0;
     pair<int,int> solve(TreeNode* root,int sum,int count)
     {
         if(!root)
@@ -21,19 +23,16 @@ public:
 
         sum=root->val+Left.second+Right.second;
         count=1+Left.first+Right.first;
+
+        if(sum/count==root->val)
+        result++;
+
         return {count,sum};
     }
 
     int averageOfSubtree(TreeNode* root) 
     {
-        if(!root)
-        return 0;
-
-        int ans=0;
-        pair<int,int> p=solve(root,0,0);
-        if(p.second/p.first==root->val)
-        ans++;
-
-        return  ans + averageOfSubtree(root->left) + averageOfSubtree(root->right);
+        solve(root,0,0);
+        return result;
     }
 };
