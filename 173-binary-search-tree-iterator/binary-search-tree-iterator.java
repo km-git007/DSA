@@ -18,11 +18,11 @@ class BSTIterator {
     private Deque<TreeNode> stack;
     private void inorderTraversal(TreeNode root)
     {
-        if(root==null)
-        return;
-
-        stack.push(root);
-        inorderTraversal(root.left);
+        while(root!=null)
+        {
+            stack.push(root);
+            root=root.left;
+        }
     }
 
     public BSTIterator(TreeNode root) 
@@ -35,7 +35,6 @@ class BSTIterator {
     {
         TreeNode node=stack.pop();
 
-        if(node.right!=null)
         inorderTraversal(node.right);
 
         return node.val;
