@@ -31,23 +31,6 @@ class Solution {
         curr.isEnd=true;
     }
     
-    private Trie search(char c,Trie curr) 
-    {
-        if(curr.children[c-'a']!=null)
-        {
-            curr=curr.children[c-'a'];
-
-            if(curr.isEnd)
-            {
-                ans.add(sb.toString());
-                curr.isEnd=false;
-            }
-
-            return curr;
-        }
-        return null;
-    }
-
     public Solution()
     {
         root=new Trie();
@@ -61,21 +44,29 @@ class Solution {
         if(row<0 || row>=n || col<0 || col>=m || board[row][col]=='#')
         return;
 
-        char originalChar=board[row][col];
-        sb.append(originalChar);
+        char c=board[row][col];
+
+        if(curr.children[c-'a']==null)
+        return;
+        
+        sb.append(c);
         board[row][col]='#';
 
-        Trie node=search(originalChar,curr);
-        if(node!=null)
+        curr=curr.children[c-'a'];
+        if(curr.isEnd)
         {
-            solve(row,col-1,node,board);  //left
-            solve(row,col+1,node,board);   //right
-            solve(row-1,col,node,board);  //up
-            solve(row+1,col,node,board);  //down
+            ans.add(sb.toString());
+            // to avoid duplicacy.
+            curr.isEnd=false;
         }
 
+        solve(row,col-1,curr,board);  //left
+        solve(row,col+1,curr,board);   //right
+        solve(row-1,col,curr,board);  //up
+        solve(row+1,col,curr,board);  //down
+
         sb.deleteCharAt(sb.length()-1);
-        board[row][col]=originalChar;
+        board[row][col]=c;
     }
 
     public List<String> findWords(char[][] board, String[] words) 
