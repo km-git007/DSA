@@ -13,28 +13,25 @@ class Solution {
     
     private Trie root;
 
+    public Solution()
+    {
+        root=new Trie();
+    }
+
     private void insert(String word) 
     {
         Trie curr=root;
-        for(int i=0;i<word.length();i++)
+        for(char c : word.toCharArray()) 
         {
-            char c = word.charAt(i);
-            int index = c-'a';
+            int index=c-'a';
+            if(curr.children[index]==null) 
+            curr.children[index] = new Trie();
 
-            if(curr.children[index]==null)
-            {
-                Trie node=new Trie();
-                curr.children[index]=node;
-            }
             curr=curr.children[index];
         }
         curr.isEnd=true;
     }
     
-    public Solution()
-    {
-        root=new Trie();
-    }
 
     List<String> ans=new ArrayList<>();
     StringBuilder sb=new StringBuilder();
