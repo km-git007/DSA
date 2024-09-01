@@ -1,24 +1,25 @@
 
 class FrontMiddleBackQueue {
 private:
-    struct Node {
+    struct Node 
+    {
         int val;
         Node* next;
         Node* prev;
 
-        Node(int val) {
+        Node(int val) 
+        {
             this->val = val;
             next = prev = nullptr;
         }
     };
 
-    Node* head;
-    Node* tail;
-    Node* middle;
+    Node *head, *tail, *middle;
     int length;
 
 public:
-    FrontMiddleBackQueue() {
+    FrontMiddleBackQueue() 
+    {
         head = new Node(-1);
         tail = new Node(-1);
         head->next = tail;
@@ -27,7 +28,8 @@ public:
         length = 0;
     }
 
-    void pushFront(int data) {
+    void pushFront(int data) 
+    {
         Node* node = new Node(data);
         node->next = head->next;
         node->next->prev = node;
@@ -36,14 +38,17 @@ public:
 
         length++;
 
-        if (length == 1)
-            middle = node;
-        else if (length % 2 == 0)
-            middle = middle->prev;
+        if(length == 1)
+        middle = node;
+
+        else if(length % 2 == 0)
+        middle = middle->prev;
     }
 
-    void pushMiddle(int data) {
-        if (length == 0) {
+    void pushMiddle(int data) 
+    {
+        if (length == 0) 
+        {
             pushFront(data);
             return;
         }
@@ -51,7 +56,8 @@ public:
         Node* node = new Node(data);
 
         // Push right at the middle index
-        if (length % 2 == 1) {
+        if (length % 2 == 1) 
+        {
             node->next = middle;
             node->prev = middle->prev;
             middle->prev->next = node;
@@ -59,7 +65,10 @@ public:
 
             // Update middle
             middle = middle->prev;
-        } else { // Push just after the middle
+        } 
+        // Push just after the middle
+        else 
+        { 
             node->next = middle->next;
             middle->next->prev = node;
             middle->next = node;
@@ -71,7 +80,8 @@ public:
         length++;
     }
 
-    void pushBack(int data) {
+    void pushBack(int data) 
+    {
         Node* node = new Node(data);
         node->next = tail;
         node->prev = tail->prev;
@@ -80,14 +90,16 @@ public:
 
         length++;
 
-        if (length == 1)
-            middle = node;
-        else if (length % 2 == 1)
-            middle = middle->next;
+        if(length == 1)
+        middle = node;
+
+        else if(length % 2 == 1)
+        middle = middle->next;
     }
 
-    int popFront() {
-        if (length == 0)
+    int popFront() 
+    {
+        if(length == 0)
             return -1;
 
         Node* frontNode = head->next;
@@ -95,10 +107,10 @@ public:
         head->next = frontNode->next;
         length--;
 
-        if (length % 2 == 1)
+        if(length % 2 == 1)
             middle = middle->next;
 
-        if (length == 0)
+        if(length == 0)
             middle = nullptr;
 
         int val = frontNode->val;
@@ -106,15 +118,18 @@ public:
         return val;
     }
 
-    int popMiddle() {
-        if (length == 0)
-            return -1;
+    int popMiddle()
+    {
+        if(length == 0)
+        return -1;
 
         Node* newMiddle;
-        if (length % 2 == 1)
-            newMiddle = middle->prev;
+
+        if(length % 2 == 1)
+        newMiddle = middle->prev;
+
         else
-            newMiddle = middle->next;
+        newMiddle = middle->next;
 
         int middleNodeValue = middle->val;
 
@@ -125,25 +140,26 @@ public:
         delete middle;
         middle = newMiddle;
 
-        if (length == 0)
-            middle = nullptr;
+        if(length == 0)
+        middle = nullptr;
 
         return middleNodeValue;
     }
 
-    int popBack() {
-        if (length == 0)
-            return -1;
+    int popBack()
+    {
+        if(length == 0)
+        return -1;
 
         Node* backNode = tail->prev;
         backNode->prev->next = tail;
         tail->prev = backNode->prev;
         length--;
 
-        if (length % 2 == 0)
+        if(length % 2 == 0)
             middle = middle->prev;
 
-        if (length == 0)
+        if(length == 0)
             middle = nullptr;
 
         int val = backNode->val;
