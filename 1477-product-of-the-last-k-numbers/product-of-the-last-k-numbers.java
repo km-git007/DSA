@@ -1,39 +1,39 @@
 class ProductOfNumbers {
 
-    int lz;
-    List<Integer> arr;
-
+    int lastZeroIndex;
+    List<Integer> list;
     public ProductOfNumbers() 
     {
-        arr=new ArrayList<>();
-        arr.add(1);
+        list=new ArrayList<>();
+        list.add(1);
+        lastZeroIndex=-1;
     }
     
     public void add(int num) 
     {
-        int index= arr.size()-1;
+        int index= list.size()-1;
 
         if(num==0)
-        lz=index+1;
+        lastZeroIndex=index+1;
 
-        if(arr.get(index)==0)
-        arr.add(num);
+        if(list.get(index)==0)
+        list.add(num);
 
         else
-        arr.add(arr.get(index)*num);
+        list.add(list.get(index)*num);
     }
     
     public int getProduct(int k) 
     {
-        int index= arr.size()-1;
+        int index= list.size()-1;
         
-        if(index-k<lz)
+        if(index-k<lastZeroIndex)
         return 0;
 
-        if(arr.get(index-k)==0)
-        return arr.get(index);
+        if(list.get(index-k)==0)
+        return list.get(index);
 
-        return arr.get(index)/arr.get(index-k);
+        return list.get(index)/list.get(index-k);
     }
 }
 
