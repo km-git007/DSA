@@ -22,7 +22,7 @@ public:
 
         prefixSum+=root->val;
 
-        if(map.count(prefixSum-target)>0)    
+        if(map.count(prefixSum-target)>0)
         count+=map[prefixSum-target];
 
         map[prefixSum]++;
@@ -30,7 +30,6 @@ public:
         dfs(root->left,prefixSum);
         dfs(root->right,prefixSum);
 
-        // backtracking
         map[prefixSum]--;
         if(map[prefixSum]==0)
         map.erase(prefixSum);
