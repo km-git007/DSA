@@ -27,9 +27,7 @@ class Solution {
     public int getLucky(String s, int K) 
     {
         int num=convert(s);
-        System.out.println(num);
         int k=K-1;
-
         while(k>0)
         {
             num=transform(num);
