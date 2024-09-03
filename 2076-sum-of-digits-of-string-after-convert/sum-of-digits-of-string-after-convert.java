@@ -2,14 +2,14 @@ class Solution {
 
     private int convert(String s)
     {
-        int num=0;
+        int sum=0;
         for(char c : s.toCharArray())
         {
             int temp=c-'a'+1;
             temp=temp/10+temp%10;
-            num+=temp;
+            sum+=temp;
         }
-        return num;
+        return sum;
     }
 
     private int transform(int num)
