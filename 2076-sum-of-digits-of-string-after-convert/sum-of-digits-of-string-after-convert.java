@@ -6,7 +6,6 @@ class Solution {
         for(char c : s.toCharArray())
         {
             int temp=c-'a'+1;
-            if(temp>9)
             temp=temp/10+temp%10;
             num+=temp;
         }
