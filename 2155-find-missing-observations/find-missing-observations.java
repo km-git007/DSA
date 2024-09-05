@@ -19,10 +19,10 @@ class Solution {
         for(int roll : rolls)
         sum+=roll;
 
-        int requiredSum=(mean*(m+n))-sum;
-        if(requiredSum>6*n || requiredSum<1*n)
+        int missingSum=(mean*(m+n))-sum;
+        if(missingSum>6*n || missingSum<1*n)
         return new int[]{};
 
-        return solve(requiredSum,n);
+        return solve(missingSum,n);
     }
 }
