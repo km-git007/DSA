@@ -11,39 +11,32 @@
  */
 class Solution {
 public:
-    vector<TreeNode*> ans;
-    TreeNode* solve(TreeNode* root, unordered_set<int> &set)
+    TreeNode* dfs(TreeNode* root, unordered_set<int> &s,vector<TreeNode*> &v)
     {
-        if(!root)
-        return NULL;
+        if(root==NULL)
+        return root;
 
-        root->left=solve(root->left,set);
-        root->right=solve(root->right,set);
+        root->left=dfs(root->left,s,v);
+        root->right=dfs(root->right,s,v);
 
-        if(set.count(root->val))
+        if(s.find(root->val)!=s.end())
         {
-            if(root->left)
-            ans.push_back(root->left);
-
-            if(root->right)
-            ans.push_back(root->right);
-
+            if(root->left!=NULL) v.push_back(root->left);
+            if(root->right!=NULL) v.push_back(root->right);
             delete root;
-            return NULL;
+            root=NULL; 
         }
         return root;
     }
 
     vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) 
     {
-        unordered_set<int> set;
-        for(int i=0;i<to_delete.size();i++)
-        set.insert(to_delete[i]);
+        unordered_set<int> s(to_delete.begin(),to_delete.end());
+        vector<TreeNode*> v;
 
-        if(!set.count(root->val))    // adding the main root of the tree
-        ans.push_back(root);
+        if(s.find(root->val)==s.end())  v.push_back(root);
 
-        solve(root,set);
-        return ans;
+        dfs(root,s,v);
+        return v;
     }
 };
