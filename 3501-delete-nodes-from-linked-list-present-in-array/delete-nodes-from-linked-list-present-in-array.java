@@ -15,19 +15,19 @@ class Solution {
         for(int num : nums)
         set.add(num);
 
-        ListNode dummy=new ListNode(-1);
-        dummy.next=head;
+        ListNode dummyNode=new ListNode(-1);
+        dummyNode.next=head;
 
-        ListNode curr=head,prev=dummy;
-        while(curr!=null)
+        ListNode current=head,previous=dummyNode;
+        while(current!=null)
         {
-            if(set.contains(curr.val))
-            prev.next=curr.next;
+            if(set.contains(current.val))
+            previous.next=current.next;
             else
-            prev=curr;
+            previous=current;
 
-            curr=curr.next;
+            current=current.next;
         }
-        return dummy.next;
+        return dummyNode.next;
     }
 }
