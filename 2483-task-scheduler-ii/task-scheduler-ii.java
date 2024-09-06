@@ -10,7 +10,6 @@ class Solution {
             // Complete the current task
             time++;
             // Map the task to its completion time.
-            System.out.println(task+"-"+time);
             map.put(task,time);
         }
         return time;
