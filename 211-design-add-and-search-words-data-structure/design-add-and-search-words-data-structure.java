@@ -1,7 +1,7 @@
 class WordDictionary {
 
-    private class Trie{
-
+    private class Trie
+    {
         boolean isEnd;
         Trie[] children;
         Trie()
@@ -22,17 +22,12 @@ class WordDictionary {
     public void addWord(String word) 
     {
         Trie curr=root;
-        for(int i=0;i<word.length();i++)
+        for(char c : word.toCharArray())
         {
-            char c = word.charAt(i);
-            int index = c-'a';
+            if(curr.children[c-'a']==null)
+            curr.children[c-'a']=new Trie();
 
-            if(curr.children[index]==null)
-            {
-                Trie node=new Trie();
-                curr.children[index]=node;
-            }
-            curr=curr.children[index];
+            curr=curr.children[c-'a'];
         }
         curr.isEnd=true;
     }
@@ -46,22 +41,24 @@ class WordDictionary {
     {
         for(int i=0;i<word.length();i++)
         {
-            char c = word.charAt(i);
+            char c=word.charAt(i);
             if(c=='.')
             {
-                for(Trie child : curr.children)
+                for(char ch='a';ch<='z';ch++)
                 {
-                    if(child!=null && searchInNode(word.substring(i+1),child))
-                    return true;
+                    if(curr.children[ch-'a']!=null)
+                    {
+                        if(searchInNode(word.substring(i+1),curr.children[ch-'a']))
+                        return true;
+                    }
                 }
                 return false;
             }
-            
-            int index = c-'a';
-            if(curr.children[index]==null)
+
+            if(curr.children[c-'a']==null)
             return false;
 
-            curr=curr.children[index];
+            curr=curr.children[c-'a'];
         }
         return curr.isEnd==true;
     }
