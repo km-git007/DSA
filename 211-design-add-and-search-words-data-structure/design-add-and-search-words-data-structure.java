@@ -44,11 +44,11 @@ class WordDictionary {
             char c=word.charAt(i);
             if(c=='.')
             {
-                for(char ch='a';ch<='z';ch++)
+                for(Trie child : curr.children)
                 {
-                    if(curr.children[ch-'a']!=null)
+                    if(child!=null)
                     {
-                        if(searchInNode(word.substring(i+1),curr.children[ch-'a']))
+                        if(searchInNode(word.substring(i+1),child))
                         return true;
                     }
                 }
