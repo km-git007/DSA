@@ -1,7 +1,7 @@
 class MagicDictionary {
 
-    private class Trie{
-
+    private class Trie
+    {
         boolean isEnd;
         Trie[] children;
         Trie()
@@ -16,17 +16,12 @@ class MagicDictionary {
     private void addWord(String word) 
     {
         Trie curr=root;
-        for(int i=0;i<word.length();i++)
+        for(char c : word.toCharArray())
         {
-            char c = word.charAt(i);
-            int index = c-'a';
+            if(curr.children[c-'a']==null)
+            curr.children[c-'a']=new Trie();
 
-            if(curr.children[index]==null)
-            {
-                Trie node=new Trie();
-                curr.children[index]=node;
-            }
-            curr=curr.children[index];
+            curr=curr.children[c-'a'];
         }
         curr.isEnd=true;
     }
@@ -60,6 +55,7 @@ class MagicDictionary {
             else 
             return false; 
         }
+        // Return true if the word is found and exactly one change has been made.
         return curr.isEnd==true && !changeAllowed;
     }
 
