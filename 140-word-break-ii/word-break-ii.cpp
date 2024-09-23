@@ -1,6 +1,5 @@
 class Solution {
-public:
-
+private:
     vector<string> ans;
     unordered_set<string> set;
     void solve(string s,string temp,int start)
@@ -17,12 +16,11 @@ public:
         {
             curr.push_back(s[i]);
             if(set.count(curr))
-            {
-                solve(s,temp+curr+" ",i+1);
-            }
+            solve(s,temp+curr+" ",i+1);
         }
     }
 
+public:
     vector<string> wordBreak(string s, vector<string>& wordDict) 
     {
         for(string word : wordDict)
