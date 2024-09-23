@@ -1,7 +1,8 @@
 class Solution {
 public:
     int dp[301];
-    int solve(string s,unordered_set<string> set,int start)
+    unordered_set<string> set;
+    int solve(string &s,int start)
     {
         if(start==s.length())
         return 1;
@@ -15,7 +16,7 @@ public:
             curr.push_back(s[i]);
             if(set.count(curr))
             {
-                if(solve(s,set,i+1))
+                if(solve(s,i+1))
                 return dp[start]=1;
             }
         }
@@ -25,7 +26,9 @@ public:
     bool wordBreak(string s, vector<string>& wordDict) 
     {
         memset(dp,-1,sizeof(dp));
-        unordered_set<string> set(wordDict.begin(),wordDict.end());
-        return solve(s,set,0);
+        for(string word : wordDict)
+        set.insert(word);
+        
+        return solve(s,0);
     }
 };
