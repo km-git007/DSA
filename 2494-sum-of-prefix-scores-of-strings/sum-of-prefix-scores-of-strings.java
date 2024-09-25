@@ -3,7 +3,6 @@ class Solution {
     public Solution()
     {
         root=new Trie();
-        scoreMap=new HashMap<>();
     }
 
     private class Trie
@@ -18,8 +17,6 @@ class Solution {
     }
     
     private Trie root;
-
-    HashMap<String,Integer> scoreMap;
 
     private void insert(String word)
     {
@@ -56,14 +53,8 @@ class Solution {
         int index=0;
         for(String word : words)
         {
-            if(scoreMap.containsKey(word))
-            {
-                ans[index++]=scoreMap.get(word);
-                continue;
-            }
             int score=scoreOfWord(word);
             ans[index++]=score;
-            scoreMap.put(word,score);
         }
         return ans;
     }
