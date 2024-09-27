@@ -14,56 +14,55 @@
  * }
  */
 class Solution {
-
-    public Solution()
-    {
-        minTime = 0;
-        adjList = new HashMap<>();
-        visited = new HashSet<>();
-    }
-
-    private void buildAdjList(TreeNode root,TreeNode parent)
-    {
-        if(root == null)
-        return;
-
-        if(!adjList.containsKey(root.val))
-        adjList.put(root.val,new HashSet<>());
-
-        HashSet<Integer> set=adjList.get(root.val);
-
-        if(parent!=null)
-        set.add(parent.val);
-
-        if(root.left != null) 
-        set.add(root.left.val);
-
-        if(root.right != null) 
-        set.add(root.right.val);
-
-        buildAdjList(root.left,root);
-        buildAdjList(root.right,root);
-    }
     
-    private int minTime;
-    private HashSet<Integer> visited;
-    private HashMap<Integer,HashSet<Integer>> adjList;
-    private void dfs(int node,int time)
+    private class Pair
     {
-        visited.add(node);
-        HashSet<Integer> neighbours=adjList.get(node);
-        for(Integer neighbour : neighbours) 
+        boolean targetFound=false;
+        int distance=0;
+
+        Pair(){}
+
+        Pair(int distance,boolean targetFound)
         {
-            if(!visited.contains(neighbour))
-            dfs(neighbour,time+1);
+            this.distance=distance;
+            this.targetFound=targetFound;
         }
-        minTime = Math.max(minTime,time);
+    }
+
+    private int result;
+    private Pair solve(TreeNode root,int target)
+    {
+        if(root==null)
+        return new Pair(0,false);
+
+        Pair Left=solve(root.left,target);
+        Pair Right=solve(root.right,target);
+
+        if(root.val==target)
+        {
+            result=Math.max(Left.distance,Right.distance);
+            return new Pair(0,true);
+        }
+
+        if(Left.targetFound)
+        {
+            result=Math.max(result,Left.distance+Right.distance+1);
+            return new Pair(Left.distance+1,true);
+        }
+
+        else if(Right.targetFound)
+        {
+            result=Math.max(result,Left.distance+Right.distance+1);
+            return new Pair(Right.distance+1,true);
+        }
+
+        return new Pair(1+Math.max(Left.distance,Right.distance),false);
     }
     
     public int amountOfTime(TreeNode root, int start)
     {
-        buildAdjList(root,null);
-        dfs(start,0);
-        return minTime;
+        result=0;
+        solve(root,start);
+        return result;
     }
 }
