@@ -17,11 +17,10 @@ class Solution {
 
     public Solution()
     {
-        // Initialize the array of lists with a specified size
         adjacencyList = new ArrayList[100001];
         // Initialize each element of the array as a new ArrayList
-        for (int i = 0; i < adjacencyList.length; i++) 
-            adjacencyList[i] = new ArrayList<>();
+        for(int i = 0; i < adjacencyList.length; i++) 
+        adjacencyList[i] = new ArrayList<>();
 
         minTime = 0;
         visited = new int[adjacencyList.length];
@@ -30,7 +29,7 @@ class Solution {
     private void buildAdjacencyList(TreeNode root)
     {
         if(root == null)
-            return;
+        return;
 
         if(root.left!=null)
         {
