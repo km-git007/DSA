@@ -17,53 +17,52 @@ class Solution {
 
     public Solution()
     {
-        adjacencyList = new ArrayList[100001];
-        // Initialize each element of the array as a new ArrayList
-        for(int i = 0; i < adjacencyList.length; i++) 
-        adjacencyList[i] = new ArrayList<>();
-
         minTime = 0;
-        visited = new int[adjacencyList.length];
+        adjList = new HashMap<>();
+        visited = new HashSet<>();
     }
 
-    private void buildAdjacencyList(TreeNode root)
+    private void buildAdjList(TreeNode root,TreeNode parent)
     {
         if(root == null)
         return;
 
-        if(root.left!=null)
-        {
-            adjacencyList[root.left.val].add(root.val);
-            adjacencyList[root.val].add(root.left.val);
-        }
+        if(!adjList.containsKey(root.val))
+        adjList.put(root.val,new HashSet<>());
 
-        if(root.right!=null)
-        {
-            adjacencyList[root.right.val].add(root.val);
-            adjacencyList[root.val].add(root.right.val);
-        }
-        
-        buildAdjacencyList(root.left);
-        buildAdjacencyList(root.right);
+        HashSet<Integer> set=adjList.get(root.val);
+
+        if(parent!=null)
+        set.add(parent.val);
+
+        if(root.left != null) 
+        set.add(root.left.val);
+
+        if(root.right != null) 
+        set.add(root.right.val);
+
+        buildAdjList(root.left,root);
+        buildAdjList(root.right,root);
     }
     
     private int minTime;
-    private int[] visited;
-    private List<Integer>[] adjacencyList;
+    private HashSet<Integer> visited;
+    private HashMap<Integer,HashSet<Integer>> adjList;
     private void dfs(int node,int time)
     {
-        visited[node] = 1;
-        for(int adj : adjacencyList[node]) 
+        visited.add(node);
+        HashSet<Integer> neighbours=adjList.get(node);
+        for(Integer neighbour : neighbours) 
         {
-            if(visited[adj]==0)
-            dfs(adj,time+1);
+            if(!visited.contains(neighbour))
+            dfs(neighbour,time+1);
         }
         minTime = Math.max(minTime,time);
     }
     
     public int amountOfTime(TreeNode root, int start)
     {
-        buildAdjacencyList(root);
+        buildAdjList(root,null);
         dfs(start,0);
         return minTime;
     }
