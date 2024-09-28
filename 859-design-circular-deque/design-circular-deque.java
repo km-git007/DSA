@@ -1,106 +1,86 @@
 class MyCircularDeque {
 
-    private class Node
-    {
-        int val;
-        Node next,prev;
-        Node(int val)
-        {
-            this.val=val;
-            next=prev=null;
-        }
-    }
-
-    public MyCircularDeque(int k)
+    private int[] deque;
+    private int size;
+    private final int MAX_CAPACITY;
+    private int front,rear; 
+    public MyCircularDeque(int k) 
     {
         size=0;
         MAX_CAPACITY=k;
-        head=new Node(-1);
-        tail=new Node(-1);
-        head.next=tail;
-        tail.prev=head;
+        front=0;
+        rear=k-1;
+        deque=new int[k];
     }
-
-    private Node head,tail;
-    private final int MAX_CAPACITY;
-    private int size;
-    public boolean insertFront(int value)
+    
+    public boolean insertFront(int value) 
     {
         if(isFull())
         return false;
 
-        Node node=new Node(value);
-        
-        node.next=head.next;
-        node.prev=head;
-        head.next.prev=node;
-        head.next=node;
+        front=(front-1+MAX_CAPACITY)%MAX_CAPACITY;
+        deque[front]=value;
         size++;
         return true;
     }
-
-    public boolean insertLast(int value)
+    
+    public boolean insertLast(int value) 
     {
         if(isFull())
         return false;
 
-        Node node=new Node(value);
-        
-        node.next=tail;
-        node.prev=tail.prev;
-        tail.prev.next=node;
-        tail.prev=node;
+        rear=(rear+1)%MAX_CAPACITY;
+        deque[rear]=value;
         size++;
         return true;
     }
-
+    
     public boolean deleteFront() 
     {
-        if(size==0)
+        if(isEmpty())
         return false;
 
-        head.next.next.prev=head;
-        head.next=head.next.next;
+        front=(front+1)%MAX_CAPACITY;
         size--;
         return true;
     }
-
+    
     public boolean deleteLast() 
     {
-        if(size==0)
+        if(isEmpty())
         return false;
 
-        tail.prev.prev.next=tail;
-        tail.prev=tail.prev.prev;
+        rear=(rear-1+MAX_CAPACITY)%MAX_CAPACITY;
         size--;
         return true;
     }
-
-    public int getFront()
+    
+    public int getFront() 
     {
-        if(isEmpty())
+        if(size==0)
         return -1;
-        return head.next.val;
-    }
 
-    public int getRear()
+        return deque[front];
+    }
+    
+    public int getRear() 
     {
-        if(isEmpty())
+        if(size==0)
         return -1;
-        return tail.prev.val;
+        
+        return deque[rear];
     }
-
-    public boolean isEmpty()
+    
+    public boolean isEmpty() 
     {
         return size==0;
     }
-
-    public boolean isFull()
+    
+    public boolean isFull() 
     {
         return size==MAX_CAPACITY;
     }
 }
-
 
 /**
  * Your MyCircularDeque object will be instantiated and called as such:
