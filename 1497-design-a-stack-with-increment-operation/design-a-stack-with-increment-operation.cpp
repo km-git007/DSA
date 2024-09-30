@@ -2,13 +2,11 @@ class CustomStack {
 private:
     int MAX_CAPACITY;
     int top;
-    int size;
     int* stack;
 public:
     CustomStack(int maxSize) 
     {
         top=0;
-        size=0;
         MAX_CAPACITY=maxSize;
         stack=new int[maxSize];
     }
@@ -20,20 +18,16 @@ public:
     
     void push(int x) 
     {
-        if(size>=MAX_CAPACITY)
-        return;
-
-        size++;
+        if(top<MAX_CAPACITY)
         stack[top++]=x;
     }
     
     int pop() 
     {
-        if(size==0)
-        return -1;
-
-        size--;
-        return stack[--top];
+        int topElement=-1;
+        if(top>0)
+        topElement=stack[--top];
+        return topElement;
     }
     
     void increment(int k, int val) 
