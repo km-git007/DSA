@@ -1,33 +1,49 @@
 class CustomStack {
 
-    private int capacity,index;
+    private int MAX_CAPACITY,index,lazyIndex;
     private int[] stack;
+    private int[] increment;
     public CustomStack(int maxSize) 
     {
         stack=new int[maxSize];
-        capacity=maxSize;
+        increment=new int[maxSize];
+        MAX_CAPACITY=maxSize;
         index=0;
+        lazyIndex = -1;     // Initialize lazyIndex to -1 (meaning no increment to apply)
     }
     
     public void push(int x) 
     {
-        if(index<capacity)
+        if(index<MAX_CAPACITY)
         stack[index++]=x;
     }
     
     public int pop() 
     {
-        int topElement=-1;
-        if(index>0)
-        topElement=stack[--index];
-        return topElement;
+        if(index==0)
+        return -1;
+
+        int actualIndex=index-1;
+        if(lazyIndex<actualIndex)
+        return stack[--index];
+
+        int val=increment[lazyIndex];
+        increment[lazyIndex]=0;
+        if(lazyIndex>0)
+        increment[lazyIndex-1]+=val;
+        lazyIndex--;
+
+        return stack[--index]+val;
     }
     
     public void increment(int k, int val) 
     {
-        int size=Math.min(k,index);
-        for(int i=0;i<size;i++)
-        stack[i]+=val;
+        if(index>0) 
+        {
+            int limit = Math.min(k, index) - 1;  // Ensure we do not go out of bounds
+            increment[limit] += val;  // Apply increment at the limit
+            lazyIndex = Math.max(lazyIndex, limit);  // Adjust lazyIndex accordingly
+        }
     }
 }
 
