@@ -33,7 +33,7 @@ class Solution {
             if(root.right!=null)
             list.add(root.right);
 
-            root=null;
+            return null;
         }
         return root;
     }
