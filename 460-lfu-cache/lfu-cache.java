@@ -74,10 +74,6 @@ class LFUCache {
     // to frequency 'f1', where (f1 = f + 1).
     private void update(Node node)
     {
-        System.out.println("UPDATE "+node.key);
-
-        // System.out.println("UPDATE "+node.freq);
-
         DLL savedList = freqMap.get(node.freq);
 
         savedList.remove(node);
@@ -98,8 +94,6 @@ class LFUCache {
 
     public int get(int key) 
     {
-        System.out.println("GET "+ key);
-
         if(!map.containsKey(key))
         return -1;
 
@@ -118,7 +112,6 @@ class LFUCache {
             Node node = map.get(key);
             node.val = value;
             update(node);
-            System.out.println("PUT-if " +key+" "+value);
         }
 
         // Key DNE. currSize is less than the cache's MAX_CAPACITY.
@@ -137,10 +130,7 @@ class LFUCache {
             // increase the size by 1;
             currSize++;
             // minFreq becomes '1'.
-            System.out.println("CURR_SIZE "+currSize+" MAXCAP "+MAX_CAPACITY);
-
             minFreq = 1;
-            System.out.println("PUT-else-if " + key+" "+value);
         }
 
         // Key DNE. currSize is equal the cache's MAX_CAPACITY.
