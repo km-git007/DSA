@@ -1,19 +1,21 @@
 class Solution {
     public int minAddToMakeValid(String s) 
     {
-        Deque<Character> stack = new ArrayDeque<>();
+        int open = 0, closed =0;
         for(char c : s.toCharArray())
         {
             if(c=='(')
-            stack.addLast(c);
+            {
+                open++;
+            }
             else
             {
-                if(!stack.isEmpty() && stack.peekLast()=='(')
-                stack.removeLast();
+                if(open>0 )
+                open--;
                 else
-                stack.addLast(c);
+                closed++;
             }
         }
-        return stack.size();
+        return open + closed;
     }
 }
