@@ -2,12 +2,14 @@ class Solution {
 
     private HashSet set = new HashSet<>();
     private int maxCount = 0;
-    private void solve(String s,int index,int count)
+    private void solve(String s,int index)
     {
+        if(s.length() - index + set.size() < maxCount)
+        return;
+
         if(index==s.length())
         {
-            maxCount = Math.max(maxCount,count);
-            System.out.println(set);
+            maxCount = Math.max(maxCount,set.size());
             return;
         }
 
@@ -18,7 +20,7 @@ class Solution {
             if(!set.contains(sb.toString()))
             {
                 set.add(sb.toString());
-                solve(s,i+1,count+1);
+                solve(s,i+1);
                 set.remove(sb.toString());
             }
         }
@@ -26,7 +28,7 @@ class Solution {
 
     public int maxUniqueSplit(String s) 
     {
-        solve(s,0,0);
+        solve(s,0);
         return maxCount;
     }
 }
