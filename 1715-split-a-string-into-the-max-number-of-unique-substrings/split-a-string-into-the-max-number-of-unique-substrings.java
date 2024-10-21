@@ -4,6 +4,7 @@ class Solution {
     private int maxCount = 0;
     private void solve(String s,int index)
     {
+        // pruning
         if(s.length() - index + set.size() < maxCount)
         return;
 
