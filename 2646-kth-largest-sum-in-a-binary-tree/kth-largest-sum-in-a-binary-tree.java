@@ -14,35 +14,30 @@
  * }
  */
 class Solution {
-
     public long kthLargestLevelSum(TreeNode root, int k) 
     {
-        PriorityQueue<Long> minHeap = new PriorityQueue<>();
         Queue<TreeNode> q = new LinkedList<>();
+        PriorityQueue<Long> minHeap = new PriorityQueue<>();
         q.add(root);
         while(!q.isEmpty())
         {
-            int level=q.size();
-            long sum=0;
-            for(int i=0;i<level;i++)
+            int levelSize = q.size();
+            long sum = 0;
+            for(int i=0; i<levelSize;i++)
             {
-                TreeNode curr=q.poll();
-                sum+=curr.val;
+                TreeNode node = q.poll();
+                sum += node.val;
 
-                if(curr.left!=null)
-                q.add(curr.left);
+                if(node.right!=null)
+                q.add(node.right);
 
-                if(curr.right!=null)
-                q.add(curr.right);
+                if(node.left!=null)
+                q.add(node.left);
             }
-            // Add in the priority queue.
             minHeap.add(sum);
-            if(minHeap.size()>k)
+            if(minHeap.size() > k)
             minHeap.poll();
         }
-
-        if(minHeap.size()<k)
-        return -1;
-        return minHeap.peek();
+        return (minHeap.size() == k) ? minHeap.peek() : -1;
     }
 }
