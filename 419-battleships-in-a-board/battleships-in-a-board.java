@@ -18,7 +18,7 @@ class Solution {
 
         int n=board.length;
         int m=board[0].length;
-        int battleships=0,endStartPoints=0;
+        int zeroNeighbours=0,oneNeighbour=0;
         for(int i=0;i<n;i++)
         {
             for(int j=0;j<m;j++)
@@ -32,14 +32,15 @@ class Solution {
                         int col=j+colDir[k];
                         if(row>=0 && row<n && col>=0 && col<m && board[row][col]=='X')
                         neighbours++;
+                        if(neighbours>1) break;
                     }
                     if(neighbours==0)
-                    battleships++;
+                    zeroNeighbours++;
                     else if(neighbours==1)
-                    endStartPoints++;
+                    oneNeighbour++;
                 }
             }
         }
-        return battleships+endStartPoints/2;
+        return zeroNeighbours+oneNeighbour/2;
     }
 }
