@@ -5,18 +5,19 @@ class Solution {
     private int directions[][]=new int[][]{{-1,0},{0,-1},{0,1},{1,0}};
     private void dfs(int row,int col,char[][] grid)
     {
-        if(row>=n || row<0 || col>=m || col<0 || vis[row][col]==1 || grid[row][col]=='0')
+        if(row < 0 || row >= n || col < 0 || col >=m || grid[row][col]=='0' || vis[row][col]==1)
         return;
 
         vis[row][col]=1;
-        
-        for(int[] dir : directions)
+
+        for( int[] dir : directions)
         {
-            int newRow=row+dir[0];
-            int newCol=col+dir[1];
-            dfs(newRow,newCol,grid);
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+            dfs(newRow, newCol, grid);
         }
     }
+
     public int numIslands(char[][] grid) 
     {
         n=grid.length;
