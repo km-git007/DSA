@@ -1,8 +1,7 @@
 class Solution {
 
     // Directions for moving up, down, left, and right
-    private static final int[] rowDir = {-1, 1, 0, 0};
-    private static final int[] colDir = {0, 0, -1, 1};
+    private final int[][] directions = {{-1,0},{1,0},{0,-1},{0,1}};
     int n,m,freshCount;
     private int bfs(Queue<int[]> q,int[][] grid) 
     { 
@@ -17,10 +16,10 @@ class Solution {
                 int[] currCell=q.poll();
                 int currRow=currCell[0];
                 int currCol=currCell[1]; 
-                for (int i=0;i<4;i++) 
+                for (int[] dir : directions) 
                 {
-                    int row=currRow+rowDir[i];
-                    int col=currCol+colDir[i];
+                    int row=currRow+dir[0];
+                    int col=currCol+dir[1];
                     // Check if the new position is within bounds and not visited.
                     if(row>=0 && row<n && col>=0 && col<m && grid[row][col]==1) 
                     {
@@ -54,7 +53,6 @@ class Solution {
                 freshCount++;
             }
         }
-
         int time=bfs(q,grid);
         return (freshCount==0)?time:-1;
     }
