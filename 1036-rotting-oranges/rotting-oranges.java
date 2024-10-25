@@ -6,11 +6,10 @@ class Solution {
     private int bfs(Queue<int[]> q,int[][] grid) 
     { 
         int time=0; 
-        boolean hasRotten=false;
         while (!q.isEmpty()) 
         {
             int levelSize=q.size();
-            hasRotten=false;
+            boolean hasRotten=false;
             for(int j=0;j<levelSize;j++)
             {
                 int[] currCell=q.poll();
@@ -30,7 +29,8 @@ class Solution {
                     }
                 }
             }
-            if(hasRotten)
+            if(!hasRotten)
+            break;
             time++;
         }
         return time;
