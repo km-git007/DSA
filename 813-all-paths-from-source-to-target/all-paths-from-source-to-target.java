@@ -7,9 +7,11 @@ class Solution {
 
         if(node == target)
         pathList.add(new ArrayList<>(path));        
-        
-        for(int adjNode : graph[node])
-        findPaths(adjNode, target, graph);
+        else
+        {
+            for(int adjNode : graph[node])
+            findPaths(adjNode, target, graph);
+        }
         
         path.removeLast();
     }
