@@ -1,57 +1,48 @@
 class Solution {
 
-    // Directions for moving up, down, left, and right
-    private static final int[] rowDir = {-1, 1, 0, 0};
-    private static final int[] colDir = {0, 0, -1, 1};
     int n,m;
-    private int bfs(Queue<int[]> q,char[][] maze, int[] entrance) 
+    // Directions for moving up, down, left, and right
+    private static final int[][] directions = {{0,-1}, {0,1}, {-1,0}, {1,0}};
+    private int bfs(Queue<int[]> queue,char[][] maze, int[] entrance)
     {
-        int steps=-1,nearestExitDistance=-1;
-        while (!q.isEmpty()) 
+        int steps = 0;
+        while(!queue.isEmpty())
         {
-            int levelSize=q.size();
-            steps++;
-            for(int j=0;j<levelSize;j++)
+            int levelSize = queue.size();
+            for(int i = 0; i < levelSize; i++)
             {
-                int[] currCell=q.poll();
-                int currRow=currCell[0];
-                int currCol=currCell[1];
-
-                if(currRow==entrance[0] && currCol==entrance[1])
-                nearestExitDistance=steps;
-
-                for (int i=0;i<4;i++) 
+                int[] coordinates = queue.poll();
+                int x = coordinates[0];
+                int y = coordinates[1];
+                
+                if((x==0 || x == n-1 || y==0 || y == m-1) && (x != entrance[0] || y != entrance[1]))
+                return steps;
+                
+                for(int[] dir : directions)
                 {
-                    int row=currRow+rowDir[i];
-                    int col=currCol+colDir[i];
-                    if(row>=0 && row<n && col>=0 && col<m && maze[row][col]=='.') 
+                    int newX = x + dir[0];
+                    int newY = y + dir[1];
+                    if(newX >= 0 && newX<n && newY >= 0 && newY<m && maze[newX][newY]=='.')
                     {
-                        q.offer(new int[]{row,col});
-                        maze[row][col]='+';
+                        maze[newX][newY] = '+';
+                        queue.add(new int[]{newX, newY});
                     }
                 }
             }
+            steps++;
         }
-        return nearestExitDistance;
+        return -1;
     }
 
-    public int nearestExit(char[][] maze, int[] entrance) 
+    public int nearestExit(char[][] maze, int[] entrance)
     {
         n=maze.length;
         m=maze[0].length;
-        Queue<int[]> q=new LinkedList<>();
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<m;j++)
-            {
-                if(maze[i][j]=='.' && (i==0 || j==0 || i==n-1 || j==m-1))
-                if(i!=entrance[0] || j!=entrance[1])
-                {
-                    q.offer(new int []{i,j});
-                    maze[i][j]='+';              // marking the current cell as visited
-                }
-            }
-        }
-        return bfs(q,maze,entrance);
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{entrance[0], entrance[1]});
+        maze[entrance[0]][entrance[1]] = '+';  // Recommended to mark entrance as visited
+
+        return bfs(queue,maze,entrance);
     }
 }
