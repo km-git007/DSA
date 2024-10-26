@@ -1,33 +1,31 @@
 class Solution {
 
-    // Directions for moving up, down, left, and right
-    private static final int[] rowDir = {-1, 1, 0, 0};
-    private static final int[] colDir = {0, 0, -1, 1};
     int n,m;
-    private int bfs(Queue<int[]> q,int[][] grid) 
+    // Directions for moving up, down, left, and right
+    private final int[][] directions = {{0,-1}, {0,1}, {-1,0}, {1,0}};
+    private int bfs(Queue<int[]> queue,int[][] grid) 
     { 
-        int dist=-1;
-        while (!q.isEmpty()) 
+        int dist = -1;
+        while (!queue.isEmpty()) 
         {
-            int levelSize=q.size();
-            dist++;
+            int levelSize=queue.size();
             for(int j=0;j<levelSize;j++)
             {
-                int[] currCell=q.poll();
-                int currRow=currCell[0];
-                int currCol=currCell[1];
-                for (int i=0;i<4;i++) 
+                int[] currCell = queue.poll();
+                int currRow = currCell[0];
+                int currCol = currCell[1];
+                for (int[] dir : directions) 
                 {
-                    int row=currRow+rowDir[i];
-                    int col=currCol+colDir[i];
-                    // Check if the new position is within bounds and not visited.
-                    if(row>=0 && row<n && col>=0 && col<m && grid[row][col]==0) 
+                    int row = currRow + dir[0];
+                    int col = currCol + dir[1];
+                    if(row >=0 && col >= 0 && row < n && col < m && grid[row][col] == 0)
                     {
-                        q.add(new int[]{row,col});
-                        grid[row][col]=1;
+                        queue.add(new int[]{row,col});
+                        grid[row][col] = 1;
                     }
                 }
             }
+            dist++;
         }
         return dist;
     }
@@ -36,18 +34,22 @@ class Solution {
     {
         n=grid.length;
         m=grid[0].length;
-        Queue<int[]> q = new LinkedList<>();
-        for(int i=0;i<n;i++)
+        boolean hasOneWaterCell = false;
+        Queue<int[]> queue = new LinkedList<>();
+        for(int i=0; i < grid.length; i++)
         {
-            for(int j=0;j<m;j++)
+            for(int j = 0; j < grid[0].length; j++)
             {
-                if(grid[i][j]==1)
-                q.add(new int[]{i,j}); 
+                if(grid[i][j] == 1)
+                queue.add(new int[]{i,j});
+                else
+                hasOneWaterCell = true;
             }
         }
-
-        if(q.size()==0 || q.size()==n*m)
+        
+        if(queue.isEmpty() || !hasOneWaterCell)
         return -1;
-        return bfs(q,grid);
+
+        return bfs(queue,grid);
     }
 }
