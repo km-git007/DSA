@@ -19,10 +19,9 @@ public:
         if(!root)
         return 0;
 
-        int Left=solve(root->left);
-        int Right=solve(root->right);
-
-        int sum=Left+Right+root->val;
+        int sum = root->val;
+        sum += solve(root->left);
+        sum += solve(root->right);
 
         map[sum]++;
         maxFrequency=max(maxFrequency,map[sum]);
