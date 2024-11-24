@@ -1,94 +1,86 @@
-
 class LRUCache {
 
-    // Doubly LinkedList 
-    private class Node 
+        // Doubly LinkedList
+    private class Node
     {
         int key;
         int value;
         Node prev,next;
-        public Node(int key, int value) 
+        public Node(int key, int value)
         {
             this.key = key;
             this.value = value;
         }
     }
-    
+
     // We build LinkedList between the head and tail nodes.
     private final Node head,tail;
-    
+
     // Max capacity of our cache.
     private final int MAX_CAPACITY;
-    
+
     // HashMap<key,Node> --> To Fetch the Node in O(1) time.
     private HashMap<Integer, Node> cache;
-    
-    public LRUCache(int capacity) 
-    {
-        MAX_CAPACITY = capacity;
-        head = new Node(0, 0);
-        tail = new Node(0, 0);
+
+    public LRUCache(int maxCapacity) {
+        this.head = new Node(0, 0);
+        this.tail = new Node(0, 0);
+        this.cache = new HashMap<>();
         head.next = tail;
         tail.prev = head;
-        cache = new HashMap<>();
+        MAX_CAPACITY = maxCapacity;
     }
+
     
-    // Inserts at the head of the LinkedList and make the node most recently used
-    private void insert(int key,int value)
+      private void insertAtHead(Node node)
     {
-        Node newNode = new Node(key,value);
-        newNode.prev = head;
-        newNode.next = head.next;
-        head.next.prev = newNode;
-        head.next = newNode;
-        cache.put(key, newNode);
+        // add after the head
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
+        cache.put(node.key, node);
     }
-    
-    // Removes the LRU node from the tail.
+
     private void remove(Node node)
     {
+        // remove the node just before the tail
         node.prev.next = node.next;
         node.next.prev = node.prev;
         cache.remove(node.key);
     }
-    
-    public int get(int key) 
+
+    public int get(int key)
     {
-        // If the key is not present
-        if(!cache.containsKey(key))  return -1;
-        
-        // If the key is found.
+        if(!cache.containsKey(key)) {
+            return -1;
+        }
+
         Node node = cache.get(key);
-        int value = node.value;
-        
-        // Remove the node from the LinkedList
         remove(node);
-        // Make this node most recent.
-        insert(node.key, node.value);
-        return value;
+        insertAtHead(node);
+        return node.value;
     }
 
-    public void put(int key, int value) 
+    public void put(int key, int value)
     {
-        // if the key to be inserted is already present.
         if(cache.containsKey(key))
         {
-            // fetch the node corresponding to the key.
-            Node nodeToRemove = cache.get(key);
-            remove(nodeToRemove);
-            insert(key,value);
+            Node node = cache.get(key);
+            remove(node);
+            node.value = value;
+            insertAtHead(node);
             return;
         }
-        
-        // If the cache has reached its max capacity then delete the LRU node
-        if(cache.size() == MAX_CAPACITY)
-        remove(tail.prev);
-        
-        // Insert the node at the head and make it most recently used.
-        insert(key,value);
+
+        if(cache.size() == MAX_CAPACITY) {
+            remove(tail.prev);
+        }
+
+        Node newNode = new Node(key, value);
+        insertAtHead(newNode);
     }
 }
-
 
 /**
  * Your LRUCache object will be instantiated and called as such:
