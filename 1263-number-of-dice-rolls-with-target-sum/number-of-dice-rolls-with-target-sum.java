@@ -2,9 +2,9 @@ class Solution {
 
     private int MOD=1000000007;
     int[][] dp=new int[31][1001];
-    private int solve(int n,int target,int k)
+    private int solve(int n,int k,int target)
     {
-        if(n==0 && target==0)
+        if(n == 0 && target == 0)
         return 1;
 
         if(n==0)
@@ -13,13 +13,13 @@ class Solution {
         if(dp[n][target]!=-1)
         return dp[n][target];
 
-        int ways=0;
-        for(int i=1;i<=k;i++)
+        int ways = 0;
+        for(int i = 1; i <= k; i++)
         {
-            if(target>=i)
-            ways=(ways%MOD+solve(n-1,target-i,k)%MOD)%MOD;
+            if(i <= target)
+            ways = (ways % MOD) + (solve(n-1, k, target - i) % MOD);
         }
-        return dp[n][target]=ways;
+        return dp[n][target] = ways % MOD;
     }
 
     public int numRollsToTarget(int n, int k, int target) 
@@ -27,6 +27,6 @@ class Solution {
         for(int i=0;i<31;i++)
         Arrays.fill(dp[i],-1);
 
-        return solve(n,target,k);
+        return solve(n,k,target);
     }
 }
