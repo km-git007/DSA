@@ -12,28 +12,29 @@ class Solution {
 
     public ListNode removeNthFromEnd(ListNode head, int n) 
     {
+        // Step 1: Create a dummy node
         ListNode dummy = new ListNode(0);
         dummy.next = head;
-        ListNode prev = dummy;
 
-        int length = 0;
-        ListNode curr = head;
-        while(curr != null)
-        {
-            curr = curr.next;
-            length++;
+        // Step 2: Initialize two pointers
+        ListNode first = dummy;
+        ListNode second = dummy;
+
+        // Step 3: Move `first` pointer `n + 1` steps ahead
+        for (int i = 0; i <= n; i++) {
+            first = first.next;
         }
 
-        int steps = length - n;
-
-        curr = head;
-        while(steps > 0)
-        {
-            prev = curr;
-            curr = curr.next;
-            steps--;
+        // Step 4: Move both pointers until `first` reaches the end
+        while (first != null) {
+            first = first.next;
+            second = second.next;
         }
-        prev.next = curr.next;
+
+        // Step 5: Remove the nth node from the end
+        second.next = second.next.next;
+
+        // Step 6: Return the new head
         return dummy.next;
     }
 }
