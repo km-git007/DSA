@@ -15,11 +15,7 @@ public:
             if(ticket == -1)
             return time + 1;
 
-            if(ticket < 0)
-            ticket++;
-            else
-            ticket--;
-            // ticket = ticket < 0 ? ticket++ : ticket--;
+            ticket = ticket < 0 ? ++ticket : --ticket;
             if(ticket != 0)
             q.push(ticket);
             time++;      
