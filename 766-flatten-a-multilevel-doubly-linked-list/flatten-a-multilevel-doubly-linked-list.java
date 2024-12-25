@@ -11,18 +11,23 @@ class Node {
 class Solution {
     public Node flatten(Node head) 
     {
-        Deque<Node> stack = new ArrayDeque<>();
         Node curr = head;
-        while(curr != null || !stack.isEmpty())
+        while(curr != null)
         {
-            Node temp = curr;
             if(curr.child != null)
             {
+                // find the tail in the child chain
+                Node tail = curr.child;
+                while(tail.next != null)
+                tail =tail.next;
+
+                // connect the tail to the curr.next
                 if(curr.next != null)
                 {
-                    stack.push(curr.next);
-                    curr.next.prev = null;
+                    tail.next = curr.next;
+                    curr.next.prev = tail;
                 }
+
                 // Connect the current node to its child
                 curr.next = curr.child;
                 curr.child.prev = curr;
@@ -30,13 +35,6 @@ class Solution {
                 curr.child = null;
             }
             curr = curr.next;
-
-            if(curr == null && !stack.isEmpty())
-            {
-                curr = stack.pop();
-                temp.next = curr;
-                curr.prev = temp;
-            }
         }
         return head;
     }
