@@ -1,40 +1,51 @@
 class Solution {
 public:
-    int n, m;
-    vector<vector<int>> dp;
-    int solve(int row, int col, int prev, vector<vector<int>>& grid)
-    {
-        if(row < 0 || row >= n || col >= m)
-        return 0;
+    // The three possible directions for the next column.
+    const int dirs[3] = {-1, 0, 1};
 
-        if(dp[row][col] != -1)
-        return dp[row][col];
+    int maxMoves(vector<vector<int>>& grid) {
+        int M = grid.size(), N = grid[0].size();
 
-        int curr = grid[row][col];
-        if (curr <= prev)
-        return 0; // Invalid move
-
-        // Recursive exploration
-        int right = solve(row, col + 1, curr, grid);
-        int upRight = solve(row - 1, col + 1, curr, grid);
-        int downRight = solve(row + 1, col + 1, curr, grid);
-
-        // Return maximum moves from the current position
-        return dp[row][col] = 1 + max({right, upRight, downRight});
-    }
-
-    int maxMoves(vector<vector<int>>& grid) 
-    {
-        n = grid.size();
-        m = grid[0].size();
-        
-        // Initialize dp array with -1
-        dp = vector<vector<int>>(n, vector<int>(m, -1));
+        queue<vector<int>> q;
+        vector<vector<int>> vis(M, vector<int>(N, 0));
+        // Enqueue the cells in the first column.
+        for (int i = 0; i < M; i++) {
+            vis[i][0] = 1;
+            q.push({i, 0, 0});
+        }
 
         int maxMoves = 0;
-        for(int i = 0; i < n; i++)
-        maxMoves = max(maxMoves, solve(i, 0, -1, grid) - 1);
-        
+        while (!q.empty()) 
+        {
+            int sz = q.size();
+
+            while (sz--) 
+            {
+                vector<int> v = q.front();
+                q.pop();
+
+                // Current cell with the number of moves made so far.
+                int row = v[0], col = v[1], count = v[2];
+
+                maxMoves = max(maxMoves, count);
+
+                for (int dir : dirs) 
+                {
+                    // Next cell after the move.
+                    int newRow = row + dir, newCol = col + 1;
+
+                    // If the next cell isn't visited yet and is greater than
+                    // the current cell value. Add it to the queue with the
+                    // moves required.
+                    if (newRow >= 0 && newCol >= 0 && newRow < M && newCol < N && !vis[newRow][newCol] &&
+                        grid[row][col] < grid[newRow][newCol]) 
+                    {
+                        vis[newRow][newCol] = 1;
+                        q.push({newRow, newCol, count + 1});
+                    }
+                }
+            }
+        }
         return maxMoves;
     }
 };
