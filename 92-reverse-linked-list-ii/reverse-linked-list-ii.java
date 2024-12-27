@@ -27,18 +27,18 @@ class Solution {
 
     public ListNode reverseBetween(ListNode head, int left, int right) 
     {
-        if(left==right)
+        if(left == right)
         return head;
         
         ListNode dummy=new ListNode(-1);
-        dummy.next=head;
+        dummy.next = head;
 
-        ListNode curr=dummy;
-        for(int i=0;i<left-1;i++)
-        curr=curr.next;
+        ListNode curr = dummy;
+        for(int i = 0; i < left - 1; i++)
+        curr = curr.next;
 
-        ListNode reversedHead=reverseList(curr.next,right-left+1);
-        curr.next=reversedHead;
+        ListNode reversedHead = reverseList(curr.next, right - left + 1);
+        curr.next = reversedHead;
 
         return dummy.next;
     }
