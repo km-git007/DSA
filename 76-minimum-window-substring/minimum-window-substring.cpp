@@ -30,7 +30,7 @@ public:
                 if(map.count(s[i]) > 0)
                 {
                     map[s[i]]++;
-                    if(map[s[i]] == 1)
+                    if(map[s[i]] > 0)
                     count++;
                 }
                 i++;
