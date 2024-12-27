@@ -1,9 +1,8 @@
 class Solution {
     public long maximumSubarraySum(int[] nums, int k) 
     {
-        long maxSum = Integer.MIN_VALUE;
         int i = 0;
-        long sum = 0;
+        long sum = 0, maxSum = Integer.MIN_VALUE;
         HashMap<Integer,Integer> map = new HashMap<>();
         for(int j = 0; j < nums.length; j++)
         {
@@ -12,16 +11,16 @@ class Solution {
 
             if(j - i + 1 == k)
             {
-                if(map.size() == k)
-                maxSum = Math.max(sum, maxSum);
+               if(map.size() == k)
+               maxSum = Math.max(maxSum, sum);
 
-                sum -= nums[i];
+               sum -= nums[i];
 
-                map.put(nums[i], map.get(nums[i]) - 1);
-                if(map.get(nums[i]) == 0)
-                map.remove(nums[i]);
-
-                i++;
+               map.put(nums[i], map.get(nums[i]) - 1);
+               if(map.get(nums[i]) == 0)
+               map.remove(nums[i]);
+               
+               i++;
             }
         }
         return maxSum == Integer.MIN_VALUE ? 0 : maxSum;
