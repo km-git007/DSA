@@ -18,23 +18,24 @@ class Solution {
     private int maxSum;
     private int solve(TreeNode root)
     {
-        if(root==null)
+        if(root == null)
         return 0;
 
-        int leftSum=solve(root.left);
-        int rightSum=solve(root.right);
+        int leftSum = solve(root.left);
+        int rightSum = solve(root.right);
 
-        int ekAcchaHai=Math.max(leftSum,rightSum)+root.val;
-        int phleHiMilgaya=leftSum+rightSum+root.val;
-        int rootAcchaHai=root.val;
-        maxSum=Math.max(Math.max(ekAcchaHai,phleHiMilgaya),Math.max(rootAcchaHai,maxSum));
+        int onlyOne = Math.max(leftSum, rightSum) + root.val;
+        int rootLeftRight = leftSum + rightSum + root.val;
+        int onlyRoot = root.val;
 
-        return Math.max(ekAcchaHai,rootAcchaHai);
+        maxSum = Math.max(Math.max(maxSum, rootLeftRight), Math.max(onlyOne, onlyRoot));
+        
+        return  Math.max(onlyOne, onlyRoot);
     }
 
     public int maxPathSum(TreeNode root) 
     {
-        maxSum=Integer.MIN_VALUE;
+        maxSum = Integer.MIN_VALUE;
         solve(root);
         return maxSum;
     }
