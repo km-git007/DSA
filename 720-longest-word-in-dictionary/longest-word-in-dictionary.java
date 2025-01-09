@@ -1,13 +1,13 @@
 class Solution {
 
-    private class Trie{
-
+    private class Trie
+    {
         boolean isEnd;
         Trie[] children;
         Trie()
         {
-            isEnd=false;
-            children=new Trie[26];
+            isEnd = false;
+            children = new Trie[26];
         }
     }
     
@@ -29,29 +29,21 @@ class Solution {
 
     public Solution()
     {
-        root=new Trie();
+        root = new Trie();
     }
 
-    private String ans= "";
-    private StringBuilder sb=new StringBuilder();
-    private void solve(Trie curr)
+    private boolean canBuild(String word)
     {
-        if(curr==null)
-        return;
-
-        String temp=sb.toString();
-        if(temp.length()>ans.length() || (temp.length()==ans.length() && temp.compareTo(ans)<0))
-        ans=temp;
-
-        for(int i=0;i<26;i++)
+        Trie curr = root;
+        for(char c : word.toCharArray())
         {
-            if(curr.children[i]!=null && curr.children[i].isEnd)
-            {
-                sb.append((char)('a' + i));
-                solve(curr.children[i]);
-                sb.deleteCharAt(sb.length()-1);
-            }
+            int index = c - 'a';
+            if(curr.children[index] == null || !curr.children[index].isEnd)
+            return false;
+
+            curr = curr.children[index];
         }
+        return true;
     }
 
     public String longestWord(String[] words) 
@@ -59,7 +51,16 @@ class Solution {
         for(String word : words)
         insert(word);
 
-        solve(root);
-        return ans;
+        String result = "";
+        for(String word : words)
+        {
+            if(canBuild(word))
+            {
+                if(word.length() > result.length() || 
+                (word.length() == result.length() && word.compareTo(result) < 0))
+                result = word;
+            }
+        }
+        return result;
     }
 }
