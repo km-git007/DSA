@@ -44,12 +44,8 @@ class MagicDictionary {
             }
         }
 
-        // if(curr.children[c - 'a'] != null  && searchWord(word, curr.children[c - 'a'], index + 1, true))
-        // return true;
-        // Proceed with the current character if it matches
-    if (curr.children[c - 'a'] != null) {
-        return searchWord(word, curr.children[c - 'a'], index + 1, canChange);
-    }
+        if(curr.children[c - 'a'] != null  && searchWord(word, curr.children[c - 'a'], index + 1, canChange))
+        return true;
 
         return false;
     }
