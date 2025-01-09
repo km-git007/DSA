@@ -19,45 +19,61 @@ class Trie {
     }
     
 
+    private void recursiveInsert(String word, TrieNode curr, int index) 
+    {
+        if(index == word.length())
+        {
+            curr.isEnd = true;
+            return;
+        }
+
+        char c = word.charAt(index);
+
+        if(curr.children[c - 'a'] == null)
+        curr.children[c - 'a'] = new TrieNode();
+
+        recursiveInsert(word, curr.children[c - 'a'], index + 1);
+    }
+
+    private boolean recursiveSearch(String word, TrieNode curr, int index) 
+    {
+        if(index == word.length()) 
+        return curr.isEnd == true;
+
+        char c = word.charAt(index);
+        
+        if(curr.children[c - 'a'] == null)
+        return false;
+
+        return recursiveSearch(word, curr.children[c - 'a'], index + 1);
+    }
+
+    private boolean recursivePrefixSearch(String prefix, TrieNode curr, int index) 
+    {
+        if(index == prefix.length()) 
+        return true;
+
+        char c = prefix.charAt(index);
+        
+        if(curr.children[c - 'a'] == null)
+        return false;
+
+        return recursivePrefixSearch(prefix, curr.children[c - 'a'], index + 1);
+    }
+
     public void insert(String word) 
     {
-        TrieNode curr=root;
-        for(char c : word.toCharArray())
-        {
-            if(curr.children[c - 'a'] == null)
-            {
-                TrieNode node = new TrieNode();
-                curr.children[c - 'a'] = node;
-            } 
-            curr = curr.children[c - 'a'];       
-        }
-        curr.isEnd = true;
+        recursiveInsert(word, root, 0);
     }
     
     public boolean search(String word) 
     {
-        TrieNode curr=root;
-        for(char c : word.toCharArray())
-        {
-            if(curr.children[c - 'a'] == null)
-            return false;
-
-            curr = curr.children[c - 'a'];  
-        }
-        return curr.isEnd == true;
+        return recursiveSearch(word, root, 0);
     }
     
     public boolean startsWith(String prefix) 
     {
-        TrieNode curr=root;
-        for(char c : prefix.toCharArray())
-        {
-            if(curr.children[c - 'a'] == null)
-            return false;
-
-            curr = curr.children[c - 'a'];
-        }
-        return true;
+        return recursivePrefixSearch(prefix, root, 0);
     }
 }
 
