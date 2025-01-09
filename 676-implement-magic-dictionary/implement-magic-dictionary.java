@@ -1,36 +1,73 @@
 class MagicDictionary {
 
-    private HashSet<String> set;
+    private class Trie
+    {
+        boolean isEnd;
+        Trie[] children;
+        Trie()
+        {
+            isEnd=false;
+            children=new Trie[26];
+        }
+    }
+    
+    private Trie root;
+
+    private void insert(String word) 
+    {
+        Trie curr=root;
+        for(char c : word.toCharArray())
+        {
+            if(curr.children[c - 'a'] == null)
+            {
+                Trie node = new Trie();
+                curr.children[c - 'a'] = node;
+            } 
+            curr = curr.children[c - 'a'];       
+        }
+        curr.isEnd = true;
+    }
+    
+    private boolean searchWord(String word, Trie curr, int index, boolean canChange) 
+    {
+        if(index == word.length())
+        return !canChange && curr.isEnd;
+        
+        char c = word.charAt(index);
+        if(canChange)
+        {
+            for(char ch = 'a'; ch <= 'z'; ch++)
+            {
+                if(ch != c && curr.children[ch - 'a'] != null)
+                if(searchWord(word, curr.children[ch - 'a'], index + 1, false))
+                return true;
+            }
+        }
+
+        // if(curr.children[c - 'a'] != null  && searchWord(word, curr.children[c - 'a'], index + 1, true))
+        // return true;
+        // Proceed with the current character if it matches
+    if (curr.children[c - 'a'] != null) {
+        return searchWord(word, curr.children[c - 'a'], index + 1, canChange);
+    }
+
+        return false;
+    }
+
     public MagicDictionary() 
     {
-        set=new HashSet<>();
+        root = new Trie();
     }
     
     public void buildDict(String[] dictionary) 
     {
         for(String word : dictionary)
-        {
-            set.add(word);
-        }
+        insert(word);
     }
     
     public boolean search(String searchWord) 
     {
-        StringBuilder sb = new StringBuilder(searchWord);
-        for(int i=0;i<sb.length();i++)
-        {
-            char ch=sb.charAt(i);
-            for(char c='a';c<='z';c++)
-            {
-                if(c==ch) continue;
-                 
-                sb.setCharAt(i,c);
-                if(set.contains(sb.toString()))
-                return true;
-            }
-            sb.setCharAt(i,ch);
-        }
-        return false;
+        return searchWord(searchWord, root, 0, true);
     }
 }
 
