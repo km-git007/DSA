@@ -22,15 +22,16 @@ class Trie {
     public void insert(String word) 
     {
         TrieNode curr=root;
-
         for(char c : word.toCharArray())
         {
-            if(curr.children[c-'a']==null)
-            curr.children[c-'a']=new TrieNode();
-
-            curr=curr.children[c-'a'];
+            if(curr.children[c - 'a'] == null)
+            {
+                TrieNode node = new TrieNode();
+                curr.children[c - 'a'] = node;
+            } 
+            curr = curr.children[c - 'a'];       
         }
-        curr.isEnd=true;
+        curr.isEnd = true;
     }
     
     public boolean search(String word) 
@@ -38,12 +39,12 @@ class Trie {
         TrieNode curr=root;
         for(char c : word.toCharArray())
         {
-            if(curr.children[c-'a']==null)
+            if(curr.children[c - 'a'] == null)
             return false;
 
-            curr=curr.children[c-'a'];
+            curr = curr.children[c - 'a'];  
         }
-        return curr.isEnd==true;
+        return curr.isEnd == true;
     }
     
     public boolean startsWith(String prefix) 
@@ -51,10 +52,10 @@ class Trie {
         TrieNode curr=root;
         for(char c : prefix.toCharArray())
         {
-            if(curr.children[c-'a']==null)
+            if(curr.children[c - 'a'] == null)
             return false;
 
-            curr=curr.children[c-'a'];
+            curr = curr.children[c - 'a'];
         }
         return true;
     }
