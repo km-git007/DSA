@@ -4,9 +4,8 @@ public:
     {
         int minTime = 0;
         for(int subOr : adj[id])
-        {
-            minTime = max(minTime, informTime[id] + dfs(subOr, informTime, adj));
-        }
+        minTime = max(minTime, informTime[id] + dfs(subOr, informTime, adj));
+        
         return minTime;
     }
 
