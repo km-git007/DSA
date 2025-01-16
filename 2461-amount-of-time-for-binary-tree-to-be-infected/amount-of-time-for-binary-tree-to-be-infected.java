@@ -14,66 +14,41 @@
  * }
  */
 class Solution {
-    private Map<Integer, Set<Integer>> adj;
-    private void buildGraph(TreeNode node, TreeNode parent)
+    private int result, target;
+    private int solve(TreeNode root)
     {
-        if(node == null)
-        return;
+        if(root == null)
+        return 0;
 
-        if(!adj.containsKey(node.val))
-        adj.put(node.val, new HashSet<>());
+        int leftHeight = solve(root.left);
+        int rightHeight = solve(root.right);
 
-        Set<Integer> set = adj.get(node.val);
+        // update the result
+        result = Math.max(result, Math.max(leftHeight, rightHeight));
 
-        if(parent != null)
-        set.add(parent.val);
+        if(root.val == target)
+        return -1;
 
-        if(node.left != null)
-        set.add(node.left.val);
-
-        if(node.right != null)
-        set.add(node.right.val);
-
-        buildGraph(node.left, node);
-        buildGraph(node.right, node);
-
-    }
-
-    private int bfs(int startNode)
-    {
-        Set<Integer> vis = new HashSet<>();
-        Queue<Integer> q = new LinkedList<>();
-
-        // add the startNode in the queue and mark it as visited
-        vis.add(startNode);
-        q.add(startNode);
-
-        int time = 0;
-        while(!q.isEmpty())
+        if(leftHeight < 0)
         {
-            int levelSize = q.size();
-            while(levelSize > 0)
-            {
-                int node = q.poll();
-                for(int ele : adj.get(node))
-                {
-                    if(!vis.contains(ele))
-                    {
-                        q.add(ele);
-                        vis.add(ele);
-                    }
-                }
-                levelSize--;
-            }
-            time++;
+            result = Math.max(result, Math.abs(leftHeight) + rightHeight);
+            return leftHeight - 1;
         }
-        return time - 1;
+
+        if(rightHeight < 0)
+        {
+            result = Math.max(result, Math.abs(rightHeight) + leftHeight);
+            return rightHeight - 1;
+        }
+        // return height
+        return 1 + Math.max(leftHeight, rightHeight);
     }
 
     public int amountOfTime(TreeNode root, int start) 
     {
-        adj = new HashMap<>();
-        buildGraph(root, null);
-        return bfs(start);
+        result = 0;
+        target = start;
+        solve(root);
+        return result;
     }
 }
