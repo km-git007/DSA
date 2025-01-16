@@ -14,55 +14,66 @@
  * }
  */
 class Solution {
-    
-    private class Pair
+    private Map<Integer, Set<Integer>> adj;
+    private void buildGraph(TreeNode node, TreeNode parent)
     {
-        boolean targetFound=false;
-        int distance=0;
+        if(node == null)
+        return;
 
-        Pair(){}
+        if(!adj.containsKey(node.val))
+        adj.put(node.val, new HashSet<>());
 
-        Pair(int distance,boolean targetFound)
-        {
-            this.distance=distance;
-            this.targetFound=targetFound;
-        }
+        Set<Integer> set = adj.get(node.val);
+
+        if(parent != null)
+        set.add(parent.val);
+
+        if(node.left != null)
+        set.add(node.left.val);
+
+        if(node.right != null)
+        set.add(node.right.val);
+
+        buildGraph(node.left, node);
+        buildGraph(node.right, node);
+
     }
 
-    private int result;
-    private Pair solve(TreeNode root,int target)
+    private int bfs(int startNode)
     {
-        if(root==null)
-        return new Pair(0,false);
+        Set<Integer> vis = new HashSet<>();
+        Queue<Integer> q = new LinkedList<>();
 
-        Pair Left=solve(root.left,target);
-        Pair Right=solve(root.right,target);
+        // add the startNode in the queue and mark it as visited
+        vis.add(startNode);
+        q.add(startNode);
 
-        if(root.val==target)
+        int time = 0;
+        while(!q.isEmpty())
         {
-            result=Math.max(Left.distance,Right.distance);
-            return new Pair(0,true);
+            int levelSize = q.size();
+            while(levelSize > 0)
+            {
+                int node = q.poll();
+                for(int ele : adj.get(node))
+                {
+                    if(!vis.contains(ele))
+                    {
+                        q.add(ele);
+                        vis.add(ele);
+                    }
+                }
+                levelSize--;
+            }
+            time++;
         }
-
-        if(Left.targetFound)
-        {
-            result=Math.max(result,Left.distance+Right.distance+1);
-            return new Pair(Left.distance+1,true);
-        }
-
-        else if(Right.targetFound)
-        {
-            result=Math.max(result,Left.distance+Right.distance+1);
-            return new Pair(Right.distance+1,true);
-        }
-
-        return new Pair(1+Math.max(Left.distance,Right.distance),false);
+        return time - 1;
     }
-    
-    public int amountOfTime(TreeNode root, int start)
+
+    public int amountOfTime(TreeNode root, int start) 
     {
-        result=0;
-        solve(root,start);
-        return result;
+        adj = new HashMap<>();
+        buildGraph(root, null);
+        return bfs(start);
     }
 }
