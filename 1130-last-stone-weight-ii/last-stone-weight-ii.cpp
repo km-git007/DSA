@@ -1,16 +1,13 @@
 class Solution {
 public:
-    vector<int> subsetSum(vector<int>& stones, int sum)
+    int subsetSum(vector<int>& stones, int sum)
     {
         int n = stones.size();
         int m = sum;
-        vector<vector<int>> dp(n + 1, vector<int>(m + 1));
-
-        // filling the first row
-        for(int j = 0; j <= m; j++)
-        dp[0][j] = 0;
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
 
         // filling the first column
+        // first row gets filled with '0's on vector initialization itself
         for(int i = 0; i <= n; i++)
         dp[i][0] = 1;
 
@@ -26,13 +23,14 @@ public:
             }
         }
 
-        vector<int> arr;
-        for(int i = 0; i <= sum / 2; i++)
+        for(int i = sum / 2; i >= 0; i--)
         {
             if(dp[n][i])
-            arr.push_back(i);
+            return sum - 2 * i;
         }
-        return arr;
+
+        // return whatever the fuck you want
+        return -1;
     }
 
     int lastStoneWeightII(vector<int>& stones) 
@@ -41,12 +39,6 @@ public:
         for(int stone : stones)
         sum += stone;
 
-        vector<int> arr = subsetSum(stones, sum);
-
-        int minWeight = INT_MAX;
-        for(int num : arr)
-        minWeight = min(minWeight, sum - 2 * num);
-
-        return minWeight;
+        return subsetSum(stones, sum);
     }
 };
