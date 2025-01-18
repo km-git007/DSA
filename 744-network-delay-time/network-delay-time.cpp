@@ -1,10 +1,7 @@
 class Solution {
 public:
-    int networkDelayTime(vector<vector<int>>& times, int n, int k) 
+    void buildGraph(vector<vector<pair<int, int>>> &adj, vector<vector<int>>& times)
     {
-        // Initialize adjacency list
-        vector<vector<pair<int, int>>> adj(n + 1);
-
         // Iterate through times and populate adjacency list
         for (int i = 0; i < times.size(); i++) 
         {
@@ -14,21 +11,33 @@ public:
 
             adj[u].push_back({t, v});
         }
+    }
+
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) 
+    {
+        // create adjacency list
+        vector<vector<pair<int, int>>> adj(n + 1);
+        buildGraph(adj, times);
 
         // create a time vector
         vector<int> time(n + 1, INT_MAX);
         time[k] = 0;
 
+        // create a vis array to optimise dijkstras
+        vector<bool> vis(n + 1, false);
+
         // min heap for pairs
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
         pq.push({0, k});
-        int maxTime = 0;
         while(!pq.empty())
         {
             auto p = pq.top();
             pq.pop();
             int currTime = p.first;
             int node = p.second;
+
+            if(vis[node])
+            continue;
 
             for(auto neighbour : adj[node])
             {
@@ -40,8 +49,12 @@ public:
                     pq.push({time[adjNode], adjNode});
                 }
             }
+
+            // mark the node as visited after exploring all neighbours
+            vis[node] = true;
         }
         
+        int maxTime = 0;
         // Check if all nodes are reachable
         for (int i = 1; i <= n; i++) 
         {
@@ -49,7 +62,6 @@ public:
             return -1;
             maxTime = max(maxTime,time[i]);
         }
-
         return maxTime;
     }
 };
