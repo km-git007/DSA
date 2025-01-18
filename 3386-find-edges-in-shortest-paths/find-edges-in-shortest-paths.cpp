@@ -19,6 +19,10 @@ public:
         vector<int> dist(n, 1e9);
         dist[source] = 0;
 
+        // create a vis array
+        // this is optimal dijkstras
+        vector<bool> vis(n, false);
+
         // Min-heap of pair {wt, node}
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
         pq.push({0, source});
@@ -31,6 +35,9 @@ public:
             int node = p.second;
             int currDist = p.first;
 
+            if(vis[node])
+            continue;
+
             for(auto adjNode : adj[node])
             {
                 int neighbour = adjNode.first;
@@ -41,6 +48,9 @@ public:
                     pq.push({dist[neighbour], neighbour});
                 }
             }
+
+            // mark the node as visited after exploring the neighbours
+            vis[node] = true;
         }
         return dist;
     }
