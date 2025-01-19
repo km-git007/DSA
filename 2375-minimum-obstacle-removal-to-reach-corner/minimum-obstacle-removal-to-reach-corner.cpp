@@ -8,36 +8,25 @@ public:
         // Directions for up, down, left, right movement
         vector<pair<int, int>> directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
     
-        // Distance vector to store minimum dist for each cell
-        vector<vector<int>> dist(n, vector<int>(m, INT_MAX));
-        dist[0][0] = 0; // Starting point distance is 0
-
+        // vis array 
         vector<vector<int>> vis(n, vector<int>(m, 0));
     
-        // Priority queue to process the smallest dist first
-        // {dist, row, col}
-        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
-        pq.push({0, 0, 0}); 
+        // deque {dist, row, col}
+        deque<vector<int>> dq;
+        dq.push_front({0, 0, 0}); 
     
         // BFS traversal
-        while (!pq.empty()) 
+        while (!dq.empty()) 
         {
-            auto curr = pq.top();
-            pq.pop();
-            int currDist = curr[0];
+            auto curr = dq.front();
+            dq.pop_front();
+            int dist = curr[0];
             int row = curr[1];
             int col = curr[2];
         
             // If we reach the destination, return the distance
             if (row == n - 1 && col == m - 1)
-            return dist[row][col];
-
-            // if the current cell is visited we already have got the shortest distance to reach this cell
-            if(vis[row][col])
-            continue;
-
-            // mark the cell as visited 
-            vis[row][col] = 1;
+            return dist;
         
             // Explore all possible directions
             for (auto [dx, dy] : directions) 
@@ -46,15 +35,20 @@ public:
                 int newCol = col + dy;
 
                 // Check if the new cell is within bounds
-                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m) 
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && !vis[newRow][newCol]) 
                 {
-                    int wt = grid[newRow][newCol] == 1 ? 1 : 0;
-                    // If a smaller dist is found, update and push to the priority queue
-                    if (wt + currDist < dist[newRow][newCol]) 
-                    {
-                        dist[newRow][newCol] = wt + currDist;
-                        pq.push({dist[newRow][newCol], newRow, newCol});
-                    }
+                    int wt = grid[newRow][newCol];
+
+                    // this is an empty cell
+                    if(wt == 1)
+                    dq.push_back({dist + wt, newRow, newCol});
+
+                    // cell with obstacle
+                    else
+                    dq.push_front({dist + wt, newRow, newCol});
+
+                    // mark the cell as visited 
+                    vis[newRow][newCol] = 1;
                 }
             }
         }
