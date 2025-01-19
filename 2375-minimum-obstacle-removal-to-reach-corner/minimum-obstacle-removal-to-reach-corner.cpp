@@ -8,8 +8,9 @@ public:
         // Directions for up, down, left, right movement
         vector<pair<int, int>> directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
     
-        // vis array 
         vector<vector<int>> vis(n, vector<int>(m, 0));
+        // Mark start as visited
+        vis[0][0] = 1; 
     
         // deque {dist, row, col}
         deque<vector<int>> dq;
