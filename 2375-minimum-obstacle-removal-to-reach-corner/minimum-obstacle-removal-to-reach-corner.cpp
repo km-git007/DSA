@@ -11,6 +11,8 @@ public:
         // Distance vector to store minimum dist for each cell
         vector<vector<int>> dist(n, vector<int>(m, INT_MAX));
         dist[0][0] = 0; // Starting point distance is 0
+
+        vector<vector<int>> vis(n, vector<int>(m, 0));
     
         // Priority queue to process the smallest dist first
         // {dist, row, col}
@@ -29,6 +31,13 @@ public:
             // If we reach the destination, return the distance
             if (row == n - 1 && col == m - 1)
             return dist[row][col];
+
+            // if the current cell is visited we already have got the shortest distance to reach this cell
+            if(vis[row][col])
+            continue;
+
+            // mark the cell as visited 
+            vis[row][col] = 1;
         
             // Explore all possible directions
             for (auto [dx, dy] : directions) 
