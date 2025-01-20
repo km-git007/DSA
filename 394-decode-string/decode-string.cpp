@@ -1,16 +1,5 @@
 class Solution {
 public:
-    int helper(int &i, string &s)
-    {
-        int num = 0;
-        while(i < s.length() && s[i] >= '0' && s[i] <= '9')
-        {
-            num = num * 10 + (s[i] - '0');
-            i++;
-        }
-        return num;
-    }
-
     string decodeString(string s) 
     {
         stack<int> numStack;
@@ -18,50 +7,54 @@ public:
         int index = 0;
         while(index < s.length())
         {
-            // a number
-            if(s[index] >= '1' && s[index] <= '9')
+            // If it's a number, parse the full number
+            if (isdigit(s[index])) 
             {
-                int num = helper(index, s);
+                int num = 0;
+                while (index < s.length() && isdigit(s[index])) 
+                {
+                    num = num * 10 + (s[index] - '0');
+                    index++;
+                }
                 numStack.push(num);
             }
-            
-            // lowercase English letter - {a, z} or '['
-            else if((s[index] >= 'a' && s[index] <= 'z') || s[index] == '[')
+            // If it's a letter or '[', push it onto the string stack
+            else if (isalpha(s[index]) || s[index] == '[') 
             {
                 stringStack.push(string(1, s[index]));
                 index++;
             }
-
-            // ']'
-            else
+            // If it's ']', process the encoded string
+            else 
             {
-                // build the string
                 string curr = "";
-                while(stringStack.top() != "[")
+                // Build the current substring until we find '['
+                while (stringStack.top() != "[") 
                 {
                     curr = stringStack.top() + curr;
                     stringStack.pop();
                 }
 
-                // pop '['
+                // Pop the '['
                 stringStack.pop();
 
+                // Get the repetition count from the number stack
                 int timesToRepeat = numStack.top();
                 numStack.pop();
 
-                // create the repeatedString string by repeating it 'timesToRepeat' times
+                // Repeat the current substring and push it back onto the stack
                 string repeatedString = "";
-                while(timesToRepeat--)
+                while(timesToRepeat--) 
                 repeatedString += curr;
-
-                // push the generated string into the strStack
+                
                 stringStack.push(repeatedString);
-                index ++;
+                index++;
             }
         }
 
+        // Build the final result from the stack
         string res = "";
-        while(!stringStack.empty())
+        while (!stringStack.empty()) 
         {
             res = stringStack.top() + res;
             stringStack.pop();
