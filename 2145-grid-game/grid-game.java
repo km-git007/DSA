@@ -1,14 +1,17 @@
 class Solution {
-    public long gridGame(int[][] grid) 
-    {
-        long firstRowSum = Arrays.stream(grid[0]).asLongStream().sum();
-        long secondRowSum = 0, minSum = Long.MAX_VALUE;
-        for(int i = 0; i < grid[0].length; i++)
-        {
-            firstRowSum -= grid[0][i];
-            minSum = Math.min(minSum, Math.max(firstRowSum, secondRowSum));
-            secondRowSum += grid[1][i];
-        }
-        return minSum;
+    public long gridGame(int[][] grid) {
+        long ans = Long.MAX_VALUE;
+            long s1 = 0; //suffix sum of the points in the first row
+            long s2 = 0; //prefix sum of the points in the second row
+            for (int v : grid[0]) {
+                s1 += v;
+            }
+            int n = grid[0].length;
+            for (int j = 0; j < n; ++j) { //j = find optimal position to go down
+                s1 -= grid[0][j];
+                ans = Math.min(ans, Math.max(s1, s2));
+                s2 += grid[1][j];
+            }
+            return ans;
     }
 }
