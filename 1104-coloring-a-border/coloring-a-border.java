@@ -3,21 +3,21 @@ class Solution {
     int[][] isBorder;
     // Directions array for up, down, left, right
     private static final int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; 
-    private boolean check(int row, int col, int originalColor, int[][] grid)
+    private int check(int row, int col, int color, int[][] grid)
     {
-        if(row >= n || row < 0 || col >= m || col < 0 || grid[row][col] != originalColor)
-        return false;
+        if(row >= n || row < 0 || col >= m || col < 0 || Math.abs(grid[row][col]) != color)
+        return 0;
 
-        return true;
+        return 1;
     }
 
     private void dfs(int row, int col, int originalColor, int[][] grid)
     {
-        if(row >= n || row < 0 || col >= m || col < 0 || grid[row][col] != originalColor || isBorder[row][col] == -1)
+        if(row >= n || row < 0 || col >= m || col < 0 || grid[row][col] != originalColor || grid[row][col] < 0)
         return;
 
         // mark the current cell as vis
-        isBorder[row][col] = -1;
+        grid[row][col] = -grid[row][col];
 
         for(int[] dir : directions)
         {
@@ -37,25 +37,25 @@ class Solution {
         m = grid[0].length;
         isBorder= new int[n][m];
 
+        // flip all the cells of the connected component to teir negative 
         dfs(row, col, originalCol, grid);
 
         for(int i = 0; i < n; i++)
         {
             for(int j = 0; j < m; j++)
             {
-                if(isBorder[i][j] != -1)
+                if(grid[i][j] > 0)
                 continue;
 
+                int count = 0;
                 for(int[] dir : directions)
                 {
                     int r = i + dir[0];
                     int c = j + dir[1];
-                    if(!check(r, c, originalCol, grid))
-                    {
-                        isBorder[i][j] = 1;
-                        break;
-                    }
+                    count += check(r, c, Math.abs(grid[i][j]), grid);
                 }
+                if(count == 4)
+                grid[i][j] = Math.abs(grid[i][j]);
             }
         }
 
@@ -63,7 +63,7 @@ class Solution {
         {
             for(int j = 0; j < m; j++)
             {
-                if(isBorder[i][j] == 1)
+                if(grid[i][j] < 0)
                 grid[i][j] = color;
             }
         }
