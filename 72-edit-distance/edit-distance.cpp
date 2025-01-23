@@ -1,38 +1,28 @@
 class Solution {
 public:
-    int dp[501][501];
-    int solve(int i, int j, string &s, string &t)
+    int minDistance(string s, string t) 
     {
-        if(j == 0)
-        return i;
+        int n = s.length();
+        int m = t.length();
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
 
-        if(i == 0)
-        return j;
+         // Fill the first row and column (base cases)
+        for (int i = 0; i <= n; i++) dp[i][0] = i; // Deleting characters from `s`
+        for (int j = 0; j <= m; j++) dp[0][j] = j; // Inserting characters into `s`
 
-        if(dp[i][j] != -1)
-        return dp[i][j];
-
-        // characters match
-        if(s[i - 1] == t[j - 1])
-        dp[i][j] = solve(i - 1, j - 1, s, t);
-
-        // characters don't match
-        else
+        for(int i = 1; i < n + 1; i++)
         {
-            int replace = 1 + solve(i - 1, j - 1, s, t);
-            int dele = 1 + solve(i - 1, j, s, t);
-            int insert = 1 + solve(i, j - 1, s, t);
+            for(int j = 1; j < m + 1; j++)
+            {
+                // characters match
+                if(s[i - 1] == t[j - 1])
+                dp[i][j] = dp[i - 1][j - 1];
 
-            // Return the minimum of the three operations
-            dp[i][j] = min({replace, dele, insert});
+                // characters don't match
+                else
+                dp[i][j] = 1 + min({dp[i - 1][j - 1], dp[i][j - 1], dp[i - 1][j]});
+            }
         }
-
-        return dp[i][j];
-    }
-
-    int minDistance(string word1, string word2) 
-    {
-        memset(dp, -1, sizeof(dp));
-        return solve(word1.length(), word2.length(), word1, word2);
+        return dp[n][m];
     }
 };
