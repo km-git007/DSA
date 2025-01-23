@@ -10,8 +10,7 @@ public:
 
         // Fill the first row
         // Inserting characters into `s`
-        for (int j = 0; j <= m; j++) curr[j] = j; 
-        prev = curr;
+        for (int j = 0; j <= m; j++) prev[j] = j; 
 
         for(int i = 1; i < n + 1; i++)
         {
