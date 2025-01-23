@@ -1,34 +1,33 @@
 class Solution {
 public:
-    int minDistance(string s, string t) 
-    {
-        int n = s.length();
-        int m = t.length();
+    int solveRec(int i,int j,string &s1,string &s2){
+        if(i < 0) return j+1;
+        if(j < 0) return i+1;
 
-        vector<int> curr(m + 1, 0);
-        vector<int> prev(m + 1, 0);
+        if(s1[i] == s2[j])
+         return solveRec(i-1,j-1,s1,s2);
 
-        // Fill the first row
-        // Inserting characters into `s`
-        for (int j = 0; j <= m; j++) prev[j] = j; 
+         return 1+min(solveRec(i,j-1,s1,s2),min(solveRec(i-1,j,s1,s2),solveRec(i-1,j-1,s1,s2)));
+    }
 
-        for(int i = 1; i < n + 1; i++)
-        {
-            for(int j = 0; j < m + 1; j++)
-            {
-                if(j == 0)
-                curr[j] = i;
+    int solveMemo(int i,int j,string &s1,string &s2, vector<vector<int>>& dp){
+        if(i < 0) return j+1;
+        if(j < 0) return i+1;
 
-                // characters match
-                else if(s[i - 1] == t[j - 1])
-                curr[j] = prev[j - 1];
+        if(dp[i][j] != -1) return dp[i][j];
 
-                // characters don't match
-                else
-                curr[j] = 1 + min({prev[j - 1], curr[j - 1], prev[j]});
-            }
-            prev = curr;
-        }
-        return prev[m];
+        if(s1[i] == s2[j])
+         return dp[i][j] = solveMemo(i-1,j-1,s1,s2,dp);
+
+         return  dp[i][j]=1+min(solveMemo(i,j-1,s1,s2,dp),min(solveMemo(i-1,j,s1,s2,dp),solveMemo(i-1,j-1,s1,s2,dp)));
+    }
+    int minDistance(string s1, string s2) {
+        int n = s1.size();
+        int m = s2.size();
+        vector<vector<int>> dp(n+1,vector<int> (m+1,-1));
+
+        //int ans = solveRec(n-1,m-1,s1,s2);
+        int ans = solveMemo(n-1,m-1,s1,s2,dp);
+        return ans;
     }
 };
