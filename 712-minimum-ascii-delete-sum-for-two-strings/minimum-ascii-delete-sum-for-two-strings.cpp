@@ -1,51 +1,30 @@
 class Solution {
 public:
-    int dp[1001][1001];
-    int helper(int index, string &s)
+    int minimumDeleteSum(string s, string t) 
     {
-        int sum = 0;
-        while(index > 0)
+        int n = s.length();
+        int m = t.length();
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+
+         // Fill the first row and column 
+        for (int i = 1; i <= n; i++) dp[i][0] = (int)s[i - 1] + dp[i - 1][0]; 
+        for (int j = 1; j <= m; j++) dp[0][j] = (int)t[j - 1] + dp[0][j - 1]; 
+
+        for(int i = 1; i < n + 1; i++)
         {
-            sum += (int)s[index - 1];
-            index--;
+            for(int j = 1; j < m + 1; j++)
+            {
+                int a = (int)t[j - 1], b = (int)s[i - 1];
+    
+                // characters don't match
+                if(s[i - 1] != t[j - 1])
+                dp[i][j] = min({a + b + dp[i - 1][j - 1], a + dp[i][j - 1], b + dp[i - 1][j]});
+
+                // characters match
+                else
+                dp[i][j] = dp[i - 1][j - 1];
+            }
         }
-        return sum;
-    }
-
-    int solve(int i, int j, string &s, string &t)
-    {
-        if(j == 0)
-        return helper(i, s);
-
-        if(i == 0)
-        return helper(j, t);
-
-        if(dp[i][j] != -1)
-        return dp[i][j];
-
-        // characters match
-        if(s[i - 1] == t[j - 1])
-        dp[i][j] = solve(i - 1, j - 1, s, t);
-
-        // characters don't match
-        else
-        {
-            int a = (int)t[j - 1], b = (int)s[i - 1];
-
-            int del1 = a + solve(i, j - 1, s, t);
-            int del2 = b + solve(i - 1, j, s, t);
-            int delBoth = a + b + + solve(i - 1, j - 1, s, t);
-
-            // Return the minimum of the three operations
-            dp[i][j] = min({del1, del2, delBoth});
-        }
-
-        return dp[i][j];
-    }
-
-    int minimumDeleteSum(string s1, string s2) 
-    {
-        memset(dp, -1, sizeof(dp));
-        return solve(s1.length(), s2.length(), s1, s2);
+        return dp[n][m];
     }
 };
