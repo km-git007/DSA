@@ -4,27 +4,32 @@ public:
     {
         int n = s.length();
         int m = t.length();
-        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
 
-         // Fill the first row and column 
-        for (int i = 1; i <= n; i++) dp[i][0] = (int)s[i - 1] + dp[i - 1][0]; 
-        for (int j = 1; j <= m; j++) dp[0][j] = (int)t[j - 1] + dp[0][j - 1]; 
-
+        vector<int> curr(m + 1, 0), prev(m + 1, 0);
+        // Fill the first row  
+        for (int j = 1; j <= m; j++) prev[j] = (int)t[j - 1] + prev[j - 1]; 
+        
         for(int i = 1; i < n + 1; i++)
         {
-            for(int j = 1; j < m + 1; j++)
+            for(int j = 0; j < m + 1; j++)
             {
-                int a = (int)t[j - 1], b = (int)s[i - 1];
+                if(j == 0)
+                curr[j] = (int)s[i - 1] + prev[j];
     
                 // characters don't match
-                if(s[i - 1] != t[j - 1])
-                dp[i][j] = min({a + b + dp[i - 1][j - 1], a + dp[i][j - 1], b + dp[i - 1][j]});
+                else if(s[i - 1] != t[j - 1])
+                {
+                    int a = (int)t[j - 1], b = (int)s[i - 1];
+                    curr[j] = min({a + b + prev[j - 1], a + curr[j - 1], b + prev[j]});
+                }
 
                 // characters match
                 else
-                dp[i][j] = dp[i - 1][j - 1];
+                curr[j] = prev[j - 1];
             }
+            prev = curr;
         }
-        return dp[n][m];
+
+        return prev[m];
     }
 };
