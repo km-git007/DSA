@@ -2,27 +2,33 @@ class Solution {
     private Integer[][] dp;
     private int solve(int prev, int curr, int[] nums)
     {
-        if(curr == nums.length)
-        return 0;
+         // Base case: if we have exhausted the list
+        if (curr == nums.length) {
+            return 0;
+        }
 
-        if(prev == -1)
-        return Math.max(1 + solve(curr, curr + 1, nums), solve(prev, curr + 1, nums));
+        // Check if the result is already memoized
+        if (dp[prev + 1][curr] != null) {
+            return dp[prev + 1][curr]; // prev is shifted by 1 for ease of indexing
+        }
 
-        if(dp[prev][curr] != null)
-        return dp[prev][curr];
-
-        int include = Integer.MIN_VALUE;
-        if(nums[curr] > nums[prev])
-        include = 1 + solve(curr, curr + 1, nums);
-
+        // Option 1: Skip the current element
         int exclude = solve(prev, curr + 1, nums);
 
-        return dp[prev][curr] = Math.max(include, exclude);
+        // Option 2: Include the current element (if possible)
+        int include = 0;
+        if (prev == -1 || nums[curr] > nums[prev]) {
+            include = 1 + solve(curr, curr + 1, nums); // Include current element
+        }
+
+        // Memoize the result
+        dp[prev + 1][curr] = Math.max(include, exclude);
+        return dp[prev + 1][curr];
     }
 
     public int lengthOfLIS(int[] nums) 
     {
-        dp = new Integer[nums.length][nums.length];
+        dp = new Integer[nums.length + 1][nums.length];
         return solve(-1, 0, nums);
     }
 }
