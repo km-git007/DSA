@@ -11,7 +11,7 @@ public:
 
         vector<vector<bool>> visited(n, vector<bool>(n, false));
 
-        queue<tuple<int, int, int>> q;
+        queue<vector<int>> q;
         // Start BFS from all thief cells
         for(int i = 0; i < n; i++)
         {
@@ -24,8 +24,10 @@ public:
 
         while(!q.empty())
         {
-            auto [row, col, distance] = q.front();
+            auto v = q.front();
             q.pop();
+
+            int row = v[0], col = v[1], distance = v[2];
 
             // Update maximum Manhattan distance
             maxManHattenDist = max(maxManHattenDist, dist[row][col]);
@@ -34,7 +36,7 @@ public:
             {
                 int r = row + dir[0];
                 int c = col + dir[1];
-                if(isValidCell(r, c) && !visited[r][c] && grid[r][c] == 0)
+                if(r >= 0 && r < n && c >= 0 && c < n && !visited[r][c] && grid[r][c] == 0)
                 {
                     q.push({r, c, distance + 1});
                     dist[r][c] = distance + 1;
@@ -46,42 +48,40 @@ public:
         return dist;
     }
 
-    bool bfs(int sf, vector<vector<int>>& grid, vector<vector<int>>& dist)
+    bool isPathValid(int sf, vector<vector<int>>& dist)
     {
         if(dist[0][0] < sf)
         return false;
-
-        queue<vector<int>> q;
+        
+        // BFS to check if a valid path exists with the given safeness factor
+        queue<pair<int, int>> q;
         q.push({0, 0});
 
         vector<vector<bool>> visited(n, vector<bool>(n, false));
         visited[0][0] = true;
 
-        while(!q.empty())
+        while (!q.empty()) 
         {
-            auto v = q.front();
+            auto [row, col] = q.front();
             q.pop();
 
-            int row = v[0];
-            int col = v[1];
-
-            // can reach with given sf
+            // If we reach the bottom-right corner
             if(row == n - 1 && col == n - 1)
             return true;
 
-            for(auto dir : directions)
+            for (auto dir : directions) 
             {
                 int r = row + dir[0];
                 int c = col + dir[1];
 
-                if(isValidCell(r,c) && !visited[r][c] && dist[r][c] >= sf)
+                if (r >= 0 && r < n && c >= 0 && c < n && !visited[r][c] && dist[r][c] >= sf) 
                 {
-                    q.push({r, c});
                     visited[r][c] = true;
+                    q.push({r, c});
                 }
             }
         }
-        // can't reach the end
+
         return false;
     }
 
@@ -95,7 +95,7 @@ public:
         {
             int mid = start + (end - start)/2;
 
-            if(bfs(mid, grid, dist))
+            if(isPathValid(mid, dist))
             {
                 res = mid;
                 start = mid + 1;
@@ -120,12 +120,5 @@ public:
 
         // Solve for the maximum safeness factor
         return solve(grid, dist);
-        // return 0;
-    }
-
-private :
-    bool isValidCell(int r, int c)
-    {
-        return r >= 0 && r < n && c >= 0 && c < n;
     }
 };
