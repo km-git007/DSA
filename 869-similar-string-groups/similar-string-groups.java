@@ -1,9 +1,6 @@
 class Solution {
     private boolean isSimilar(String s, String t)
     {
-        if(s.length() != t.length())
-        return false;
-
         int diff = 0;
         for(int i = 0; i < s.length(); i++)
         {
