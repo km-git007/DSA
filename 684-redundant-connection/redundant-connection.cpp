@@ -1,43 +1,71 @@
 class Solution {
 public:
-    bool canReach(int node, int target, vector<int> &vis, vector<int> adj[])
-    {
-        if(node == target)
-        return true;
+    
+    class DSU {
+    public:
 
-        vis[node] = 1;
-
-        for(int nbr : adj[node])
+        vector<int> parent, rank;
+        DSU(int n)
         {
-            if(!vis[nbr])
+            for(int i = 0; i < n; i++)
             {
-                if(canReach(nbr, target, vis, adj))
-                return true;
+                parent.push_back(i);
+                rank.push_back(0);
             }
         }
 
-        return false;
-    }
+        int find(int x) 
+        {
+            if(x == parent[x])
+            return x;
+            
+            // Path compression
+            return parent[x] = find(parent[x]);
+        }
+
+        void unionSet(int x, int y) 
+        {
+            int parentX = find(x);
+            int parentY = find(y);
+            
+            if(parentX == parentY)
+            return;
+
+            // Union by rank
+            // rank same - anyone can be made parent
+            if(rank[parentX] == rank[parentY]) 
+            {
+                parent[parentX] = parentY;
+                rank[parentY]++;
+            }
+
+            // rank of parent of 'x' is higher
+            else if(rank[parentX] > rank[parentY])
+            parent[parentY] = parentX;
+
+            // rank of parent of 'y' is higher
+            else
+            parent[parentX] = parentY;
+
+        }
+    };
+    
 
     vector<int> findRedundantConnection(vector<vector<int>>& edges) 
     {
         int N = edges.size();
-        vector<int> adj[N];
+        DSU* dsu = new DSU(N);
 
         for(auto edge : edges)
         {
-            vector<int> vis(N, 0);
+            int x = edge[0] - 1;
+            int y = edge[1] - 1;
 
-            int u = edge[0] - 1;
-            int v = edge[1] - 1;
-
-            if(canReach(u, v, vis, adj))
+            if(dsu->find(x) == dsu->find(y))
             return edge;
 
-            adj[u].push_back(v);
-            adj[v].push_back(u);
+            dsu->unionSet(x, y);
         }
-
         return {};
     }
 };
