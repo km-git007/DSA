@@ -1,71 +1,27 @@
 class Solution {
 public:
     
-    class DSU {
-    public:
-
-        vector<int> parent, rank;
-        DSU(int n)
-        {
-            for(int i = 0; i < n; i++)
-            {
-                parent.push_back(i);
-                rank.push_back(0);
-            }
+    int findPar(int p,vector<int>par){
+        if(p==par[p]){
+            return p;
         }
-
-        int find(int x) 
-        {
-            if(x == parent[x])
-            return x;
-            
-            // Path compression
-            return parent[x] = find(parent[x]);
-        }
-
-        void unionSet(int x, int y) 
-        {
-            int parentX = find(x);
-            int parentY = find(y);
-            
-            if(parentX == parentY)
-            return;
-
-            // Union by rank
-            // rank same - anyone can be made parent
-            if(rank[parentX] == rank[parentY]) 
-            {
-                parent[parentX] = parentY;
-                rank[parentY]++;
-            }
-
-            // rank of parent of 'x' is higher
-            else if(rank[parentX] > rank[parentY])
-            parent[parentY] = parentX;
-
-            // rank of parent of 'y' is higher
-            else
-            parent[parentX] = parentY;
-
-        }
-    };
-    
-
-    vector<int> findRedundantConnection(vector<vector<int>>& edges) 
-    {
-        int N = edges.size();
-        DSU* dsu = new DSU(N);
-
-        for(auto edge : edges)
-        {
-            int x = edge[0] - 1;
-            int y = edge[1] - 1;
-
-            if(dsu->find(x) == dsu->find(y))
-            return edge;
-
-            dsu->unionSet(x, y);
-        }
-        return {};
+        return findPar(par[p],par);
+    }//for finding the parent of a node in a given graph 
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+          vector<int> p(2000, 0);
+        for(int i = 0; i < p.size(); i++ )
+            p[i] = i;//parent vector taken initialised with a vaalue 
+        
+        vector<int> res;//res vector 
+        for(auto v : edges ){
+            int n1 = v[0], n2 = v[1];//n1 and n2 2 nodes taken 
+            while(n1 != p[n1]) n1 = p[n1];//while n1 is not the parent of n1 then we initialise with parent p[n1]
+            while(n2 != p[n2]) n2 = p[n2];//same goes with the n2 
+            if( n1 == n2 )//if both r same it is a possible edge which can be removed for making it a tree
+                res = v;
+            else//else we join n1 to n2 and make n2 the paren tof n1 
+                p[n1] = n2;
+        }//TC IS O(N)
+        return res;
     }
 };
