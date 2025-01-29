@@ -1,4 +1,55 @@
 class Solution {
+
+    private class DSU 
+    {
+        private int[] parent, rank;
+        // Constructor
+        public DSU(int n) 
+        {
+            parent = new int[n];
+            rank = new int[n];
+            for (int i = 0; i < n; i++) 
+            {
+                parent[i] = i;
+                rank[i] = 0;
+            }
+        }
+
+        public int[] getParent()
+        {
+            return parent;
+        }
+
+        // Find function with path compression
+        public int find(int x) 
+        {
+            if (x != parent[x]) {
+                parent[x] = find(parent[x]); // Path compression
+            }
+
+            return parent[x];
+        }
+
+        // Union by rank
+        public void unionSet(int x, int y) 
+        {
+            int parentX = find(x);
+            int parentY = find(y);
+
+            // Already in the same set
+            if (parentX == parentY) return; 
+
+            if (rank[parentX] > rank[parentY]) {
+                parent[parentY] = parentX;
+            } else if (rank[parentX] < rank[parentY]) {
+                parent[parentX] = parentY;
+            } else {
+                parent[parentX] = parentY;
+                rank[parentY]++;
+            }
+        }
+    }
+
     private boolean isSimilar(String s, String t)
     {
         int diff = 0;
@@ -22,48 +73,34 @@ class Solution {
         for (int i = 0; i < n; i++)
         adj[i] = new ArrayList<>(); 
 
+        
+
+        return adj;
+    }
+
+    public int numSimilarGroups(String[] strs) 
+    {
+        int n = strs.length;
+        DSU dsu = new DSU(n);
+
         for(int i = 0; i < n; i++)
         {
             for(int j = i + 1; j < n; j++)
             {
                 if(isSimilar(strs[i], strs[j]))
                 {
-                    adj[i].add(j);
-                    adj[j].add(i);
+                    dsu.unionSet(i, j);
                 }
             }
         }
 
-        return adj;
-    }
-
-    private boolean[] vis;
-    private void dfs(int node, List<Integer>[] adj)
-    {
-        if(vis[node])
-        return;
-
-        vis[node] = true;
-
-        for(int nbr : adj[node])
-        dfs(nbr, adj);
-    }
-
-    public int numSimilarGroups(String[] strs) 
-    {
-        int N = strs.length;
-        var adj = buildAdj(N, strs);
-
-        vis = new boolean[N];
+        int[] par = dsu.getParent();
 
         int count = 0;
-        for(int i = 0; i < N; i++)
+        for(int i = 0; i < n; i++)
         {
-            if(!vis[i])
-            {
-                dfs(i, adj);
-                count++;
-            }
+            if(i == par[i])
+            count++;
         }
 
         return count;
