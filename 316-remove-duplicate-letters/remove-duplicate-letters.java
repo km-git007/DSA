@@ -27,9 +27,11 @@ class Solution {
         }
 
         StringBuilder sb = new StringBuilder();
+
+        // Poll from the end for correct order
         while(!stack.isEmpty())
-        sb.append((char)(stack.pop() + 'a'));
+        sb.append((char)(stack.pollLast() + 'a'));
         
-        return sb.reverse().toString();
+        return sb.toString();
     }
 }
