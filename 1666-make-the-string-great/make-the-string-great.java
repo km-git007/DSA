@@ -1,9 +1,7 @@
 class Solution {
     private boolean check(char ch, Deque<Character> stack)
     {
-        boolean case1 = Character.isLowerCase(ch) && (ch - 'a' == stack.peek() - 'A');
-        boolean case2 = Character.isUpperCase(ch) && (ch - 'A' == stack.peek() - 'a');
-        return case1 || case2;
+        return Math.abs(ch - stack.peek()) == 32;
     }
 
     public String makeGood(String s) 
