@@ -1,31 +1,29 @@
 class Solution {
-    private Integer[][] dp;
-    private int solve(int index, int coins, List<List<Integer>> piles)
-    {
-        if(index == 0)
-        return 0;
-
-        if(dp[index][coins] != null)
-        return dp[index][coins];
-
-        // no coins taken from the current pile
-        int notTake = solve(index - 1, coins, piles);
-
-        int take = 0, total = 0;
-        // coins taken from the current pile
-        for(int i = 0; i < piles.get(index - 1).size() && i < coins; i++)
-        {
-            total += piles.get(index - 1).get(i);
-            take = Math.max(take, total + solve(index - 1, coins - (i + 1), piles));
-        }
-
-        return dp[index][coins] = Math.max(take, notTake);
-    }
     public int maxValueOfCoins(List<List<Integer>> piles, int k) 
     {
         int n = piles.size();
-        dp = new Integer[n + 1][k + 1];
+        Integer[][] dp = new Integer[n + 1][k + 1];
 
-        return solve(n, k, piles);
+        for(int i = 0; i < n + 1; i++)
+        {
+            for(int j = 0; j < k + 1; j++)
+            {
+                if(i == 0 || j == 0)
+                dp[i][j] = 0;
+
+                else
+                {
+                    int notTake = dp[i - 1][j];
+                    int take = 0, total = 0;
+                    for(int index = 0; index < piles.get(i - 1).size() && index < j; index++)
+                    {
+                        total += piles.get(i - 1).get(index);
+                        take = Math.max(take, total + dp[i - 1][j - (index + 1)]);
+                    }
+                    dp[i][j] = Math.max(take, notTake);
+                }
+            }
+        }
+        return dp[n][k];
     }
 }
