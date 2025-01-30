@@ -1,29 +1,31 @@
 class Solution {
-    public int maxValueOfCoins(List<List<Integer>> piles, int k) 
-    {
-        int n = piles.size();
-        Integer[][] dp = new Integer[n + 1][k + 1];
+    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
 
-        for(int i = 0; i < n + 1; i++)
-        {
-            for(int j = 0; j < k + 1; j++)
-            {
-                if(i == 0 || j == 0)
-                dp[i][j] = 0;
+        int[] dp = new int[k+1];
+        int count = 0;
 
-                else
-                {
-                    int notTake = dp[i - 1][j];
-                    int take = 0, total = 0;
-                    for(int index = 0; index < piles.get(i - 1).size() && index < j; index++)
-                    {
-                        total += piles.get(i - 1).get(index);
-                        take = Math.max(take, total + dp[i - 1][j - (index + 1)]);
-                    }
-                    dp[i][j] = Math.max(take, notTake);
-                }
+        for(List<Integer> pile : piles){
+
+            int n = Math.min(pile.size(), k);
+            int[] preSum = new int[n+1];
+            int sum = 0;
+            for(int i = 0 ; i < n; ++i){
+               sum += pile.get(i);
+               preSum[i + 1] = sum;
             }
+
+            count += n;
+
+            for(int i = Math.min(k, count); i > 0; --i){
+              int cur = dp[i];
+              for(int j = Math.min(n, i); j > 0; --j)
+                  cur = Math.max(cur, dp[i - j] + preSum[j]);
+              
+               dp[i] = cur;              
+            }
+
         }
-        return dp[n][k];
+        
+        return dp[k];
     }
 }
