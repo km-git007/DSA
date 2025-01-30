@@ -1,21 +1,21 @@
 class StockSpanner {
 
     private ArrayDeque<int[]> stack = new ArrayDeque<>();
-    int index=0;
+    int index = 0, span = 1;
     public StockSpanner() {}
 
     public int next(int price) 
     {
-        int span=1;
-        while(!stack.isEmpty() && stack.peek()[0]<=price)
+        while(!stack.isEmpty() && stack.peek()[0] <= price)
         stack.pop();
 
         if(stack.isEmpty())
-        span=index+1;
+        span = index + 1;
         else
-        span=index-stack.peek()[1];
+        span = index - stack.peek()[1];
 
         stack.push(new int[]{price,index});
+        
         index++;
         return span;
     }
