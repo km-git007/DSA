@@ -1,25 +1,28 @@
 class Solution {
 public:
-    int longestPalindrome(string s) 
-    {
-        unordered_map<char,int> map;
-        for(char ch : s)
-        map[ch]++;
+    int longestPalindrome(string s) {
+        unordered_set<char> characterSet;
+        int res = 0;
 
-        int hasOddFreq = false;
-        int length = 0;
-        for(auto ele : map)
-        {
-            if(ele.second % 2 == 0)
-            length += ele.second;
-
-            else
-            {
-                hasOddFreq = true;
-                length += ele.second - 1;
+        // Loop over characters in the string
+        for (char c : s) {
+            // If set contains the character, match found
+            if (characterSet.find(c) != characterSet.end()) {
+                characterSet.erase(c);
+                // add the two occurrences to our palindrome
+                res += 2;
+            } else {
+                // add the character to the set
+                characterSet.insert(c);
             }
         }
-        
-        return hasOddFreq == true ? length + 1 : length;
+
+        // if any character remains, we have at least one unmatched
+        // character to make the center of an odd length palindrome.
+        if (!characterSet.empty()) {
+            res++;
+        }
+
+        return res;
     }
 };
