@@ -1,76 +1,114 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,abm,bmi2")
+
+static const auto io_sync_off = []() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    return nullptr;
+}();
+
+// class Solution {
+//   public:
+//     int largestIsland(std::vector<std::vector<int>> &grid) {
+//         int groupId = -1, n = grid.size();
+//         int groupSize[n * n + 1];
+//         std::memset(groupSize, 0, sizeof(groupSize));
+
+//         auto dfs = [&](this auto &&dfs, int i, int j) -> int {
+//             if (i < 0 || i >= n || j < 0 || j >= n || grid[i][j] < 1) {
+//                 return 0;
+//             }
+//             grid[i][j] = groupId;
+//             return 1 + dfs(i + 1, j) + dfs(i - 1, j) + dfs(i, j + 1) + dfs(i, j - 1);
+//         };
+
+//         for (int i = 0; i < n; ++i) {
+//             for (int j = 0; j < n; ++j) {
+//                 if (grid[i][j] > 0) {
+//                     groupSize[~(groupId - 1)] = dfs(i, j);
+//                     --groupId;
+//                 }
+//             }
+//         }
+
+//         int res = 0;
+//         std::unordered_set<int> check;
+//         for (int i = 0; i < n; ++i) {
+//             for (int j = 0; j < n; ++j) {
+//                 if (grid[i][j] == 0) {
+//                     check.clear();
+//                     int cur = 1;
+//                     if (i - 1 >= 0 && check.insert(grid[i - 1][j]).second) {
+//                         cur += groupSize[~(grid[i - 1][j] - 1)];
+//                     }
+//                     if (i + 1 < n && check.insert(grid[i + 1][j]).second) {
+//                         cur += groupSize[~(grid[i + 1][j] - 1)];
+//                     }
+//                     if (j - 1 >= 0 && check.insert(grid[i][j - 1]).second) {
+//                         cur += groupSize[~(grid[i][j - 1] - 1)];
+//                     }
+//                     if (j + 1 < n && check.insert(grid[i][j + 1]).second) {
+//                         cur += groupSize[~(grid[i][j + 1] - 1)];
+//                     }
+//                     res = std::max(res, cur);
+//                 }
+//             }
+//         }
+
+//         return res == 0 ? n * n : res;
+//     }
+// };
+
 class Solution {
-private:
-    const vector<vector<int>> DIRECTIONS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    int n, m, id;
+  public:
+    int largestIsland(std::vector<std::vector<int>> &grid) {
+        int groupId = -1, n = grid.size();
+        int groupSize[n * n + 1];
+        std::memset(groupSize, 0, sizeof(groupSize));
 
-    int dfs(vector<vector<int>>& grid, int row, int col, int id) {
-        if (!isValidCell(row, col) || grid[row][col] != 1)
-            return 0;
-        
-        // Mark the cell with a unique id
-        grid[row][col] = id;
-        int count = 1; // Count the current land cell
-        
-        // Explore all 4 directions
-        for (const auto& dir : DIRECTIONS) {
-            count += dfs(grid, row + dir[0], col + dir[1], id);
-        }
-        
-        return count;
-    }
+        auto dfs = [&](this auto &&dfs, int i, int j) -> int {
+            if (i < 0 || i >= n || j < 0 || j >= n || grid[i][j] < 1) {
+                return 0;
+            }
+            grid[i][j] = groupId;
+            return 1 + dfs(i + 1, j) + dfs(i - 1, j) + dfs(i, j + 1) + dfs(i, j - 1);
+        };
 
-    bool isValidCell(int row, int col) {
-        return row >= 0 && row < n && col >= 0 && col < m;
-    }
-
-public:
-    int largestIsland(vector<vector<int>>& grid) {
-        n = grid.size();
-        m = grid[0].size();
-        id = 2;
-        
-        unordered_map<int, int> map; // {id -> size}
-        map[0] = 0; // Handle empty water cases
-        
-        int largestIsland = 0;
-        
-        // Assign unique IDs to islands and compute sizes
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (grid[i][j] == 1) {
-                    int islandSize = dfs(grid, i, j, id);
-                    largestIsland = max(largestIsland, islandSize);
-                    map[id] = islandSize;
-                    id++;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] > 0) {
+                    groupSize[~(groupId - 1)] = dfs(i, j);
+                    --groupId;
                 }
             }
         }
 
-        // Try flipping each 0 and merging islands
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+        int res = 0;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (grid[i][j] == 0) {
-                    int islandSize = 1; // Flipping 0 to 1
-                    unordered_set<int> uniqueIslands;
-                    
-                    for (const auto& dir : DIRECTIONS) {
-                        int row = i + dir[0];
-                        int col = j + dir[1];
-
-                        if (isValidCell(row, col)) {
-                            uniqueIslands.insert(grid[row][col]);
-                        }
+                    int cur = 1;
+                    int a = (i > 0) ? grid[i - 1][j] : 0;
+                    int b = (i + 1 < n) ? grid[i + 1][j] : 0;
+                    int c = (j > 0) ? grid[i][j - 1] : 0;
+                    int d = (j + 1 < n) ? grid[i][j + 1] : 0;
+                    if (a != 0) {
+                        cur += groupSize[~(grid[i - 1][j] - 1)];
                     }
-
-                    for (int islandId : uniqueIslands) {
-                        islandSize += map[islandId];
+                    if (b != 0 && b != a) {
+                        cur += groupSize[~(grid[i + 1][j] - 1)];
                     }
-
-                    largestIsland = max(largestIsland, islandSize);
+                    if (c != 0 && c != a && c != b) {
+                        cur += groupSize[~(grid[i][j - 1] - 1)];
+                    }
+                    if (d != 0 && d != a && d != b && d != c) {
+                        cur += groupSize[~(grid[i][j + 1] - 1)];
+                    }
+                    res = std::max(res, cur);
                 }
             }
         }
-        
-        return largestIsland;
+
+        return res == 0 ? n * n : res;
     }
 };
