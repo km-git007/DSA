@@ -2,23 +2,32 @@ class Solution {
     private final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     int n, m;
     int id;
-    private int dfs(int[][] grid, int row, int col, int id) 
+    private int bfs(int[][] grid, int row, int col, int id) 
     {
-        if(!isValidCell(row, col) || grid[row][col] != 1)
-        return 0;
-        
-        // mark the cell with unique id
-        grid[row][col] = id;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{row, col});
+        grid[row][col] = id; // Mark the cell with a unique id
+        int count = 1; // Count the current land cell
 
-        // Count current land cell
-        int count = 1; 
-        
-        // Explore all 4 directions using the DIRECTIONS array
-        for(int[] dir : DIRECTIONS) 
-        count += dfs(grid, row + dir[0], col + dir[1], id);
-        
+        while (!queue.isEmpty()) 
+        {
+            int[] cell = queue.poll();
+            int r = cell[0], c = cell[1];
+
+            for (int[] dir : DIRECTIONS) 
+            {
+                int newRow = r + dir[0], newCol = c + dir[1];
+                if (isValidCell(newRow, newCol) && grid[newRow][newCol] == 1) 
+                {
+                    grid[newRow][newCol] = id; // Mark as visited
+                    queue.offer(new int[]{newRow, newCol});
+                    count++;
+                }
+            }
+        }
         return count;
     }
+
 
     public int largestIsland(int[][] grid) 
     {
@@ -37,7 +46,7 @@ class Solution {
             {
                 if(grid[i][j] == 1) 
                 {
-                    int islandSize = dfs(grid, i, j, id);
+                    int islandSize = bfs(grid, i, j, id);
                     largestIsland = Math.max(largestIsland, islandSize);
                     map.put(id, islandSize);
                     id++;
