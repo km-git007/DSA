@@ -1,28 +1,27 @@
 class Solution {
-    private Integer[][] dp;
-    private int solve(int start, int end, String s)
-    {
-        if(start > end)
-        return 0;
-
-        if(start == end)
-        return 1;
-
-        if(dp[start][end] != null)
-        return dp[start][end];
-
-        if(s.charAt(start) == s.charAt(end))
-        return dp[start][end] = 2 + solve(start + 1, end - 1, s);
-
-        int skipStart = solve(start + 1, end, s);
-        int skipEnd = solve(start, end - 1, s);
-
-        return dp[start][end] = Math.max(skipStart, skipEnd);
-    }
-
     public int longestPalindromeSubseq(String s) 
     {
-        dp = new Integer[s.length()][s.length()];
-        return solve(0, s.length() - 1, s);
+        int n = s.length();
+        int[][] dp = new int[n][n];
+
+        // Base case: single-character substrings are palindromes of length 1
+        for(int i = 0; i < n; i++) 
+        dp[i][i] = 1;
+
+        // Build the dp table bottom-up
+        for (int len = 2; len <= n; len++) {  // Length of the substring
+            for (int start = 0; start <= n - len; start++) {
+                int end = start + len - 1;
+
+                if (s.charAt(start) == s.charAt(end)) {
+                    dp[start][end] = 2 + dp[start + 1][end - 1];
+                } else {
+                    dp[start][end] = Math.max(dp[start + 1][end], dp[start][end - 1]);
+                }
+            }
+        }
+
+        // The result is stored in dp[0][n-1] (whole string)
+        return dp[0][n - 1];
     }
 }
