@@ -1,34 +1,32 @@
 class Solution {
-    private int n, m;
-    private Integer[][] dp;
-    private int solve(int row, int col, int[][] grid)
-    {
-        // prevent overflow
-        if(col < 0 || col >= m)
-        return Integer.MAX_VALUE/2;
-
-        if(row == n - 1)
-        return grid[row][col]; 
-
-        if(dp[row][col] != null)
-        return dp[row][col];    
-
-        int left = grid[row][col] + solve(row + 1, col - 1, grid);
-        int right = grid[row][col] + solve(row + 1, col + 1, grid);
-        int down = grid[row][col] + solve(row + 1, col, grid);
-
-        return dp[row][col] = Math.min(down, Math.min(left, right));
-    }
 
     public int minFallingPathSum(int[][] grid) 
     {
-        n = grid.length;
-        m = grid[0].length;
-        dp = new Integer[n][m];
+        int n = grid.length;
+        int m = grid[0].length;
+        int[][] dp = new int[n][m];
 
-        int res = Integer.MAX_VALUE;
-        for(int col = 0; col < m; col++)
-        res = Math.min(res, solve(0, col, grid));
+        // initialize the first column
+        for(int j = 0; j < m; j++)
+        dp[0][j] = grid[0][j];
+
+        int INF = Integer.MAX_VALUE/2;
+        for(int i = 1; i < m; i++)
+        {
+            for(int j = 0; j < m; j++)
+            {
+                int left = j - 1 >= 0 ? dp[i - 1][j - 1] : INF;
+                int right = j + 1 < m ? dp[i - 1][j + 1] : INF;
+                int up = dp[i - 1][j];
+
+                dp[i][j] = grid[i][j] + Math.min(up, Math.min(left, right));
+            }
+        }
+
+        // find the minimum from the last row
+        int res = dp[n - 1][0];
+        for(int j = 1; j < m; j++)
+        res = Math.min(res, dp[n - 1][j]);
 
         return res;
     }
