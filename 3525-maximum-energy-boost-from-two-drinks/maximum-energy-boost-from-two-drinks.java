@@ -1,25 +1,21 @@
 class Solution {
-    private Long[][] dp;
-    private long solve(int index, int currDrink, int[] energyDrinkA, int[] energyDrinkB)
+    public long maxEnergyBoost(int[] drinkA, int[] drinkB) 
     {
-        if(index >= energyDrinkA.length)
-        return 0;
+        int n = drinkA.length;
+        long[] dpA = new long[n];
+        long[] dpB = new long[n];
 
-        if(dp[index][currDrink] != null)
-        return dp[index][currDrink];
+        dpA[0] = drinkA[0];
+        dpB[0] = drinkB[0];
+        dpA[1] = drinkA[0] + drinkA[1];
+        dpB[1] = drinkB[0] + drinkB[1];
 
-        long drinkBoost = currDrink == 0 ? energyDrinkA[index] : energyDrinkB[index];
-        
-        // two choices
-        long notSwitch = solve(index + 1, currDrink, energyDrinkA, energyDrinkB);
-        long switchDrink = solve(index + 2, 1 - currDrink, energyDrinkA, energyDrinkB);
-        
-        return dp[index][currDrink] = drinkBoost + Math.max(notSwitch, switchDrink);
-    }
+        for(int i = 2; i < n; i++)
+        {
+            dpA[i] = drinkA[i] + Math.max(dpB[i - 2], dpA[i - 1]);
+            dpB[i] = drinkB[i] + Math.max(dpA[i - 2], dpB[i - 1]);
+        }
 
-    public long maxEnergyBoost(int[] energyDrinkA, int[] energyDrinkB) 
-    {
-        dp = new Long[energyDrinkA.length][2];
-        return Math.max(solve(0, 0, energyDrinkA, energyDrinkB), solve(0, 1, energyDrinkA, energyDrinkB));
+        return Math.max(dpA[n -1], dpB[n - 1]);
     }
 }
