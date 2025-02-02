@@ -12,7 +12,7 @@ public:
         vector<vector<vector<int>>> vis(n, vector<vector<int>>(m, vector<int>(k + 1, 0)));
     
         // {k, row, col}
-        queue<vector<int>> q;
+        queue<tuple<int, int, int>> q;
         q.push({k, 0, 0}); 
     
         // BFS traversal
@@ -22,11 +22,8 @@ public:
             int level = q.size();
             for(int l = 0; l < level; l++)
             {
-                auto curr = q.front();
+                auto [moves, row, col] = q.front();
                 q.pop();
-                int moves = curr[0];
-                int row = curr[1];
-                int col = curr[2];
             
                 // If we reach the destination, return the distance
                 if (row == n - 1 && col == m - 1)
@@ -48,10 +45,9 @@ public:
                     // Check if the new cell is within bounds
                     if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m) 
                     {
-                        int wt = grid[newRow][newCol] == 1 ? 1 : 0;
-                        // If a smaller dist is found, update and push to the queue
-                        if (moves - wt >= 0) 
-                        q.push({moves - wt, newRow, newCol});
+                        int remainingMoves = moves - grid[newRow][newCol];
+                        if (remainingMoves >= 0) 
+                        q.push({remainingMoves, newRow, newCol});
                     }
                 }
             }
