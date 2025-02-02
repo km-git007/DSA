@@ -1,26 +1,20 @@
 class Solution {
     private Long[][] dp;
-    private long solve(int index, int canDrinkB, int[] energyDrinkA, int[] energyDrinkB)
+    private long solve(int index, int currDrink, int[] energyDrinkA, int[] energyDrinkB)
     {
         if(index >= energyDrinkA.length)
         return 0;
 
-        if(dp[index][canDrinkB] != null)
-        return dp[index][canDrinkB];
+        if(dp[index][currDrink] != null)
+        return dp[index][currDrink];
 
-        long switchDrink = -1, notSwitch = -1;
-        if(canDrinkB == 0)
-        {
-            notSwitch = energyDrinkA[index] + solve(index + 1, 0, energyDrinkA, energyDrinkB);
-            switchDrink = energyDrinkA[index] + solve(index + 2, 1, energyDrinkA, energyDrinkB);
-        }
-        else
-        {
-            notSwitch = energyDrinkB[index] + solve(index + 1, 1, energyDrinkA, energyDrinkB);
-            switchDrink = energyDrinkB[index] + solve(index + 2, 0, energyDrinkA, energyDrinkB);
-        }
+        long drinkBoost = currDrink == 0 ? energyDrinkA[index] : energyDrinkB[index];
         
-        return dp[index][canDrinkB] = Math.max(notSwitch, switchDrink);
+        // two choices
+        long notSwitch = solve(index + 1, currDrink, energyDrinkA, energyDrinkB);
+        long switchDrink = solve(index + 2, 1 - currDrink, energyDrinkA, energyDrinkB);
+        
+        return dp[index][currDrink] = drinkBoost + Math.max(notSwitch, switchDrink);
     }
 
     public long maxEnergyBoost(int[] energyDrinkA, int[] energyDrinkB) 
