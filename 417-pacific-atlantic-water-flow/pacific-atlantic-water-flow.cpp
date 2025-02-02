@@ -30,10 +30,9 @@ public:
         n = grid.size();
         m = grid[0].size();
 
-        queue<pair<int, int>> pacific;
-        queue<pair<int, int>> atlantic;
-        vector<vector<bool>> pacificVis(n, vector<bool>(m, false));
-        vector<vector<bool>> atlanticVis(n, vector<bool>(m, false));
+        queue<pair<int, int>> pacific, atlantic;
+        vector<vector<bool>> pacificVis, atlanticVis;
+        atlanticVis = pacificVis = vector<vector<bool>>(n, vector<bool>(m, false));
         // start bfs from the shore of pacific and atlantic
         for(int i = 0; i < m; i++)
         {
