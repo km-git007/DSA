@@ -1,46 +1,57 @@
 class Solution {
 public:
-    int shortestPath(vector<vector<int>>& grid, int k) {
-        int m = grid.size(), n = grid[0].size();
+    int shortestPath(vector<vector<int>>& grid, int k) 
+    {
+        int n = grid.size();
+        int m = grid[0].size();
+        
+        // Directions for up, down, left, right movement
+        vector<pair<int, int>> directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+    
+        // vis{row,col, k}
+        vector<vector<vector<int>>> vis(n, vector<vector<int>>(m, vector<int>(k + 1, 0)));
+        vis[0][0][k] = 1;
+    
+        // {k, row, col}
+        queue<tuple<int, int, int>> q;
+        q.push({k, 0, 0}); 
+    
+        // BFS traversal
+        int steps = 0;
+        while (!q.empty()) 
+        {
+            int level = q.size();
+            for(int l = 0; l < level; l++)
+            {
+                auto [moves, row, col] = q.front();
+                q.pop();
+            
+                // If we reach the destination, return the distance
+                if (row == n - 1 && col == m - 1)
+                return steps;
+            
+                // Explore all possible directions
+                for (auto [dx, dy] : directions) 
+                {
+                    int newRow = row + dx;
+                    int newCol = col + dy;
 
-    // case: k is greater or equal to the number of obstacles
-    if (m + n <= k) return m + n - 2;
-
-    // for all four directions
-    vector<pair<int, int>> directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-
-    // Visited state: (row, col, remaining obstacle eliminations)
-    vector<vector<vector<bool>>> visited(m, vector<vector<bool>>(n, vector<bool>(k + 1, false)));
-
-    // BFS queue storing (x, y, steps, remaining obstacle eliminations)
-    queue<tuple<int, int, int, int>> q;
-    q.push({0, 0, 0, k});  // Start at (0,0) with 0 steps taken and k removals available
-    visited[0][0][k] = true;
-
-    while (!q.empty()) {
-        auto [x, y, steps, remaining_k] = q.front();
-        q.pop();
-
-        // If we reach the bottom-right corner, return the number of steps
-        if (x == m - 1 && y == n - 1) return steps;
-
-        // Explore all 4 directions
-        for (auto [dx, dy] : directions) {
-            int newX = x + dx, newY = y + dy;
-
-            // Check if within bounds
-            if (newX >= 0 && newX < m && newY >= 0 && newY < n) {
-                int newK = remaining_k - grid[newX][newY];  // Deduct 1 if moving onto an obstacle
-                
-                // Only proceed if we have enough eliminations left
-                if (newK >= 0 && !visited[newX][newY][newK]) {
-                    visited[newX][newY][newK] = true;
-                    q.push({newX, newY, steps + 1, newK});
+                    // Check if the new cell is within bounds
+                    if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m) 
+                    {
+                        int remainingMoves = moves - grid[newRow][newCol];
+                        // Only proceed if we have enough eliminations left
+                        if (remainingMoves >= 0 && !vis[newRow][newCol][remainingMoves]) 
+                        {
+                            q.push({remainingMoves, newRow, newCol});
+                            vis[newRow][newCol][remainingMoves] = 1;
+                        }
+                    }
                 }
             }
+            steps++;
         }
-    }
-
-    return -1;  // If no path found 
+        // return -1 if can't reach
+        return -1;
     }
 };
