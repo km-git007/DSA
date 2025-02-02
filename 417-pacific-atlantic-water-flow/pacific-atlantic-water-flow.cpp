@@ -1,27 +1,69 @@
 class Solution {
 public:
-    int m, n;
-	// denotes cells reachable starting from atlantic and pacific edged cells respectively
-    vector<vector<bool> > atlantic, pacific;
-	vector<vector<int> > ans;    
-    vector<vector<int> > pacificAtlantic(vector<vector<int>>& mat) {
-        if(!size(mat)) return ans;
-        m = size(mat), n = size(mat[0]);
-        atlantic = pacific = vector<vector<bool> >(m, vector<bool>(n, false));
-		// perform dfs from all edge cells (ocean-connected cells)
-        for(int i = 0; i < m; i++) dfs(mat, pacific, i, 0), dfs(mat, atlantic, i, n - 1);
-        for(int i = 0; i < n; i++) dfs(mat, pacific, 0, i), dfs(mat, atlantic, m - 1, i);             
-        return ans;
+    int n, m;
+    vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    void bfs(queue<pair<int, int>>& q, vector<vector<bool>>& vis, vector<vector<int>>& grid) 
+    {
+        while (!q.empty()) 
+        {
+            auto [row, col] = q.front();
+            q.pop();
+        
+            for (auto dir : directions) 
+            {
+                int newRow = row + dir.first;
+                int newCol = col + dir.second;
+
+                // Check boundaries and if already visited
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && 
+                !vis[newRow][newCol] && grid[row][col] <= grid[newRow][newCol]) 
+                {
+                    vis[newRow][newCol] = true;
+                    q.push({newRow, newCol});
+                }
+            }
+        }
     }
-    void dfs(vector<vector<int> >& mat, vector<vector<bool> >& visited, int i, int j){        
-        if(visited[i][j]) return;
-        visited[i][j] = true;
-		// if cell reachable from both the oceans, insert into final answer vector
-        if(atlantic[i][j] && pacific[i][j]) ans.push_back(vector<int>{i, j});    
-		// dfs from current cell only if height of next cell is greater
-/*⬇️*/  if(i + 1 <  m && mat[i + 1][j] >= mat[i][j]) dfs(mat, visited, i + 1, j); 
-/*⬆️*/  if(i - 1 >= 0 && mat[i - 1][j] >= mat[i][j]) dfs(mat, visited, i - 1, j);
-/*➡️*/  if(j + 1 <  n && mat[i][j + 1] >= mat[i][j]) dfs(mat, visited, i, j + 1); 
-/*⬅️*/  if(j - 1 >= 0 && mat[i][j - 1] >= mat[i][j]) dfs(mat, visited, i, j - 1);
+
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& grid) 
+    {
+        n = grid.size();
+        m = grid[0].size();
+
+        queue<pair<int, int>> pacific;
+        queue<pair<int, int>> atlantic;
+        vector<vector<bool>> pacificVis(n, vector<bool>(m, false));
+        vector<vector<bool>> atlanticVis(n, vector<bool>(m, false));
+        // start bfs from the shore of pacific and atlantic
+        for(int i = 0; i < m; i++)
+        {
+            pacific.push({0, i});
+            atlantic.push({n - 1, i});
+            pacificVis[0][i] = true;
+            atlanticVis[n - 1][i] = true;
+        }
+
+        for(int i = 0; i < n; i++)
+        {
+            pacific.push({i, 0});
+            atlantic.push({i, m - 1});
+            pacificVis[i][0] = true;
+            atlanticVis[i][m - 1] = true;
+        }
+
+        // start bfs from the shore of atlantic and pacific
+        bfs(pacific, pacificVis, grid);
+        bfs(atlantic, atlanticVis, grid);
+
+        vector<vector<int>> res;
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < m; j++)
+            {
+                if(pacificVis[i][j] && atlanticVis[i][j])
+                res.push_back({i, j});
+            }
+        }
+        return res;
     }
 };
