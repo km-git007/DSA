@@ -24,24 +24,27 @@ class Node {
 class Solution {
     public Node connect(Node root) 
     {
-        if(root==null)
+        if(root == null || root.left == null)
         return root;
 
-        Node head = root;
-        while(head.left != null)
+        Node curr = root;
+        while(curr.left != null)
         {
-            Node curr = head;
-            while(curr != null)
+            Node node = curr;
+            while(node != null)
             {
-                curr.left.next = curr.right;
-            
-                if(curr.next != null)
-                curr.right.next = curr.next.left;
+                // make connection between children
+                node.left.next = node.right;
 
-                curr = curr.next;
+                // make connection between right child and the left child of next node
+                if(node.next != null)
+                node.right.next = node.next.left;
+
+                node = node.next;
             }
-            head = head.left;
+            curr = curr.left;
         }
+
         return root;
     }
 }
