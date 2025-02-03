@@ -1,26 +1,32 @@
 class Solution {
 public:
-    int longestSubarray(vector<int>& a, int limit) 
+    int longestSubarray(vector<int>& nums, int limit) 
     {
-        priority_queue<pair<int,int>> maxHeap;
-        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> minHeap;
-        int maxLen=0,i=0;
-        for(int j=0;j<a.size();j++)
+        deque<int> minDq, maxDq;
+        int i = 0, maxLength = 0, n = nums.size();
+        for(int j = 0; j < n; j++)
         {
-            maxHeap.push({a[j],j});
-            minHeap.push({a[j],j});
+            while(!minDq.empty() && nums[j] < minDq.back())
+            minDq.pop_back();
 
-            while(maxHeap.top().first-minHeap.top().first>limit)
+            while(!maxDq.empty() && nums[j] > maxDq.back())
+            maxDq.pop_back();
+
+            minDq.push_back(nums[j]);
+            maxDq.push_back(nums[j]);
+
+            while(maxDq.front() - minDq.front() > limit)
             {
-                i=min(maxHeap.top().second, minHeap.top().second)+1;
-                // Remove elements from the heaps that are outside the current window
-                while(maxHeap.top().second<i)
-                maxHeap.pop();
-                while(minHeap.top().second<i)
-                minHeap.pop();
+                if(nums[i] == minDq.front())
+                minDq.pop_front();
+
+                if(nums[i] == maxDq.front())
+                maxDq.pop_front();
+
+                i++;
             }
-            maxLen=max(maxLen,j-i+1);
+            maxLength = max(maxLength, j - i + 1);
         }
-        return maxLen;
+        return maxLength;
     }
 };
