@@ -27,27 +27,28 @@ class Solution {
         if(root == null)
         return root;
 
-        Node head = root;
-        while(head != null)
+        Node curr = root;
+        while(curr != null)
         {
-            Node dummy = new Node(0);
-            Node curr = dummy;
-            while(head != null)
+            Node dummy = new Node(-1);
+            Node tail = dummy;
+            while(curr != null)
             {
-                if(head.left != null)
+                if(curr.left != null)
                 {
-                    curr.next = head.left;
-                    curr = curr.next;
+                    tail.next = curr.left;
+                    tail = tail.next;
                 }
-    
-                if(head.right != null)
+
+                if(curr.right != null)
                 {
-                    curr.next = head.right;
-                    curr = curr.next;
+                    tail.next = curr.right;
+                    tail = tail.next;
                 }
-                head = head.next;
+                // move the current
+                curr = curr.next;
             }
-            head = dummy.next;
+            curr = dummy.next;
         }
         return root;
     }
