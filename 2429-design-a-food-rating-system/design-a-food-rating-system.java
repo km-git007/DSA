@@ -17,9 +17,8 @@ public class FoodRatings {
     // stores <food-name,Food> as key value pair.
     private HashMap<String,Food> foodMap;
 
-
-    // HashMap that maps a cuisine to a priority queue of Food objects
-    private HashMap<String, PriorityQueue<Food>> cuisineMap;
+    // HashMap that maps a cuisine to a TreeSet of Food objects
+    private HashMap<String, TreeSet<Food>> cuisineMap;
 
 
     // Global static comparator for Food objects
@@ -36,16 +35,15 @@ public class FoodRatings {
     
     public FoodRatings(String[] foods, String[] cuisines, int[] ratings)
     {
-        foodMap=new HashMap<>();
-        cuisineMap=new HashMap<>();
-
-        for(int i=0;i<foods.length;i++)
+        foodMap = new HashMap<>();
+        cuisineMap = new HashMap<>();
+        for(int i = 0; i < foods.length; i++)
         {
-            Food foodItem=new Food(foods[i],cuisines[i],ratings[i]);
+            Food foodItem = new Food(foods[i],cuisines[i],ratings[i]);
             foodMap.put(foods[i],foodItem);
 
             // Get the priority queue for the cuisine, or create one if it doesn't exist
-            cuisineMap.putIfAbsent(cuisines[i], new PriorityQueue<>(FOOD_COMPARATOR));
+            cuisineMap.putIfAbsent(cuisines[i], new TreeSet<>(FOOD_COMPARATOR));
 
             // Add the food item to the corresponding cuisine's priority queue
             cuisineMap.get(cuisines[i]).add(foodItem);
@@ -58,21 +56,21 @@ public class FoodRatings {
         Food foodItem = foodMap.get(food);
     
         // Get the priority queue for the cuisine
-        PriorityQueue<Food> foodQueue = cuisineMap.get(foodItem.cuisine);
+        TreeSet<Food> foodSet = cuisineMap.get(foodItem.cuisine);
 
-        // Remove the food item from the priority queue
-        foodQueue.remove(foodItem);
+        // Remove the food item from the treeset
+        foodSet.remove(foodItem);
 
         // Update the rating of the food
         foodItem.rating = newRating;
 
         // Reinsert the food item with the updated rating
-        foodQueue.add(foodItem);
+        foodSet.add(foodItem);
     }
     
     public String highestRated(String cuisine)
     {
-        return cuisineMap.get(cuisine).peek().name;
+        return cuisineMap.get(cuisine).first().name;
     }
 }
 
