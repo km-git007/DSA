@@ -4,20 +4,23 @@ class TaskManager {
         int userId;
         int taskId;
         int priority;
+        boolean isRemoved;
         public Task(int userId, int taskId, int priority)
         {
             this.userId = userId;
             this.taskId = taskId;
             this.priority = priority;
+            isRemoved = false;
         }
     }
 
     private Map<Integer,Task> map;
-    private TreeSet<Task> taskSet;
+    private Queue<Task> maxHeap;
+
     public TaskManager(List<List<Integer>> tasks) 
     {
         map = new HashMap<>();
-        taskSet = new TreeSet<>((a, b) -> {
+        maxHeap = new PriorityQueue<>((a, b) -> {
             if(a.priority == b.priority)
             return b.taskId - a.taskId;
             return b.priority - a.priority;
@@ -31,41 +34,42 @@ class TaskManager {
     {
         Task t = new Task(userId, taskId, priority);
         map.put(taskId, t);
-        taskSet.add(t);
+        maxHeap.add(t);
     }
     
     public void edit(int taskId, int newPriority) 
     {
-        Task oldTask = map.get(taskId);
-        if (oldTask != null) 
-        {
-            taskSet.remove(oldTask); // Remove old entry
-            Task newTask = new Task(oldTask.userId, taskId, newPriority);
-            map.put(taskId, newTask);
-            taskSet.add(newTask); // Insert updated task
-        }
+        // soft delete the old task
+        Task task = map.get(taskId);
+        task.isRemoved = true;
+
+        // create a new task and add in the queue
+        Task newTask = new Task(task.userId, taskId, newPriority);
+        maxHeap.add(newTask);
+        map.put(taskId, newTask);
     }
     
     public void rmv(int taskId) 
     {
         Task task = map.get(taskId);
-        if (task != null) 
-        {
-            taskSet.remove(task);
-            map.remove(taskId);
-        }
+        task.isRemoved = true;
+
+        // remove the task from the map
+        map.remove(taskId);
     }
     
     public int execTop() 
     {
-        if (taskSet.isEmpty()) 
+        while(!maxHeap.isEmpty())
+        {
+            Task task = maxHeap.poll();
+            if(!task.isRemoved)
+            {
+                map.remove(task.taskId);
+                return task.userId;
+            }
+        }
         return -1;
-
-        Task topTask = taskSet.first(); // Get highest-priority task
-        taskSet.remove(topTask); // Remove from TreeSet
-        map.remove(topTask.taskId); // Remove from HashMap
-
-        return topTask.userId;
     }
 }
 
