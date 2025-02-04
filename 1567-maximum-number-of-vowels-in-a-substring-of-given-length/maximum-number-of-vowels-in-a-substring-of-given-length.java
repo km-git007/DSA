@@ -4,7 +4,7 @@ class Solution {
         // build a set of vowels
         Set<Character> set = helper();
 
-        int i = 0, count = 0, maxVowel = 0;
+        int i = 0, count = 0, maxVowels = 0;
         for(int j = 0; j < s.length(); j++)
         {
             if(set.contains(s.charAt(j)))
@@ -12,8 +12,12 @@ class Solution {
             
             if(j - i + 1 == k)
             {
-               // update the maxVowel
-               maxVowel = Math.max(count, maxVowel);
+               // update the maxVowels
+               maxVowels = Math.max(count, maxVowels);
+               
+               // no need to check further
+               if(maxVowels == k)
+               return k;
 
                if(set.contains(s.charAt(i)))
                count--;
@@ -21,7 +25,7 @@ class Solution {
                i++;
             }
         }
-        return maxVowel;
+        return maxVowels;
     }
 
     private Set<Character> helper()
