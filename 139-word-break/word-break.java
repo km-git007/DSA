@@ -1,33 +1,25 @@
 class Solution {
 
     private HashSet<String> set = new HashSet<>();
-    private HashMap<String,Boolean> map = new HashMap<>();
-
-    private boolean solve(String s) 
+    private Boolean[] dp;
+    private boolean solve(int index, String s) 
     {
-        // Base case: if the entire string is found in the set
-        if(set.contains(s))
+        if(index >= s.length())
         return true;
         
-        if(map.containsKey(s))
-        return map.get(s);
+        if(dp[index] != null)
+        return dp[index];
 
-        // Try breaking the string into two parts and solve recursively
-        for(int i = 1; i<s.length(); i++) 
-        {  // Use i < s.length() to avoid out-of-bounds
-            String prefix = s.substring(0, i);
-            String suffix = s.substring(i);
+        for(int i = index + 1; i <= s.length(); i++) 
+        {  
+            String prefix = s.substring(index, i);
 
-            // Check if the prefix is a valid word and recursively check the suffix
-            if (set.contains(prefix) && solve(suffix))
-            {
-                map.put(s,true);
-                return true;
-            }
+            // Check if the prefix is a valid word and recursively check the remaining string
+            if (set.contains(prefix) && solve(i, s))
+            return true;
         }
         // If no valid break found, return false
-        map.put(s,false);
-        return false;
+        return dp[index] = false;
     }
 
     public boolean wordBreak(String s, List<String> wordDict) 
@@ -35,6 +27,8 @@ class Solution {
         for(String word : wordDict)
         set.add(word);
 
-        return solve(s);
+        dp = new Boolean[s.length() + 1];
+
+        return solve(0, s);
     }
 }
