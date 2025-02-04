@@ -12,15 +12,18 @@ class Solution {
             if(j - i + 1 == k)
             {
                if(map.size() == k)
-               maxSum = Math.max(maxSum, sum);
+               maxSum = Math.max(sum, maxSum);
 
                sum -= nums[i];
 
+               // remove 1 occurance the ith number from the map
                map.put(nums[i], map.get(nums[i]) - 1);
-               if(map.get(nums[i]) == 0)
-               map.remove(nums[i]);
-               
-               i++;
+
+                // if no more occurance of the its number is left than remove it from the map
+                if(map.get(nums[i]) == 0)
+                map.remove(nums[i]);
+
+                i++;
             }
         }
         return maxSum == Integer.MIN_VALUE ? 0 : maxSum;
