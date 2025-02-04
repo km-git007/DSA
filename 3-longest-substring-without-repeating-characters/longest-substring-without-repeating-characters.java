@@ -6,7 +6,7 @@ class Solution {
         for(int j = 0; j < s.length(); j++)
         {
             map.put(s.charAt(j), map.getOrDefault(s.charAt(j), 0) + 1);
-            while(map.size() < j - i + 1)
+            if(map.size() < j - i + 1)
             {
                 // remove 1 occurance the ith number from the map
                 map.put(s.charAt(i), map.get(s.charAt(i)) - 1);
@@ -18,6 +18,7 @@ class Solution {
                 i++;
             }
 
+            if(map.size() == j - i + 1)
             maxLength = Math.max(maxLength, j - i + 1);
         }
         return maxLength;
