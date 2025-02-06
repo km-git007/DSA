@@ -18,21 +18,37 @@ class Solution {
     public List<Integer> postorderTraversal(TreeNode root) 
     {
         List<Integer> ans=new ArrayList<>();
-        if(root == null)
+        if(root==null)
         return ans;
 
-        ArrayDeque<TreeNode> stack = new ArrayDeque<>();
-        stack.push(root);
-        while(!stack.isEmpty())
+        while(root!=null)
         {
-            TreeNode node = stack.pop();
-            ans.add(node.val);
-
-            if(node.left!=null)
-            stack.push(node.left);
-
-            if(node.right!=null)
-            stack.push(node.right);
+            // Right-Part doesn't exist.
+            if(root.right == null)
+            {
+                ans.add(root.val);
+                root = root.left;
+            }
+            // Right-Part does exist.
+            else
+            {
+                TreeNode curr = root.right;
+                while(curr.left != null && curr.left != root)
+                curr = curr.left;
+                // Right-Part not yet traversed.
+                if(curr.left == null)
+                {
+                    ans.add(root.val);
+                    curr.left = root;
+                    root = root.right;
+                }
+                // Right-Part already traversed.
+                else
+                {
+                    curr.left = null;
+                    root = root.left;
+                }
+            }
         }
         Collections.reverse(ans);
         return ans;
