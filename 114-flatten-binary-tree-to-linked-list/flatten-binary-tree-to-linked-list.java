@@ -16,26 +16,20 @@
 class Solution {
 
     public void flatten(TreeNode root) {
-        if (root == null) return;
+        
+        while(root != null)
+        {
+            if(root.left != null)
+            {
+                TreeNode curr = root.left;
+                while(curr.right != null)
+                curr = curr.right;
 
-        // Recursively flatten left and right subtrees
-        flatten(root.left);
-        flatten(root.right);
-
-        // Store the right subtree
-        TreeNode tempRight = root.right;
-
-        // Move left subtree to the right
-        root.right = root.left;
-        root.left = null;
-
-        // Find the rightmost node of the new right subtree
-        TreeNode curr = root;
-        while (curr.right != null) {
-            curr = curr.right;
+                curr.right = root.right;
+                root.right = root.left;
+                root.left = null;
+            }
+            root = root.right;
         }
-
-        // Attach the original right subtree
-        curr.right = tempRight;
     }
 }
