@@ -15,25 +15,23 @@
  */
 class Solution {
 
-    int maxLevel=-1;
-    List<Integer> list=new ArrayList<>();
+    List<Integer> list;
     public void solve(TreeNode root,int level)
     {
-        if(root==null)
+        if(root == null)
         return;
 
-        if(level>maxLevel)
-        {
-            maxLevel=level;
-            list.add(Integer.valueOf(root.val));
-        }
+        if(level == list.size())
+        list.add(root.val);
 
         solve(root.right,level+1);
         solve(root.left,level+1);
     }
     public List<Integer> rightSideView(TreeNode root) 
     {
-        if(root==null)
+        list = new ArrayList<>();
+
+        if(root == null)
         return list;
 
         solve(root,0);
