@@ -15,8 +15,8 @@ class NeighborSum {
             map.put(grid[i][j], new int[]{i, j});
         }
     }
-    
-    public int adjacentSum(int value) 
+
+    private int sumOfNeighbours(int value, boolean isAdj)
     {
         int[] coordinates = map.get(value);
         int r = coordinates[0], c = coordinates[1];
@@ -24,30 +24,22 @@ class NeighborSum {
         int sum = 0;
         for(int i = 0; i < 4; i++)
         {
-            int row = r + adj[i][0];
-            int col = c + adj[i][1];
+            int row = r + (isAdj ? adj[i][0] : dia[i][0]);
+            int col = c + (isAdj ? adj[i][1] : dia[i][1]);
             if(row >= 0 && row < grid.length && col >= 0 && col < grid[0].length)
             sum += grid[row][col];
         }
-
         return sum;
+    }
+    
+    public int adjacentSum(int value) 
+    {
+        return sumOfNeighbours(value, true);
     }
     
     public int diagonalSum(int value) 
     {
-        int[] coordinates = map.get(value);
-        int r = coordinates[0], c = coordinates[1];
-
-        int sum = 0;
-        for(int i = 0; i < 4; i++)
-        {
-            int row = r + dia[i][0];
-            int col = c + dia[i][1];
-            if(row >= 0 && row < grid.length && col >= 0 && col < grid[0].length)
-            sum += grid[row][col];
-        }
-
-        return sum;
+        return sumOfNeighbours(value, false);
     }
 }
 
