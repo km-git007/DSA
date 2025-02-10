@@ -7,7 +7,6 @@ public:
         {
             if(isdigit(ch))
             {
-                if(!res.empty())
                 res.pop_back();
             }
 
