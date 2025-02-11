@@ -11,8 +11,7 @@ class Solution {
         grid[row][col] = -1;
 
         // push in the queue
-        q.add(new int[]{row, col, 0});
-
+        q.add(new int[]{row, col});
 
         for(int[] dir : directions)
         {
@@ -24,30 +23,35 @@ class Solution {
 
     int bfs(int[][] grid, Queue<int[]> q)
     {
+        int dist = 0;
         while(!q.isEmpty())
         {
-            int[] arr = q.poll();
-            int row = arr[0];
-            int col = arr[1];
-            int dist = arr[2];
-
-            for(int[] dir : directions)
+            int levelSize = q.size();
+            for(int i = 0; i < levelSize; i++)
             {
-                int r = row + dir[0];
-                int c = col + dir[1];
-                if(r >= 0 && r < n && c >= 0 && c < m && grid[r][c] >= 0)
+                int[] arr = q.poll();
+                int row = arr[0];
+                int col = arr[1];
+                
+                for(int[] dir : directions)
                 {
-                    // Found the first island
-                    if(grid[r][c] == 1)
-                    return dist;
+                    int r = row + dir[0];
+                    int c = col + dir[1];
+                    if(r >= 0 && r < n && c >= 0 && c < m && grid[r][c] >= 0)
+                    {
+                        // Found the first island
+                        if(grid[r][c] == 1)
+                        return dist;
 
-                    // mark the cell as vis
-                    grid[r][c] = -1;
+                        // mark the cell as vis
+                        grid[r][c] = -1;
 
-                    // push in the queue
-                    q.add(new int[]{r, c, dist + 1});
+                        // push in the queue
+                        q.add(new int[]{r, c});
+                    }
                 }
             }
+            dist++;
         }
         // whatever the fuck you want
         return -1;
