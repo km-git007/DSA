@@ -1,56 +1,45 @@
 class Solution {
-    
-    // Directions for moving up, down, left, and right
-    private static final int[] rowDir = {-1, 1, 0, 0};
-    private static final int[] colDir = {0, 0, -1, 1};
-    int n,m;
-    int[][] vis;
-    private int bfs(int startRow, int startCol,int[][] grid) 
+    private static int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+    int n, m, perimeter;
+    private int dfs(int row, int col, int[][] grid) 
     { 
-        vis[startRow][startCol]=1;
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[]{startRow, startCol}); 
+        if(row < 0 || col < 0 || row >= n || col >= m || grid[row][col] == 0)
+        return 1;
 
-        int perimeter=0;       
-        while (!q.isEmpty()) 
+        // already visited cell
+        if(grid[row][col] == -1)
+        return 0;
+
+        // mark as vis
+        grid[row][col] = -1;
+
+        int cellPeri = 0;
+        for(var dir : directions)
         {
-            int[] currCell=q.poll();
-            int currRow=currCell[0];
-            int currCol=currCell[1];
-                        
-            // Explore neighbors
-            for (int i=0;i<4;i++) 
-            {
-                int row=currRow+rowDir[i];
-                int col=currCol+colDir[i];
-                // Check if the new position is within bounds and not visited.
-                if(row>=0 && row<n && col>=0 && col<m && vis[row][col]==0 && grid[row][col]==1) 
-                {
-                    q.add(new int[]{row,col});
-                    vis[row][col]=1;
-                }
-                else if(row<0 || row>=n || col<0 || col>=m || grid[row][col]==0)
-                perimeter++;
-            }
+            int x = row + dir[0];
+            int y = col + dir[1];
+            cellPeri += dfs(x, y, grid);
         }
-        return perimeter;
+
+        perimeter += cellPeri;
+        return 0;
     }
 
     public int islandPerimeter(int[][] grid) 
     {
-        n=grid.length;
-        m=grid[0].length;
-        vis=new int[n][m];
+        n = grid.length;
+        m = grid[0].length;
+        perimeter = 0;
 
-        for(int i=0;i<n;i++)
+        for(int i = 0; i < n; i++)
         {
-            for(int j=0;j<m;j++)
+            for(int j = 0; j < m; j++)
             {
-                if(grid[i][j]==1 && vis[i][j]==0)
-                return bfs(i,j,grid);
+                if(grid[i][j] == 1)
+                dfs(i,j,grid);
             }
-            
         }
-        return -1;
+
+        return perimeter;
     }
 }
