@@ -1,27 +1,16 @@
 class Solution {
-    public int minOperations(int[] nums, int k) 
-    {
-        // Creating a Min Heap
-        PriorityQueue<Long> pq = new PriorityQueue<>();
-
-        for(int num : nums)
-        pq.add(Long.valueOf(num)); 
-
-        int oper = 0;
-        while(pq.size() > 1)
-        {
-            long a = pq.poll();
-            long b = pq.poll();
-
-            if(a >= k && b >= k)
-            break;
-
-            long c = a * 2 + b;
-            pq.add(c);
-
-            oper++;
+    public int minOperations(int[] nums, int k) {
+        PriorityQueue<Long> queue = new PriorityQueue<>();
+        int operations = 0;
+        for(int a = 0; a < nums.length; a++) {
+            queue.add((long)nums[a]);
         }
-
-        return oper;
+        while(queue.size() > 1 && queue.peek() < k) {
+            long val1 = queue.remove();
+            long val2 = queue.remove();
+            queue.add((val1*2) + val2);
+            operations = operations + 1;
+        }
+        return operations;
     }
 }
