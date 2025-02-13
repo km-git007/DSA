@@ -8,10 +8,13 @@ class Solution {
         pq.add(Long.valueOf(num)); 
 
         int oper = 0;
-        while(pq.size() > 1 && pq.peek() < k)
+        while(pq.size() > 1)
         {
             long a = pq.poll();
             long b = pq.poll();
+
+            if(a >= k && b >= k)
+            break;
 
             long c = a * 2 + b;
             pq.add(c);
