@@ -1,32 +1,29 @@
+#include <ranges>
+
+static auto init = []() {
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+  return nullptr;
+}(); 
+
 class Solution {
 public:
-    int minOperations(vector<int>& nums, int k) 
-    {
-        // Creating a Min Heap (priority_queue with greater<int> for min-heap behavior)
-        priority_queue<long long, vector<long long>, greater<>> pq;
-
-        // Insert all elements into the Min Heap
-        for(int num : nums) 
-        pq.push((long long)num);
-
-        int oper = 0;
-        // Continue merging until the smallest element is at least 'k'
-        while (pq.size() > 1) 
-        {
-            long long a = pq.top(); 
-            pq.pop();
-
-            long long b = pq.top(); 
-            pq.pop();
-
-            if(a >= k && b >= k) 
-            break;
-
-            long long c = a * 2 + b; // Merge rule
-            pq.push(c);
-
-            oper++;
-        }
-        return oper;
+  int minOperations(vector<int>& nums, int k) {
+    auto low_values = nums
+                      | views::filter([k](auto num) { return num < k; })
+                      | views::transform([](auto num) {
+                            return static_cast<long long>(num); }) ;
+    auto q = priority_queue(ranges::begin(low_values), ranges::end(low_values),
+                            greater{});
+    auto num_ops = 0;
+    while (!empty(q)) {
+      ++num_ops;
+      if (size(q) == 1) break;
+      auto x = q.top(); q.pop();
+      auto y = q.top(); q.pop();
+      auto new_val = (min(x, y) << 1 ) + max(x, y);
+      if (new_val < k) q.push(new_val);
     }
+    return num_ops;
+  }
 };
