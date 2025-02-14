@@ -15,26 +15,27 @@
  */
 class Solution {
 
-    private HashSet<Integer> set=new HashSet<>();
-    private List<TreeNode> list=new ArrayList<>();
+    private Set<Integer> set = new HashSet<>();
+    private List<TreeNode> list = new ArrayList<>();
     private TreeNode solve(TreeNode root)
     {
-        if(root==null)
+        if(root == null)
         return root;
 
-        root.left=solve(root.left);
-        root.right=solve(root.right);
+        root.left = solve(root.left);
+        root.right = solve(root.right);
 
         if(set.contains(root.val))
         {
-            if(root.left!=null)
+            if(root.left != null)
             list.add(root.left);
 
-            if(root.right!=null)
+            if(root.right != null)
             list.add(root.right);
 
             return null;
         }
+
         return root;
     }
 
