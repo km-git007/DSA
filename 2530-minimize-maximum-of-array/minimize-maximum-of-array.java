@@ -1,34 +1,12 @@
 class Solution {
-    private boolean isValid(int[] nums, int maxCap)
+    public int minimizeArrayValue(int[] nums) 
     {
-        long sum = 0;
+        long sum = 0, minMaxValue = 0;
         for(int i = 0; i < nums.length; i++)
         {
             sum += nums[i];
-
-            if(sum > (long)maxCap * (i + 1))
-            return false;
+            minMaxValue = Math.max(minMaxValue, (long)Math.ceil((double)sum / (i + 1)));
         }
-        return true;
-    }
-
-    public int minimizeArrayValue(int[] nums) 
-    {
-        int start = nums[0];
-        int end = Arrays.stream(nums).max().getAsInt();
-        int minMaxValue = end;
-        while (start <= end) 
-        {
-            int mid = start + (end - start) / 2;
-            if(isValid(nums, mid)) 
-            {
-                minMaxValue = mid;
-                end = mid - 1;
-            } 
-            else 
-            start = mid + 1;
-        }
-        // return the ans
-        return minMaxValue;
+        return (int)minMaxValue;
     }
 }
