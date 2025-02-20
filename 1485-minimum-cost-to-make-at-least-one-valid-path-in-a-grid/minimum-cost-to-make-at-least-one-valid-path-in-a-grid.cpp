@@ -11,10 +11,8 @@ public:
         int n = grid.size();
         int m = grid[0].size();
 
-        // create cost array
-        vector<vector<int>> cost(n, vector<int>(m, 1e9));
-        // cost to reach source is '0'
-        cost[0][0] = 0;
+        // create vis array
+        vector<vector<bool>> vis(n, vector<bool>(m, false));
 
         // Min-Heap of vectors (lexicographical order) {cost, row, col}
         priority_queue<vector<int>, vector<vector<int>>, greater<>> pq;
@@ -25,25 +23,26 @@ public:
             auto v = pq.top();
             pq.pop();
 
-            int currCost = v[0];
+            int cost = v[0];
             int row = v[1];
             int col = v[2];
 
             if(row == n - 1 && col == m - 1)
-            return currCost;
+            return cost;
+
+            if(vis[row][col])
+            continue;
+
+            vis[row][col] = true;
 
             for(int i = 0; i < directions.size(); i++)
             {
                 int r = row + directions[i].first;
                 int c = col + directions[i].second;
-                if(r >= 0 && r < n && c >= 0 && c < m)
+                if(r >= 0 && r < n && c >= 0 && c < m && !vis[r][c])
                 {
                     int nextCellTravelCost = ((grid[row][col] - 1) == i ? 0 : 1);
-                    if(cost[r][c] > nextCellTravelCost + currCost)
-                    {
-                        cost[r][c] = nextCellTravelCost + currCost;
-                        pq.push({cost[r][c], r, c});
-                    }
+                    pq.push({nextCellTravelCost + cost, r, c});
                 }
             }
         }
