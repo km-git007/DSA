@@ -15,21 +15,21 @@
  */
 class Solution {
     private Map<Integer, Integer> map;
-    private TreeNode solve(int[] preorder, int[] postorder, int preStart, int preEnd, int postStart, int postEnd)
+    private TreeNode solve(int[] preorder, int[] postorder, int preStart, int preEnd, int postStart)
     {
         if(preStart > preEnd)
         return null;
 
-        if(preStart == preEnd)
-        return new TreeNode(preorder[preStart]);
-
         TreeNode node = new TreeNode(preorder[preStart]);
+
+        if(preStart == preEnd)
+        return node;
 
         int pos = map.get(preorder[preStart + 1]);
         int numLeftTree = pos - postStart + 1;
 
-        node.left = solve(preorder, postorder, preStart + 1, preStart + numLeftTree, postStart, pos);
-        node.right = solve(preorder, postorder, preStart + numLeftTree + 1, preEnd, pos + 1, postEnd - 1);
+        node.left = solve(preorder, postorder, preStart + 1, preStart + numLeftTree, postStart);
+        node.right = solve(preorder, postorder, preStart + numLeftTree + 1, preEnd, pos + 1);
 
         return node;
     }
@@ -42,6 +42,6 @@ class Solution {
         for(int i = 0; i < n; i++)
         map.put(postorder[i], i);
 
-        return solve(preorder, postorder, 0, n - 1, 0, n - 1);
+        return solve(preorder, postorder, 0, n - 1, 0);
     }
 }
