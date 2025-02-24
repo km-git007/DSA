@@ -16,6 +16,8 @@
 class Solution {
 
     private int maxSum;
+    //solve(root) returns the maximum sum of a path that can be extended upwards 
+    // (either by taking the left or right subtree).
     private int solve(TreeNode root)
     {
         if(root == null)
