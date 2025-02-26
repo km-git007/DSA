@@ -1,20 +1,21 @@
 class Solution {
-    private int kadanesAlgo(int[] nums, boolean findMax)
+    private int[] kadanesAlgo(int[] nums)
     {
-        int currExtrema = nums[0];
-        int maxExtrema = nums[0];
+        int currMaxima, currMinima, maxima, minima;
+        currMaxima = currMinima = minima = maxima = nums[0];
         for(int i = 1; i < nums.length; i++)
         {
-            currExtrema = findMax ? Math.max(nums[i], currExtrema + nums[i]) : Math.min(nums[i], currExtrema + nums[i]);
-            maxExtrema = findMax ? Math.max(maxExtrema, currExtrema) : Math.min(maxExtrema, currExtrema);
+            currMaxima = Math.max(nums[i], currMaxima + nums[i]);
+            currMinima = Math.min(nums[i], currMinima + nums[i]);
+            maxima = Math.max(maxima, currMaxima);
+            minima = Math.min(minima, currMinima);
         }
-        return maxExtrema;
+        return new int[]{maxima, minima};
     }
 
     public int maxAbsoluteSum(int[] nums) 
     {
-        int maxSubarraySum = kadanesAlgo(nums, true);
-        int minSubarraySum = kadanesAlgo(nums, false);
-        return Math.max(maxSubarraySum, Math.abs(minSubarraySum));
+        int[] extrema = kadanesAlgo(nums);
+        return Math.max(extrema[0], -extrema[1]);
     }
 }
