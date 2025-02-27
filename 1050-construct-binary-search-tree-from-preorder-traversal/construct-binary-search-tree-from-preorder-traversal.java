@@ -15,31 +15,23 @@
  */
 class Solution {
 
-    int index=0;
-    HashMap<Integer,Integer> map=new HashMap<>();
-    private TreeNode buildBST(int[] preorder,int[] inorder,int start,int end)
+    int index;
+    private TreeNode buildBST(int[] preorder, int ub)
     {
-        if(start>end)
+        if(index == preorder.length || preorder[index] > ub)
         return null;
 
-        TreeNode node=new TreeNode(preorder[index++]);
-        int pos=map.get(node.val);
+        TreeNode node = new TreeNode(preorder[index++]);
 
-        node.left=buildBST(preorder,inorder,start,pos-1);
-        node.right=buildBST(preorder,inorder,pos+1,end);
+        node.left = buildBST(preorder,node.val);
+        node.right = buildBST(preorder,ub);
 
         return node;
     }
 
     public TreeNode bstFromPreorder(int[] preorder) 
     {
-        int n=preorder.length;
-        int[] inorder=Arrays.copyOf(preorder,n);
-        Arrays.sort(inorder);
-
-        for(int i=0;i<n;i++)
-        map.put(inorder[i],i);
-
-        return buildBST(preorder,inorder,0,n-1);
+        index = 0;
+        return buildBST(preorder, Integer.MAX_VALUE);
     }
 }
