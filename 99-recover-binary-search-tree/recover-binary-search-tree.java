@@ -14,7 +14,7 @@
  * }
  */
 class Solution {
-    private TreeNode first, middle, last, prev;
+    private TreeNode first, last, prev;
     private void inorderTraversal(TreeNode root)
     {
         if(root == null)
@@ -25,12 +25,8 @@ class Solution {
         if(prev != null && root.val < prev.val)
         {
             if(first == null)
-            {
-                first = prev;
-                middle = root;
-            }
+            first = prev;
 
-            else
             last = root;
         }
 
@@ -41,16 +37,10 @@ class Solution {
     public void recoverTree(TreeNode root) 
     {
         inorderTraversal(root);
+
+        // swap first and last
         int temp = first.val;
-        if(last == null)
-        {
-            first.val = middle.val;
-            middle.val = temp;
-        }
-        else
-        {
-            first.val = last.val;
-            last.val = temp;
-        }
+        first.val = last.val;
+        last.val = temp;
     }
 }
