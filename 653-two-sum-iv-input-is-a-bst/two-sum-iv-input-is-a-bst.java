@@ -15,55 +15,34 @@
  */
 class BSTIterator {
 
-    BSTIterator(TreeNode root)
+    private Deque<TreeNode> stack = new ArrayDeque<>();
+    private boolean reverse;
+
+    public BSTIterator(TreeNode root, boolean isReverse) 
     {
-        nextStack = new ArrayDeque<>();
-        insertNext(root);
-        prevStack = new ArrayDeque<>();
-        insertPrev(root);
+        this.reverse = isReverse;
+        pushNodes(root);
     }
 
-    private Deque<TreeNode> nextStack, prevStack;
-    public void insertNext(TreeNode root)
+    private void pushNodes(TreeNode node) 
     {
-        while(root != null)
+        while (node != null) 
         {
-            nextStack.push(root);
-            root = root.left;
+            stack.push(node);
+            node = reverse ? node.right : node.left;
         }
     }
 
-    public int next()
+    public int next() 
     {
-        TreeNode node = nextStack.pop();
-        insertNext(node.right);
+        TreeNode node = stack.pop();
+        pushNodes(reverse ? node.left : node.right);
         return node.val;
     }
 
-    public boolean hasNext()
+    public boolean hasNext() 
     {
-        return !nextStack.isEmpty();
-    }
-
-    public void insertPrev(TreeNode root)
-    {
-        while(root != null)
-        {
-            prevStack.push(root);
-            root = root.right;
-        }
-    }
-
-    public int prev()
-    {
-        TreeNode node = prevStack.pop();
-        insertPrev(node.left);
-        return node.val;
-    }
-
-    public boolean hasPrev()
-    {
-        return !prevStack.isEmpty();
+        return !stack.isEmpty();
     }
 }
 
@@ -71,19 +50,25 @@ class Solution {
     
     public boolean findTarget(TreeNode root, int target) 
     {
-        BSTIterator itr = new BSTIterator(root);
-        int left = itr.next();
-        int right = itr.prev();
-        while(itr.hasNext() && itr.hasPrev())
+        if(root == null) 
+        return false;
+
+        BSTIterator leftItr = new BSTIterator(root, false); // In-order
+        BSTIterator rightItr = new BSTIterator(root, true); // Reverse in-order
+
+        int left = leftItr.next();
+        int right = rightItr.next();
+
+        while(leftItr.hasNext() && rightItr.hasNext())
         {
             if(left != right && left + right == target)
             return true;
 
             else if(left + right > target)
-            right = itr.prev();
+            right = rightItr.next();
 
             else
-            left = itr.next();
+            left = leftItr.next();
         }
         return false;
     }
