@@ -21,21 +21,35 @@ class Solution {
         if(root == null)
         return ans;
 
-        Deque<TreeNode> stack = new ArrayDeque<>();
-        while(root != null || !stack.isEmpty())
+        while(root != null)
         {
-            while(root != null)
+            // left part doesn't exists
+            if(root.left == null)
             {
-                stack.push(root);
-                root = root.left;
+                ans.add(root.val);
+                root = root.right;
             }
+            // left part exists
+            else
+            {
+                TreeNode curr = root.left;
+                while(curr.right != null && curr.right != root)
+                curr = curr.right;
 
-            root = stack.pop();
-            ans.add(root.val);
+                if(curr.right == null)
+                {
+                    curr.right = root;
+                    root = root.left;
+                }
 
-            root = root.right;
+                else
+                {
+                    ans.add(root.val);
+                    curr.right = null;
+                    root = root.right;
+                }
+            }
         }
-
         return ans;
     }
 }
