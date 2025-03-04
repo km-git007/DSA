@@ -27,24 +27,32 @@ class Solution {
         if(root == null || root.left == null)
         return root;
 
-        Node curr = root;
-        while(curr.left != null)
+        Node head = root;
+        while(root != null)
         {
-            Node node = curr;
-            while(node != null)
+            Node dummy = new Node(-1);
+            Node tail = dummy;
+            while(root != null)
             {
                 // make connection between children
-                node.left.next = node.right;
+                if(root.left != null)
+                {
+                    tail.next = root.left;
+                    tail = tail.next;
+                }
+                
+                if(root.right != null)
+                {
+                    tail.next = root.right;
+                    tail = tail.next;
+                }
 
-                // make connection between right child and the left child of next node
-                if(node.next != null)
-                node.right.next = node.next.left;
-
-                node = node.next;
+                root = root.next;
             }
-            curr = curr.left;
+
+            root = dummy.next;
         }
 
-        return root;
+        return head;
     }
 }
