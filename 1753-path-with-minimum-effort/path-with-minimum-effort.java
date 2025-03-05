@@ -5,11 +5,6 @@ class Solution {
         int rows = grid.length, cols = grid[0].length;
         boolean[][] visited = new boolean[rows][cols];
 
-        // int[][] effort = new int[rows][cols];
-        // for(int i = 0; i < rows; i++)
-        // Arrays.fill(effort[i], Integer.MAX_VALUE / 2);
-        // effort[0][0] = 0;
-
         PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
         pq.offer(new int[]{0, 0, 0});
 
