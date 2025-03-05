@@ -3,6 +3,7 @@ class Solution {
     public int minimumEffortPath(int[][] grid) 
     {
         int rows = grid.length, cols = grid[0].length;
+        boolean[][] visited = new boolean[rows][cols];
 
         int[][] effort = new int[rows][cols];
         for(int i = 0; i < rows; i++)
@@ -20,10 +21,13 @@ class Solution {
             if(r == rows - 1 && c == cols - 1)
             return currEffort;
 
+            if (visited[r][c]) continue;
+            visited[r][c] = true;
+
             for (int[] dir : directions) 
             {
                 int newRow = r + dir[0], newCol = c + dir[1];
-                if(newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) 
+                if(newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && !visited[newRow][newCol]) 
                 {
                     int newEffort = Math.max(currEffort, Math.abs(grid[newRow][newCol] - grid[r][c]));
                     if(newEffort < effort[newRow][newCol])
