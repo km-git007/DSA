@@ -1,7 +1,5 @@
 class Solution {
     private int n,m;
-    int[][] isBorder;
-    // Directions array for up, down, left, right
     private static final int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; 
     private int check(int row, int col, int color, int[][] grid)
     {
@@ -35,7 +33,6 @@ class Solution {
 
         n = grid.length;
         m = grid[0].length;
-        isBorder= new int[n][m];
 
         // flip all the cells of the connected component to teir negative 
         dfs(row, col, originalCol, grid);
