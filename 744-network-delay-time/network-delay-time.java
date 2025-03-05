@@ -38,7 +38,11 @@ class Solution {
             int currTime = p[0];
             int node = p[1];
 
-            if (visited[node]) continue;
+            if (visited[node]) 
+            continue;
+
+            // Mark the node as visited
+            visited[node] = true;
 
             for (int[] neighbor : adj.get(node)) 
             {
@@ -50,9 +54,6 @@ class Solution {
                     pq.offer(new int[]{time[adjNode], adjNode});
                 }
             }
-
-            // Mark the node as visited after exploring all neighbors
-            visited[node] = true;
         }
 
         int maxTime = 0;
