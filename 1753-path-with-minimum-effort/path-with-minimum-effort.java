@@ -5,10 +5,10 @@ class Solution {
         int rows = grid.length, cols = grid[0].length;
         boolean[][] visited = new boolean[rows][cols];
 
-        int[][] effort = new int[rows][cols];
-        for(int i = 0; i < rows; i++)
-        Arrays.fill(effort[i], Integer.MAX_VALUE / 2);
-        effort[0][0] = 0;
+        // int[][] effort = new int[rows][cols];
+        // for(int i = 0; i < rows; i++)
+        // Arrays.fill(effort[i], Integer.MAX_VALUE / 2);
+        // effort[0][0] = 0;
 
         PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
         pq.offer(new int[]{0, 0, 0});
@@ -30,11 +30,7 @@ class Solution {
                 if(newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && !visited[newRow][newCol]) 
                 {
                     int newEffort = Math.max(currEffort, Math.abs(grid[newRow][newCol] - grid[r][c]));
-                    if(newEffort < effort[newRow][newCol])
-                    {
-                        pq.offer(new int[]{newEffort, newRow, newCol});
-                        effort[newRow][newCol] = newEffort;
-                    }
+                    pq.offer(new int[]{newEffort, newRow, newCol});
                 }
             }
         }
