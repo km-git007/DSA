@@ -1,103 +1,110 @@
 class Solution {
-    int[] dir = new int[] {-1, 0, 1, 0, -1};
+
+    // Directions for moving to neighboring cells: right, left, down, up
+    final int[][] dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
     public int maximumSafenessFactor(List<List<Integer>> grid) {
-        List<int[]> thiefs = new ArrayList<>();
-        int m = grid.size(), n = grid.get(0).size(), ans = 0;
-        int low = 0, high = 0;
-        int[][] safeness = new int[m][n];
-        high = buildSafenessAndReturnMax(safeness, m, n, grid);
-        
-        // while(low <= high) {
-        //     int mid = (low + high) / 2;
-        //     if(check(mid, m, n, safeness)) {
-        //         // System.out.println(mid);
-        //         ans = mid;
-        //         low = mid + 1;
-        //     } else {
-        //         high = mid - 1;
-        //     }
-        // }
+        int n = grid.size();
+        int[][] mat = new int[n][n];
+        Queue<int[]> multiSourceQueue = new LinkedList<>();
 
-        Deque<int[]> dq = new LinkedList<>();
-        dq.offer(new int[] {0, 0, safeness[0][0]});
-        ans = safeness[0][0];
-        safeness[0][0] = -1;
-        while(!dq.isEmpty()) {
-            int x = dq.peekFirst()[0], y = dq.peekFirst()[1], safe = dq.pollFirst()[2];
-            ans = Math.min(ans, safe);
-            if(x == m - 1 && y == n - 1) {
-                break;
-            }
-            for(int i = 0 ; i < 4 ; i++) {
-                int dx = x + dir[i], dy = y + dir[i + 1];
-                if(dx < 0 || dx == m || dy < 0 || dy == n || safeness[dx][dy] == -1) {
-                    continue;
-                }
-                if(safeness[dx][dy] >= ans) {
-                    dq.offerFirst(new int[] {dx, dy, safeness[dx][dy]});
+        // To make modifications and navigation easier, the grid is converted into a 2-d array.
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid.get(i).get(j) == 1) {
+                    // Push thief coordinates to the queue
+                    multiSourceQueue.add(new int[]{i, j});
+                    // Mark thief cell with 0
+                    mat[i][j] = 0;
                 } else {
-                    dq.offerLast(new int[] {dx, dy, safeness[dx][dy]});
+                    // Mark empty cell with -1
+                    mat[i][j] = -1;
                 }
-                safeness[dx][dy] = -1;
             }
         }
-        return ans;
+
+        // Calculate safeness factor for each cell using BFS
+        while (!multiSourceQueue.isEmpty()) {
+            int size = multiSourceQueue.size();
+            while (size-- > 0) {
+                int[] curr = multiSourceQueue.poll();
+                // Check neighboring cells
+                for (int[] d : dir) {
+                    int di = curr[0] + d[0];
+                    int dj = curr[1] + d[1];
+                    int val = mat[curr[0]][curr[1]];
+                    // Check if the neighboring cell is valid and unvisited
+                    if (isValidCell(mat, di, dj) && mat[di][dj] == -1) {
+                        // Update safeness factor and push to the queue
+                        mat[di][dj] = val + 1;
+                        multiSourceQueue.add(new int[]{di, dj});
+                    }
+                }
+            }
+        }
+
+        // Binary search for maximum safeness factor
+        int start = 0;
+        int end = 0;
+        int res = -1;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                // Set end as the maximum safeness factor possible
+                end = Math.max(end, mat[i][j]);
+            }
+        }
+
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (isValidSafeness(mat, mid)) {
+                // Store valid safeness and search for larger ones 
+                res = mid; 
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return res;
     }
 
-    boolean check(int val, int m, int n, int[][] grid) {
-        if(grid[0][0] < val || grid[m - 1][n - 1] < val) {
+    // Check if a path exists with given minimum safeness value
+    private boolean isValidSafeness(int[][] grid, int minSafeness) {
+        int n = grid.length;
+
+        // Check if the source and destination cells satisfy minimum safeness
+        if (grid[0][0] < minSafeness || grid[n - 1][n - 1] < minSafeness) {
             return false;
         }
-        Queue<int[]> q = new LinkedList<>();
-        boolean[][] vis = new boolean[m][n];
-        q.offer(new int[] {0, 0});
-        vis[0][0] = true;
-        while(!q.isEmpty()) {
-            int x = q.peek()[0], y = q.poll()[1];
-            if(x == m - 1 && y == n - 1) {
-                return true;
+
+        Queue<int[]> traversalQueue = new LinkedList<>();
+        traversalQueue.add(new int[]{0, 0});
+        boolean[][] visited = new boolean[n][n];
+        visited[0][0] = true;
+
+        // Breadth-first search to find a valid path
+        while (!traversalQueue.isEmpty()) {
+            int[] curr = traversalQueue.poll();
+            if (curr[0] == n - 1 && curr[1] == n - 1) {
+                return true; // Valid path found
             }
-            for(int i = 0 ; i < 4 ; i++) {
-                int dx = x + dir[i], dy = y + dir[i + 1];
-                if(dx < 0 || dy < 0 || dx == m || dy == n || vis[dx][dy] || grid[dx][dy] < val) {
-                    continue;
+            // Check neighboring cells
+            for (int[] d : dir) {
+                int di = curr[0] + d[0];
+                int dj = curr[1] + d[1];
+                // Check if the neighboring cell is valid, unvisited and satisfying minimum safeness
+                if (isValidCell(grid, di, dj) && !visited[di][dj] && grid[di][dj] >= minSafeness) {
+                    visited[di][dj] = true;
+                    traversalQueue.add(new int[]{di, dj});
                 }
-                q.offer(new int[] {dx, dy});
-                vis[dx][dy] = true;
             }
         }
-        return false;
+
+        return false; // No valid path found
     }
 
-    int buildSafenessAndReturnMax(int[][] arr, int m, int n, List<List<Integer>> grid) {
-        int max = 0;
-        Queue<int[]> q = new LinkedList<>();
-        for(int i = 0 ; i < m ; i++) {
-            for(int j = 0 ; j < n ; j++) {
-                if(grid.get(i).get(j) == 1) {
-                    q.offer(new int[] {i, j, 0});
-                    arr[i][j] = 0;
-                } else {
-                    arr[i][j] = -1;
-                }
-            }
-        }
-        while(!q.isEmpty()) {
-            int x = q.peek()[0], y = q.peek()[1], dist = q.poll()[2];
-            for(int i = 0 ; i < 4 ; i++) {
-                int dx = x + dir[i], dy = y + dir[i + 1];
-                if(dx < 0 || dy < 0 || dx == m || dy == n || arr[dx][dy] != -1) {
-                    continue;
-                }
-                q.offer(new int[] {dx, dy, 1 + dist});
-                arr[dx][dy] = dist + 1;
-                max = Math.max(max, dist + 1);
-            }
-        }
-        // for(int[] row: arr) {
-        //     System.out.println(Arrays.toString(row));
-        // }
-        return max;
+    // Check if a given cell lies within the grid
+    private boolean isValidCell(int[][] mat, int i, int j) {
+        int n = mat.length;
+        return i >= 0 && j >= 0 && i < n && j < n;
     }
 }
