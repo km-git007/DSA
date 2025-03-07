@@ -19,11 +19,13 @@ public:
             }
         }
 
+        if(freshCount == 0)
+        return 0;
+        
         int time = 0;
         while(!q.empty())
         {
             int levelSize = q.size();
-            bool isRotten = false;
             while(levelSize--)
             {
                 int row = q.front().first;
@@ -38,13 +40,11 @@ public:
                         q.push({nRow, nCol});
                         grid[nRow][nCol] = 2;
                         freshCount--;
-                        isRotten = true;
                     }  
                 }
             }
-            if(isRotten)
             time++;
         }
-        return(freshCount == 0) ? time : -1;
+        return(freshCount == 0) ? time - 1 : -1;
     }
 };
