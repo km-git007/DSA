@@ -29,12 +29,7 @@ public:
                     if(isValidCell(nRow, nCol) && grid[nRow][nCol] == 0 && !vis[nRow][nCol]) 
                     {
                         if(nRow == n - 1 && nCol == m - 1)
-                        {
-                            // if(fireTime[n - 1][m - 1] == 1e9) // Fire never reaches exit
-                            // return true;
-
-                            return time + 1 <= fireTime[nRow][nCol];
-                        }
+                        return time + 1 <= fireTime[nRow][nCol];
 
                         if(time + 1 < fireTime[nRow][nCol]) 
                         {
@@ -114,7 +109,7 @@ public:
             end = mid - 1;
         }
 
-        // If fire never reaches exit, return max possible time
+        // If fire never reaches exit but the person can reach exit, return max possible time
         if(minStayTime != -1 && fireTime[n-1][m-1] == 1e9)
         return 1e9;
 
