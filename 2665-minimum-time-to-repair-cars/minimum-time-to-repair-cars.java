@@ -5,7 +5,9 @@ class Solution {
         long carsRepaired = 0;
         for(int rank : ranks)
         {
-            carsRepaired += Math.floor(Math.sqrt((double)time/(double)rank));
+            // time to repair n cars is time i.e time = rank * n * n
+            // that's how you calculate the number of cars 'n' repaired in that time
+            carsRepaired += Math.floor(Math.sqrt(1.0 * time / rank));
             if(carsRepaired >= carsInGarage)
             return true;
         }
