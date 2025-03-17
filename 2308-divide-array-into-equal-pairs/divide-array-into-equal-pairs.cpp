@@ -2,16 +2,16 @@ class Solution {
 public:
     bool divideArray(vector<int>& nums) 
     {
-        unordered_map<int, int> map;
+        unordered_set<int> set;
         for(int num : nums)
-        map[num]++;
-
-        for(auto ele : map)
         {
-            if(ele.second % 2 != 0)
-            return false;
+            if(set.count(num))
+            set.erase(num);
+
+            else
+            set.insert(num);
         }
-        
-        return true;
+
+        return set.empty();
     }
 };
