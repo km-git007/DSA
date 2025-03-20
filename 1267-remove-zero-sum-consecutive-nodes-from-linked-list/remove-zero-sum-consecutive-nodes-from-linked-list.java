@@ -15,31 +15,29 @@ class Solution {
         dummy.next=head;
 
         HashMap<Integer,ListNode> map=new HashMap<>();
-        map.put(0,dummy);
+        map.put(0, dummy);
 
         ListNode curr=head;
         int pSum=0;
         while(curr!=null)
         {
-            pSum+=curr.val;
+            pSum += curr.val;
             if(map.containsKey(pSum))
             {
-                int tempSum=pSum;
-                ListNode node=map.get(pSum).next;
-                while(node!=curr)
+                ListNode node = map.get(pSum).next;
+                int sum = pSum + node.val;
+                while(sum != pSum)
                 {
-                    tempSum+=node.val;
-                    // removing the prefix sum corresponding to the elements which are going to get deleted.
-                    map.remove(tempSum);
-                    node=node.next;
+                    node = node.next;
+                    map.remove(sum);
+                    sum += node.val;
                 }
-                // making the connection
-                map.get(pSum).next=curr.next;
+                map.get(pSum).next = curr.next;
             }
             else
-            map.put(pSum,curr);
+            map.put(pSum, curr);
 
-            curr=curr.next;
+            curr = curr.next;
         }
         return dummy.next;
     }
