@@ -1,55 +1,58 @@
 class Solution {
 public:
+
+    unordered_map<string, int> inDegree;
+    unordered_map<string, unordered_set<string>> buildGraph(vector<string>& recipes, vector<vector<string>>& ingredients) 
+    {
+        unordered_map<string, unordered_set<string>> adj;  // Adjacency list
+        for (int i = 0; i < recipes.size(); i++) 
+        {
+            string recipe = recipes[i];
+            // Number of ingredients needed
+            inDegree[recipe] = ingredients[i].size();  
+
+            // Edge: ingredient -> recipe
+            for(const string& ingredient : ingredients[i])
+            adj[ingredient].insert(recipe);  
+        }
+
+        return adj;  // Return the graph
+    }
+
     vector<string> findAllRecipes(vector<string>& recipes, vector<vector<string>>& ingredients, vector<string>& supplies) 
     {
         vector<string> res;
 
-        // to look for available ingredients.
-        unordered_set<string> supply(supplies.begin(), supplies.end());
+        // any of the supply item doesnt need any other item to be made. It can exist independently.
+        for(string supply : supplies)
+        inDegree[supply] = 0;
 
-        // to look for ingredients needed in a particular recipe
-        unordered_map<string, vector<string>> recipeIngredientMap;
-        for(int i = 0; i < recipes.size(); i++)
-        recipeIngredientMap[recipes[i]] = ingredients[i];
+        // build adj List
+        auto adj = buildGraph(recipes, ingredients);
 
         // contains all the recipes yet to be made
         queue<string> q;
-        for(string recipe : recipes)
-        q.push(recipe);
+        for(auto [item, ind] : inDegree)
+        {
+            if(ind == 0)
+            q.push(item);
+        }
 
         while(!q.empty())
         {
-            int levelSize = q.size();
-            bool noRecipeMade = true;
-            while(levelSize--)
+            auto item = q.front();
+            q.pop();
+
+            for(auto adjItem : adj[item])
             {
-                auto currR = q.front();
-                q.pop();
-                auto reqIngredients = recipeIngredientMap[currR];
-
-                bool canMakeRecipe = true;
-                for(string ingredient : reqIngredients)
+                inDegree[adjItem]--;
+                if(inDegree[adjItem] == 0)
                 {
-                    if(!supply.count(ingredient))
-                    {
-                        canMakeRecipe = false;
-                        q.push(currR);
-                        break;
-                    }
-                }
-
-                if(canMakeRecipe)
-                {
-                    supply.insert(currR);
-                    res.push_back(currR);
-                    noRecipeMade = false;
+                    q.push(adjItem);
+                    res.push_back(adjItem);
                 }
             }
-
-            if(noRecipeMade)
-            break;
         }
-
         return res;
     }
 };
