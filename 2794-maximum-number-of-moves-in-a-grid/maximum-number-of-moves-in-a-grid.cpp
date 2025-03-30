@@ -2,51 +2,40 @@ class Solution {
 public:
     int M, N;
     // The three possible directions for the next column.
-    const int dirs[3] = {-1, 0, 1};
-    bool isValidCell(int row, int col)
+    const int direction[3] = {-1, 0, 1};
+    vector<vector<int>> dp;
+    int DFS(int row, int col, vector<vector<int>>& grid) 
     {
-        return row >= 0 && col >= 0 && row < M && col < N;
+        if(dp[row][col] != -1)
+        return dp[row][col];
+
+        int maxMoves = 0;
+        for (int dir : direction) 
+        {
+            // Next cell after the move.
+            int newRow = row + dir, newCol = col + 1;
+
+            // If the next cell is valid and greater than the current cell
+            // value, perform recursion to that cell with updated value of moves.
+            if(newRow >= 0 && newCol >= 0 && newRow < M && newCol < N && grid[row][col] < grid[newRow][newCol])
+            maxMoves = max(maxMoves, 1 + DFS(newRow, newCol, grid));
+        }
+
+        return dp[row][col] = maxMoves;
     }
+
     int maxMoves(vector<vector<int>>& grid) 
     {
         M = grid.size();
         N = grid[0].size();
+        dp = vector<vector<int>>(M, vector<int>(N, -1));
 
-        queue<pair<int, int>> q;
-        vector<vector<int>> vis(M, vector<int>(N, 0));
-        // Enqueue the cells in the first column.
-        for (int i = 0; i < M; i++) 
+        int maxMoves = 0;
+        for(int i = 0; i < M; i++) 
         {
-            vis[i][0] = 1;
-            q.push({i, 0});
+            int movesRequired = DFS(i, 0, grid);
+            maxMoves = max(maxMoves, movesRequired);
         }
-
-        int moves = 0;
-        while(!q.empty()) 
-        {
-            int sz = q.size();
-            while(sz--) 
-            {
-                auto [row, col] = q.front();
-                q.pop();
-
-                for (int dir : dirs) 
-                {
-                    // Next cell after the move.
-                    int newRow = row + dir, newCol = col + 1;
-
-                    // If the next cell isn't visited yet and is greater than
-                    // the current cell value. Add it to the queue with the
-                    // moves required.
-                    if(isValidCell(newRow, newCol) && !vis[newRow][newCol] && grid[row][col] < grid[newRow][newCol]) 
-                    {
-                        vis[newRow][newCol] = 1;
-                        q.push({newRow, newCol});
-                    }
-                }
-            }
-            moves++;
-        }
-        return moves - 1;
+        return maxMoves;
     }
 };
