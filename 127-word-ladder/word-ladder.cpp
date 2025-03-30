@@ -6,33 +6,38 @@ public:
         for(string s : wordList)
         set.insert(s);
 
-        queue<pair<string,int>> q;
-        q.push({beginWord,1});
+        queue<string> q;
+        q.push(beginWord);
         set.erase(beginWord);
 
+        int steps = 0;
         while(!q.empty())
         {
-            auto p = q.front();
-            q.pop();
-
-            string word = p.first;
-            if(word == endWord)
-            return p.second;
-
-            for(int i = 0; i < word.length(); i++)
+            int level = q.size();
+            while(level--)
             {
-                char originalChar = word[i];
-                for(char c = 'a'; c <= 'z'; c++)
+                string word = q.front();
+                q.pop();
+
+                if(word == endWord)
+                return steps + 1;
+
+                for(int i = 0; i < word.length(); i++)
                 {
-                    word[i] = c;
-                    if(set.count(word) > 0)
+                    char originalChar = word[i];
+                    for(char c = 'a'; c <= 'z'; c++)
                     {
-                        set.erase(word);
-                        q.push({word, p.second + 1});
+                        word[i] = c;
+                        if(set.count(word) > 0)
+                        {
+                            set.erase(word);
+                            q.push(word);
+                        }
                     }
+                    word[i] = originalChar;
                 }
-                word[i] = originalChar;
             }
+            steps++;
         }
         return 0;
     }
