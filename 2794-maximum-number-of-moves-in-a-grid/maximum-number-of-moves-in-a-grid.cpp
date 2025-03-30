@@ -1,33 +1,34 @@
 class Solution {
 public:
+    int M, N;
     // The three possible directions for the next column.
     const int dirs[3] = {-1, 0, 1};
+    bool isValidCell(int row, int col)
+    {
+        return row >= 0 && col >= 0 && row < M && col < N;
+    }
+    int maxMoves(vector<vector<int>>& grid) 
+    {
+        M = grid.size();
+        N = grid[0].size();
 
-    int maxMoves(vector<vector<int>>& grid) {
-        int M = grid.size(), N = grid[0].size();
-
-        queue<vector<int>> q;
+        queue<pair<int, int>> q;
         vector<vector<int>> vis(M, vector<int>(N, 0));
         // Enqueue the cells in the first column.
-        for (int i = 0; i < M; i++) {
+        for (int i = 0; i < M; i++) 
+        {
             vis[i][0] = 1;
-            q.push({i, 0, 0});
+            q.push({i, 0});
         }
 
-        int maxMoves = 0;
-        while (!q.empty()) 
+        int moves = 0;
+        while(!q.empty()) 
         {
             int sz = q.size();
-
-            while (sz--) 
+            while(sz--) 
             {
-                vector<int> v = q.front();
+                auto [row, col] = q.front();
                 q.pop();
-
-                // Current cell with the number of moves made so far.
-                int row = v[0], col = v[1], count = v[2];
-
-                maxMoves = max(maxMoves, count);
 
                 for (int dir : dirs) 
                 {
@@ -37,15 +38,15 @@ public:
                     // If the next cell isn't visited yet and is greater than
                     // the current cell value. Add it to the queue with the
                     // moves required.
-                    if (newRow >= 0 && newCol >= 0 && newRow < M && newCol < N && !vis[newRow][newCol] &&
-                        grid[row][col] < grid[newRow][newCol]) 
+                    if(isValidCell(newRow, newCol) && !vis[newRow][newCol] && grid[row][col] < grid[newRow][newCol]) 
                     {
                         vis[newRow][newCol] = 1;
-                        q.push({newRow, newCol, count + 1});
+                        q.push({newRow, newCol});
                     }
                 }
             }
+            moves++;
         }
-        return maxMoves;
+        return moves - 1;
     }
 };
