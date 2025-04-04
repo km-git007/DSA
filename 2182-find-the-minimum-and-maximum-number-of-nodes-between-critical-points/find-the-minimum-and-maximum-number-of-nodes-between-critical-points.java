@@ -16,30 +16,39 @@ class Solution {
 
     public int[] nodesBetweenCriticalPoints(ListNode head) 
     {
+        int minDiff = Integer.MAX_VALUE;
+        int prevCritical = 0, firstCritical = 0;
         ListNode curr = head.next;
         ListNode prev = head;
 
-        int step = 1;
+        int currIndex = 1;
         Deque<Integer> stack = new ArrayDeque<>();
         while(curr.next != null)
         {
             ListNode next = curr.next;
 
             if(isExtrema(prev.val, curr.val, next.val))
-            stack.push(step);
+            {
+                if(prevCritical == 0)
+                {
+                    prevCritical = currIndex;
+                    firstCritical = currIndex;
+                }
+                else
+                {
+                    minDiff = Math.min(minDiff, currIndex - prevCritical);
+                    prevCritical = currIndex;
+                }
+            }
 
             prev = curr;
             curr = curr.next;
-            step++;
+            currIndex++;
         }
 
-        if(stack.size() < 2)
+        if(minDiff == Integer.MAX_VALUE)
         return new int[]{-1, -1};
-
-        int right = stack.peek(), minDiff = Integer.MAX_VALUE;
-        while(stack.size() > 1)
-        minDiff = Math.min(minDiff, stack.pop() - stack.peek());
         
-        return new int[]{minDiff, right - stack.pop()};
+        return new int[]{minDiff, prevCritical - firstCritical};
     }
 }
