@@ -13,10 +13,9 @@
  *     }
  * }
  */
-record Pair(int first, int second) {}
 class Solution {
 
-    private Map<Pair, List<TreeNode>> map;
+    private List<TreeNode>[][] dp;
     private List<TreeNode> solve(int start, int end)
     {
         List<TreeNode> res = new ArrayList<>();
@@ -26,15 +25,8 @@ class Solution {
             return res;
         } 
 
-        else if(start == end)
-        {
-            res.add(new TreeNode(start));
-            return res;
-        } 
-
-        Pair pair = new Pair(start, end);
-        if(map.containsKey(pair))
-        return map.get(pair);
+        if(dp[start][end] != null) 
+        return dp[start][end];
 
         for(int root = start; root <= end; root++)
         {
@@ -51,13 +43,12 @@ class Solution {
                 }       
             }
         }
-        map.put(pair, res);
-        return res;
+        return dp[start][end] = res;
     }
 
     public List<TreeNode> generateTrees(int n) 
     {
-        map = new HashMap<>();
+        dp = new ArrayList[n + 1][n + 1];
         return solve(1, n);
     }
 }
