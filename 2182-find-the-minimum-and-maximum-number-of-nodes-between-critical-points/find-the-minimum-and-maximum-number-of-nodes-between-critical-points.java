@@ -30,15 +30,12 @@ class Solution {
             if(isExtrema(prev.val, curr.val, next.val))
             {
                 if(prevCritical == 0)
-                {
-                    prevCritical = currIndex;
-                    firstCritical = currIndex;
-                }
+                firstCritical = currIndex;
+                
                 else
-                {
-                    minDiff = Math.min(minDiff, currIndex - prevCritical);
-                    prevCritical = currIndex;
-                }
+                minDiff = Math.min(minDiff, currIndex - prevCritical);
+
+                prevCritical = currIndex;
             }
 
             prev = curr;
