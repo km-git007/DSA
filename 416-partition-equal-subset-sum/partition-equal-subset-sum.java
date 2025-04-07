@@ -10,23 +10,28 @@ class Solution {
         int n = nums.length;
 
         // create dp array
-        boolean[][] dp = new boolean[n + 1][sum + 1];
-
-        // fill the first column
-        for(int i = 0; i < n + 1; i++)
-        dp[i][0] = true;
+        // first row is set to false i.e all elements of prev is set to false
+        boolean[] prev = new boolean[sum + 1], curr = new boolean[sum + 1];
+        // boolean[] curr = new boolean[sum + 1];
 
         for(int i = 1; i < n + 1; i++)
         {
-            for(int j = 1; j < sum + 1; j++)
+            for(int j = 0; j < sum + 1; j++)
             {
-                if(j - nums[i - 1] >= 0)
-                dp[i][j] = dp[i - 1][j - nums[i - 1]] || dp[i - 1][j];
+                // first column is always true
+                if(j == 0)
+                curr[j] = true;
+
+                else if(j - nums[i - 1] >= 0)
+                curr[j] = prev[j - nums[i - 1]] || prev[j];
 
                 else
-                dp[i][j] = dp[i - 1][j];
+                curr[j] = prev[j];
             }
+            // assign curr to prev
+            for(int j = 0; j < sum + 1; j++)
+            prev[j] = curr[j];
         }
-        return dp[n][sum];
+        return prev[sum];
     }
 }
