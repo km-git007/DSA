@@ -1,34 +1,34 @@
 class Solution {
     public String rankTeams(String[] votes) 
     {
-        Set<Character> charSet = new HashSet<>();
-        int [][] voteCount = new int[26][26];
-        for(String vote : votes)
+        int n = votes[0].length(); // number of teams / ranks
+        int[][] voteCount = new int[26][n];
+
+        for (String vote : votes)
         {
-            for(int i = 0; i < vote.length(); i++)
+            for(int i = 0; i < n; i++)
             {
                 char ch = vote.charAt(i);
-                charSet.add(ch);
                 voteCount[ch - 'A'][i]++; 
             }
         }
 
-        Queue<Character> pq = new PriorityQueue<>((a, b) -> {
-            for(int i = 0; i < 26; i++)
-            {
+        List<Character> teamList = new ArrayList<>();
+        for(char ch : votes[0].toCharArray()) 
+        teamList.add(ch);
+
+        Collections.sort(teamList, (a, b) -> {
+            for (int i = 0; i < n; i++) {
                 if(voteCount[a - 'A'][i] != voteCount[b - 'A'][i])
                 return voteCount[b - 'A'][i] - voteCount[a - 'A'][i];
             }
-            return a - b;
+            return a - b; // Alphabetical order if tie
         });
 
-        for(Character ch : charSet)
-        pq.add(ch);
-
         StringBuilder sb = new StringBuilder();
-        while(!pq.isEmpty())
-        sb.append(pq.poll());
-
+        for (char ch : teamList) 
+        sb.append(ch);
+        
         return sb.toString();
     }
 }
