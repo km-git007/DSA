@@ -1,6 +1,9 @@
 class Solution {
     public boolean canConstruct(String ransomNote, String magazine) 
     {
+        if(ransomNote.length() > magazine.length()) 
+        return false;
+
         int[] charMap = new int[26];
         for(char ch : magazine.toCharArray())
         charMap[ch - 'a']++;
