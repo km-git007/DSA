@@ -1,6 +1,5 @@
 class Solution {
 public:
-    vector<int> dp;
     int findNextIndex(int start, int target, vector<vector<int>>& offers)
     {
         int end = offers.size() - 1;
@@ -20,29 +19,30 @@ public:
         return res;
     }
 
-    int solve(int index, vector<vector<int>>& offers)
+    int maximizeTheProfit(int N, vector<vector<int>>& offers) 
     {
-        if(index >= offers.size())
-        return 0;
-
-        if(dp[index] != -1)
-        return dp[index];
-
-        int notTake = solve(index + 1, offers);
-
-        int nextIndex = findNextIndex(index + 1, offers[index][1], offers);
-        int take = offers[index][2] + solve(nextIndex, offers);
-
-        return dp[index] = max(take, notTake);
-    }
-
-    int maximizeTheProfit(int n, vector<vector<int>>& offers) 
-    {
+        int n = offers.size();
         sort(offers.begin(), offers.end(), [](const vector<int>& a, const vector<int>& b) {
             return a[0] < b[0];  // ascending order based on first element
         });
 
-        dp = vector<int>(offers.size(), -1);
-        return solve(0, offers);
+        vector<int> dp(n);
+        dp[n - 1] = offers[n - 1][2];
+
+        if(n > 1)
+        dp[n - 2] = (offers[n - 2][1] < offers[n - 1][0]) ? dp[n - 1] + offers[n - 2][2] : max(dp[n - 1], offers[n - 2][2]);
+
+        for(int i = n - 3; i >= 0; i--)
+        {
+            int take = offers[i][2];
+
+            int nextIndex = findNextIndex(i + 1, offers[i][1], offers);
+            take += nextIndex < n ? dp[nextIndex] : 0;
+
+            int notTake = dp[i + 1];
+
+            dp[i] = max(take, notTake);
+        }
+        return dp[0];
     }
 };
