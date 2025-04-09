@@ -29,10 +29,7 @@ public:
         vector<int> dp(n);
         dp[n - 1] = offers[n - 1][2];
 
-        if(n > 1)
-        dp[n - 2] = (offers[n - 2][1] < offers[n - 1][0]) ? dp[n - 1] + offers[n - 2][2] : max(dp[n - 1], offers[n - 2][2]);
-
-        for(int i = n - 3; i >= 0; i--)
+        for(int i = n - 2; i >= 0; i--)
         {
             int take = offers[i][2];
 
