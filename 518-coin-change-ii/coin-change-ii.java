@@ -1,28 +1,29 @@
 class Solution {
 
-    int[][] dp=new int[5002][300];
-    private int solve(int[] coins,int amount,int index)
+    Integer[][] dp;
+    private int solve(int[] coins, int amount, int index)
     {
-        if(amount==0)
+        if(amount == 0)
         return 1;
 
-        if(dp[amount][index]!=-1)
+        if(index >= coins.length)
+        return 0;
+
+        if(dp[amount][index] != null)
         return dp[amount][index];
 
-        int ways=0;
-        for(int i=index;i<coins.length;i++)
-        {
-            if(amount>=coins[i])
-            ways+=solve(coins,amount-coins[i],i);
-        }
-        return dp[amount][index]=ways;
+        int notTake = solve(coins, amount, index + 1);
+
+        int take = 0;
+        if(amount >= coins[index])
+        take = solve(coins, amount - coins[index], index);
+
+        return dp[amount][index] = take + notTake;
     }
 
     public int change(int amount, int[] coins) 
     {
-        for(int i=0;i<5002;i++)
-        Arrays.fill(dp[i],-1);
-
-        return solve(coins,amount,0);
+        dp = new Integer[amount + 1][coins.length + 1];
+        return solve(coins, amount, 0);
     }
 }
