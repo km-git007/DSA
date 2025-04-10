@@ -15,7 +15,9 @@ class Solution {
         int ways = 0;
         for(int i = index; i < coins.length; i++)
         {
-            if(amount >= coins[i])
+            if(amount < coins[i])
+            break;
+
             ways += solve(coins, amount - coins[i], i);
         }
 
@@ -25,6 +27,7 @@ class Solution {
     public int change(int amount, int[] coins) 
     {
         dp = new Integer[amount + 1][coins.length + 1];
+        Arrays.sort(coins);
         return solve(coins, amount, 0);
     }
 }
