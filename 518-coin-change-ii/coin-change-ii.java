@@ -6,24 +6,25 @@ class Solution {
         if(amount == 0)
         return 1;
 
-        if(index == 0)
+        if(index >= coins.length)
         return 0;
 
         if(dp[amount][index] != null)
         return dp[amount][index];
 
-        int notTake = solve(coins, amount, index - 1);
+        int ways = 0;
+        for(int i = index; i < coins.length; i++)
+        {
+            if(amount >= coins[i])
+            ways += solve(coins, amount - coins[i], i);
+        }
 
-        int take = 0;
-        if(amount >= coins[index - 1])
-        take = solve(coins, amount - coins[index - 1], index);
-
-        return dp[amount][index] = take + notTake;
+        return dp[amount][index] = ways;
     }
 
     public int change(int amount, int[] coins) 
     {
         dp = new Integer[amount + 1][coins.length + 1];
-        return solve(coins, amount, coins.length);
+        return solve(coins, amount, 0);
     }
 }
