@@ -1,34 +1,29 @@
 class Solution {
     private Integer[][] dp;
-    private int solve(int prev, int curr, int[] nums)
+    private int solve(int curr, int next, int[] nums)
     {
-         // Base case: if we have exhausted the list
-        if (curr == nums.length) {
-            return 0;
-        }
+        // Base case: if we have exhausted the list
+        if(curr < 0)
+        return 0;
 
-        // Check if the result is already memoized
-        if (dp[prev + 1][curr] != null) {
-            return dp[prev + 1][curr]; // prev is shifted by 1 for ease of indexing
-        }
+        if (dp[curr][next] != null)
+        return dp[curr][next]; 
 
         // Option 1: Skip the current element
-        int exclude = solve(prev, curr + 1, nums);
+        int exclude = solve(curr - 1, next, nums);
 
         // Option 2: Include the current element (if possible)
         int include = 0;
-        if (prev == -1 || nums[curr] > nums[prev]) {
-            include = 1 + solve(curr, curr + 1, nums); // Include current element
-        }
+        if (next == nums.length || nums[curr] < nums[next])
+        include = 1 + solve(curr - 1, curr, nums); 
 
-        // Memoize the result
-        dp[prev + 1][curr] = Math.max(include, exclude);
-        return dp[prev + 1][curr];
+        // Memoize the result and return 
+        return dp[curr][next] = Math.max(include, exclude);
     }
 
     public int lengthOfLIS(int[] nums) 
     {
-        dp = new Integer[nums.length + 1][nums.length];
-        return solve(-1, 0, nums);
+        dp = new Integer[nums.length + 1][nums.length + 1];
+        return solve(nums.length - 1, nums.length, nums);
     }
 }
