@@ -11,10 +11,10 @@ class Solution {
         return dp[amount];
 
         int minCoins = INF;
-        for(int i = 0; i < coins.length; i++)
+        for(int coin : coins)
         {
-            if(amount >= coins[i])
-            minCoins = Math.min(minCoins,1 + solve(coins,amount-coins[i]));
+            if(amount >= coin)
+            minCoins = Math.min(minCoins, 1 + solve(coins, amount - coin));
         }
 
         return dp[amount] = minCoins;
