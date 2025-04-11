@@ -1,30 +1,21 @@
 class Solution {
-
-    int[] dp;
-    int INF = Integer.MAX_VALUE / 2;
-    private int solve(int[] coins,int amount)
-    {
-        if(amount == 0)
-        return 0;
-
-        if(dp[amount] != -1)
-        return dp[amount];
-
-        int minCoins = INF;
-        for(int coin : coins)
-        {
-            if(amount >= coin)
-            minCoins = Math.min(minCoins, 1 + solve(coins, amount - coin));
-        }
-
-        return dp[amount] = minCoins;
-    }
-
     public int coinChange(int[] coins, int amount) 
     {
-        dp = new int[amount + 1];
-        Arrays.fill(dp,-1);
-        int ans = solve(coins,amount);
-        return ans >= INF ? -1 : ans;
+        int INF = Integer.MAX_VALUE / 2;
+
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, INF);
+        dp[0] = 0;
+
+        for(int i = 1; i <= amount; i++)
+        {
+            for(int coin : coins)
+            {
+                if(i >= coin)
+                dp[i] = Math.min(dp[i], 1 + dp[i - coin]);
+            }
+        }
+
+        return dp[amount] >= INF ? -1 : dp[amount];
     }
 }
