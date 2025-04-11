@@ -7,11 +7,14 @@ class Solution {
         Arrays.fill(dp, INF);
         dp[0] = 0;
 
+        Arrays.sort(coins);
         for(int i = 1; i <= amount; i++)
         {
             for(int coin : coins)
             {
-                if(i >= coin)
+                if(i < coin)
+                break;
+
                 dp[i] = Math.min(dp[i], 1 + dp[i - coin]);
             }
         }
