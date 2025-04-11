@@ -1,18 +1,18 @@
 class Solution {
     public int lengthOfLIS(int[] nums) 
     {
-        int n = nums.length;
-        TreeSet<Integer> treeSet = new TreeSet<>();
-        for(int i = 0; i < n; i++)
+        int[] dp = new int[nums.length];
+        int maxLength = 0;
+        for(int i = 0; i < nums.length; i++)
         {
-            int num = nums[i];
-            Integer ceil = treeSet.ceiling(num);
-
-            if(ceil != null)
-            treeSet.remove(ceil);
-
-            treeSet.add(num);
+            dp[i] = 1;
+            for(int j = 0; j <= i; j++)
+            {
+                if(nums[i] > nums[j])
+                dp[i] = Math.max(1 + dp[j], dp[i]);
+            }
+            maxLength = Math.max(maxLength, dp[i]);
         }
-        return treeSet.size();
+        return maxLength;
     }
 }
