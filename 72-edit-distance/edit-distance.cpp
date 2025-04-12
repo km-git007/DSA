@@ -1,35 +1,38 @@
 class Solution {
 public:
-    int minDistance(string s, string t) 
+    int dp[501][501];
+    int solve(int i, int j, string &s, string &t)
     {
-        int n = s.length();
-        int m = t.length();
+        if(j == 0)
+        return i;
 
-        int curr[501];
-        int prev[501];
+        if(i == 0)
+        return j;
 
-        // Fill the first row
-        // Inserting characters into `s`
-        for (int j = 0; j <= m; j++) prev[j] = j; 
+        if(dp[i][j] != -1)
+        return dp[i][j];
 
-        for(int i = 1; i < n + 1; i++)
+        // characters match
+        if(s[i - 1] == t[j - 1])
+        dp[i][j] = solve(i - 1, j - 1, s, t);
+
+        // characters don't match
+        else
         {
-            for(int j = 0; j < m + 1; j++)
-            {
-                if(j == 0)
-                curr[j] = i;
+            int replace = 1 + solve(i - 1, j - 1, s, t);
+            int dele = 1 + solve(i - 1, j, s, t);
+            int insert = 1 + solve(i, j - 1, s, t);
 
-                // characters match
-                else if(s[i - 1] == t[j - 1])
-                curr[j] = prev[j - 1];
-
-                // characters don't match
-                else
-                curr[j] = 1 + min({prev[j - 1], curr[j - 1], prev[j]});
-            }
-            // Copy curr to prev for the next iteration
-            for (int j = 0; j <= m; j++) prev[j] = curr[j];
+            // Return the minimum of the three operations
+            dp[i][j] = min({replace, dele, insert});
         }
-        return prev[m];
+
+        return dp[i][j];
+    }
+
+    int minDistance(string word1, string word2) 
+    {
+        memset(dp, -1, sizeof(dp));
+        return solve(word1.length(), word2.length(), word1, word2);
     }
 };
