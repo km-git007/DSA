@@ -1,17 +1,44 @@
+class Node {
+    int timestamp;
+    String value;
+    public Node(int timestamp, String value) {
+        this.timestamp = timestamp;
+        this.value = value;
+    }
+}
+
 class TimeMap {
+    private HashMap<String, List<Node>> map;
 
-
-    public TimeMap() 
-    {
+    public TimeMap() {
         map = new HashMap<>();
     }
 
-    private HashMap<String, TreeMap<Integer, String>> map;
-
     public void set(String key, String value, int timestamp) 
     {
-        map.putIfAbsent(key, new TreeMap<>());
-        map.get(key).put(timestamp, value);
+        map.putIfAbsent(key, new ArrayList<>());
+        map.get(key).add(new Node(timestamp, value));
+    }
+
+    public String binarySearch(String key, int timestamp)
+    {
+        List<Node> nodes = map.get(key);
+        int left = 0, right = nodes.size() - 1;
+        String result = "";
+        // Binary search for the closest timestamp <= given timestamp
+        while (left <= right) 
+        {
+            int mid = left + (right - left) / 2;
+            if (nodes.get(mid).timestamp == timestamp) {
+                return nodes.get(mid).value;
+            } else if (nodes.get(mid).timestamp < timestamp) {
+                result = nodes.get(mid).value;  // candidate answer
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return result;
     }
 
     public String get(String key, int timestamp) 
@@ -19,8 +46,7 @@ class TimeMap {
         if (!map.containsKey(key)) 
         return "";
 
-        Integer closestTimestamp = map.get(key).floorKey(timestamp);
-        return closestTimestamp == null ? "" : map.get(key).get(closestTimestamp);
+        return binarySearch(key, timestamp);
     }
 }
 
