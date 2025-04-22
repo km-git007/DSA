@@ -1,58 +1,52 @@
 class Solution {
-    private Map<String, Integer> ind;
-    private Map<String, List<String>> buildGraph(String[] recipes, List<List<String>> ingredients)
-    {
-        Map<String, List<String>> adj = new HashMap<>();
-        for(int i = 0; i < recipes.length; i++)
-        {
-            String recipe = recipes[i];
-            for(String ingredient : ingredients.get(i))
-            {
-                // put the ingredient as one of the dependency of the recipe
-                adj.putIfAbsent(ingredient, new ArrayList<>());
-                adj.get(ingredient).add(recipe);
+    private Map<String, Integer> inDegree;
 
-                // increase the ind of recipe by 1
-                ind.put(recipe, ind.getOrDefault(recipe, 0) + 1);
+    private Map<String, Set<String>> buildGraph(String[] recipes, List<List<String>> ingredients) {
+        Map<String, Set<String>> adj = new HashMap<>();
+        for (int i = 0; i < recipes.length; i++) {
+            String recipe = recipes[i];
+            inDegree.put(recipe, ingredients.get(i).size());
+
+            for (String ingredient : ingredients.get(i)) {
+                adj.computeIfAbsent(ingredient, k -> new HashSet<>()).add(recipe);
             }
         }
         return adj;
     }
 
-    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) 
-    {
-        // indegree Map
-        ind = new HashMap<>();
-
-        // build adjList
-        var adj = buildGraph(recipes, ingredients);
-
-        // supply have no dependency on anything
-        Queue<String> q = new LinkedList<>();
-        for(String supply : supplies)
-        q.add(supply);
-
-
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        inDegree = new HashMap<>();
         List<String> res = new ArrayList<>();
-        while(!q.isEmpty())
-        {
+
+        // Supplies have in-degree 0
+        for (String supply : supplies) {
+            inDegree.put(supply, 0);
+        }
+
+        // Build the graph
+        Map<String, Set<String>> adj = buildGraph(recipes, ingredients);
+
+        // Queue for topological sort
+        Queue<String> q = new LinkedList<>();
+        for (String item : inDegree.keySet()) {
+            if (inDegree.get(item) == 0) {
+                q.offer(item);
+            }
+        }
+
+        while (!q.isEmpty()) {
             String item = q.poll();
+            if (!adj.containsKey(item)) continue;
 
-            // adj only contains keys for ingredients that are used in some recipe. But BFS queue q
-            // includes every supply, and some supplies might not be used as ingredients in any recipe.
-            if(!adj.containsKey(item)) 
-            continue;
-
-            for(String adjItem : adj.get(item))
-            {
-                ind.put(adjItem, ind.get(adjItem) - 1);
-                if(ind.get(adjItem) == 0)
-                {
-                    res.add(adjItem);
-                    q.add(adjItem);
+            for (String next : adj.get(item)) {
+                inDegree.put(next, inDegree.get(next) - 1);
+                if (inDegree.get(next) == 0) {
+                    res.add(next);
+                    q.offer(next);
                 }
             }
         }
+
         return res;
     }
 }
