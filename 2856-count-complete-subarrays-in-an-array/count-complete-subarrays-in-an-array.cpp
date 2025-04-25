@@ -1,14 +1,17 @@
 class Solution {
 public:
-    int subarraysLessThanEqualToKDistinct(vector<int>& nums, int k)
+    int countCompleteSubarrays(vector<int>& nums) 
     {
+        unordered_set<int> set(nums.begin(), nums.end());
+        int distinct = set.size();
+
         int n = nums.size();
         unordered_map<int, int> map;
         int i = 0, count = 0;
         for(int j = 0; j < n; j++)
         {
             map[nums[j]]++;
-            while(map.size() == k)
+            while(map.size() == distinct)
             {
                 count += n - j;
 
@@ -20,12 +23,5 @@ public:
             }
         }
         return count;
-    }
-
-    int countCompleteSubarrays(vector<int>& nums) 
-    {
-        unordered_set<int> set(nums.begin(), nums.end());
-        int distinct = set.size();
-        return subarraysLessThanEqualToKDistinct(nums, distinct) - subarraysLessThanEqualToKDistinct(nums, distinct + 1);
     }
 };
