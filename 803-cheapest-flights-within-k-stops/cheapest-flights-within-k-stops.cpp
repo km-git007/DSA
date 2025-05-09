@@ -13,7 +13,7 @@ public:
         vector<int> cost(n, INT_MAX);
         cost[src] = 0;
 
-        // queue {pair{node, cost}}
+        // queue - pair{node, cost}
         queue<pair<int,int>> q;
         q.push({src,0});
         int stops = 0;
