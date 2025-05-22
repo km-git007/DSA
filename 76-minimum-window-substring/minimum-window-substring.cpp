@@ -6,35 +6,36 @@ public:
         return "";
 
         unordered_map<char,int> map;
-        for(char c : t)
-        map[c]++;
+        for(char ch : t)
+        map[ch]++;
 
-        int count = map.size(), i = 0;
-        int startIndex = -1, minLength = s.length();
+        int matches = 0, startIndex = -1, minLength = s.length();
+        int i = 0;
         for(int j = 0; j < s.length(); j++)
         {
-            if(map.count(s[j]))
+            char ch = s[j];
+            if(map.count(ch) > 0)
             {
-                map[s[j]]--;
-                if(map[s[j]] == 0)
-                count--;
+                map[ch]--;
+                if(map[ch] == 0)
+                matches++;
             }
-
-            while(count == 0)
+            
+            while(matches == map.size())
             {
                 if(j - i + 1 <= minLength)
                 {
-                    startIndex = i;
                     minLength = j - i + 1;
+                    startIndex = i;
                 }
 
-                if(map.count(s[i]))
+                char ch1 = s[i];
+                if(map.count(ch1) > 0)
                 {
-                    map[s[i]]++;
-                    if(map[s[i]] == 1)
-                    count++;
+                    map[ch1]++;
+                    if(map[ch1] == 1)
+                    matches--;
                 }
-
                 i++;
             }
         }
