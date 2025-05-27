@@ -1,90 +1,89 @@
-class LRUCache {
-
-        // Doubly LinkedList
-    private class Node
+class Node
+{
+    int key;
+    int value;
+    Node prev,next;
+    public Node(int key, int value)
     {
-        int key;
-        int value;
-        Node prev,next;
-        public Node(int key, int value)
-        {
-            this.key = key;
-            this.value = value;
-        }
+        this.key = key;
+        this.value = value;
     }
+}
 
-    // We build LinkedList between the head and tail nodes.
+
+public class LRUCache {
+
+    private final int CAPACITY;
+
+    // head and tail are the dummy nodes
     private final Node head,tail;
 
-    // Max capacity of our cache.
-    private final int MAX_CAPACITY;
+    // for O(1) lookup
+    private Map<Integer,Node> map;
 
-    // HashMap<key,Node> --> To Fetch the Node in O(1) time.
-    private HashMap<Integer, Node> cache;
-
-    public LRUCache(int maxCapacity) {
-        this.head = new Node(0, 0);
-        this.tail = new Node(0, 0);
-        this.cache = new HashMap<>();
-        head.next = tail;
-        tail.prev = head;
-        MAX_CAPACITY = maxCapacity;
+    public LRUCache(int capacity) {
+        this.CAPACITY = capacity;
+        this.tail = new Node(-1,-1);
+        this.head = new Node(-1,-1);
+        this.tail.prev = this.head;
+        this.head.next = this.tail;
+        map = new HashMap<>();
     }
 
-    
-      private void insertAtHead(Node node)
+    private void addAtHead(Node node)
     {
-        // add after the head
-        node.next = head.next;
-        node.prev = head;
         head.next.prev = node;
+        node.next = head.next;
         head.next = node;
-        cache.put(node.key, node);
+        node.prev = head;
+
+        // put in the map
+        map.put(node.key,node);
     }
 
     private void remove(Node node)
     {
-        // remove the node just before the tail
         node.prev.next = node.next;
         node.next.prev = node.prev;
-        cache.remove(node.key);
+
+        // remove from the map
+        map.remove(node.key);
     }
 
     public int get(int key)
     {
-        if(!cache.containsKey(key)) {
+        if(!map.containsKey(key)){
             return -1;
         }
 
-        Node node = cache.get(key);
+        Node node = map.get(key);
         remove(node);
-        insertAtHead(node);
+        addAtHead(node);
         return node.value;
     }
 
     public void put(int key, int value)
     {
-        if(cache.containsKey(key))
-        {
-            Node node = cache.get(key);
-            remove(node);
+        Node node = map.get(key);
+        
+        // Key is already present
+        if(node != null){
+            // update the value
             node.value = value;
-            insertAtHead(node);
+            remove(node);
+            addAtHead(node);
             return;
         }
 
-        if(cache.size() == MAX_CAPACITY) {
+        // Key is not present then create a node
+        Node newNode = new Node(key, value);
+        
+        // Map is full so remove the tail node
+        if(map.size() >= CAPACITY){
             remove(tail.prev);
         }
-
-        Node newNode = new Node(key, value);
-        insertAtHead(newNode);
+        // Map is not full
+        addAtHead(newNode);
     }
-}
 
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache obj = new LRUCache(capacity);
- * int param_1 = obj.get(key);
- * obj.put(key,value);
- */
+}
