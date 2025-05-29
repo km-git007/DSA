@@ -27,7 +27,7 @@ public:
                 for(int i = 0; i < currGene.length(); i++)
                 {
                     int org = currGene[i];
-                    for(char ch = 'A'; ch <= 'Z'; ch++)
+                    for(char ch : mutations)
                     {
                         if(ch == org)
                         continue;
