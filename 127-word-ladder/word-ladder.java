@@ -22,21 +22,22 @@ class Solution {
                 if(currWord.equals(endWord))
                 return steps;
 
-                StringBuilder combinationBuilder = new StringBuilder(currWord);
-                for(int i = 0; i < currWord.length(); i++)
+                char[] wordArray = currWord.toCharArray();
+                for(int i = 0; i < wordArray.length; i++)
                 {
-                    char originalCharacter = combinationBuilder.charAt(i);
+                    char originalCharacter = wordArray[i];
                     for(char ch = 'a'; ch <= 'z'; ch++)
                     {
-                        combinationBuilder.setCharAt(i, ch);
-                        String newWord = combinationBuilder.toString();
+                        wordArray[i] = ch;
+                        String newWord = new String(wordArray);
                         if(wordSet.contains(newWord))
                         {
                             bfsQueue.add(newWord);
                             wordSet.remove(newWord);
                         }
                     }
-                    combinationBuilder.setCharAt(i, originalCharacter);
+                    // Restore original
+                    wordArray[i] = originalCharacter; 
                 }
                 level--;
             }
