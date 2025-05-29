@@ -18,25 +18,32 @@ public:
             int level = q.size();
             while(level--)
             {
-                string curr = q.front();
+                string currGene = q.front();
                 q.pop();
 
-                if(curr == target)
+                if(currGene == target)
                 return steps;
 
-                for(int i = 0; i < curr.length(); i++)
+                for(int i = 0; i < currGene.length(); i++)
                 {
-                    char originalChar = curr[i];
-                    for(char ch : mutations)
+                    int org = currGene[i];
+                    for(char ch = 'A'; ch <= 'Z'; ch++)
                     {
-                        curr[i] = ch;
-                        if(set.count(curr))
+                        if(ch == org)
+                        continue;
+
+                        // change the character
+                        currGene[i] = ch;
+
+                        // check whether this mutataed gene exists in the bank
+                        if(set.count(currGene))
                         {
-                            q.push(curr);
-                            set.erase(curr);
+                            q.push(currGene);
+                            set.erase(currGene);
                         }
                     }
-                    curr[i] = originalChar;
+                    // change the character at this index back to original
+                    currGene[i] = org;
                 }
             }
             steps++;
