@@ -19,8 +19,11 @@ public:
         vector<vector<pair<int, int>>> adj(n + 1);
         buildGraph(adj, times);
 
-        vector<int> time (n + 1, INT_MAX);
+        vector<int> time(n + 1, INT_MAX);
         time[src] = 0;
+
+        //to optimise the dijaktras
+        vector<bool> vis(n + 1, false);
 
         // min heap for pairs {time, node}
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
@@ -34,6 +37,9 @@ public:
             int currTime = p.first;
             int currNode = p.second;
 
+            if(vis[currNode])
+            continue;
+
             for(auto pair : adj[currNode])
             {
                 int nbr = pair.second;
@@ -45,14 +51,13 @@ public:
                     pq.push({time[nbr], nbr});
                 }
             }
+
+            vis[currNode] = true;
         }
 
-        // for 1 based indexing
-        time[0] = 0;
-        
         int maxTime = 0;
-        for(int t : time)
-        maxTime = max(maxTime, t);
+        for(int i = 1; i < time.size(); i++)
+        maxTime = max(maxTime, time[i]);
 
         return maxTime == INT_MAX ? -1 : maxTime;
     }
