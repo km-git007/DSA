@@ -13,55 +13,47 @@ public:
         }
     }
 
-    int networkDelayTime(vector<vector<int>>& times, int n, int k) 
+    int networkDelayTime(vector<vector<int>>& times, int n, int src) 
     {
         // create adjacency list
         vector<vector<pair<int, int>>> adj(n + 1);
         buildGraph(adj, times);
 
-        // create a time vector
-        vector<int> time(n + 1, INT_MAX);
-        time[k] = 0;
+        vector<int> time (n + 1, INT_MAX);
+        time[src] = 0;
 
-        // create a vis array to optimise dijkstras
-        vector<bool> vis(n + 1, false);
-
-        // min heap for pairs
+        // min heap for pairs {time, node}
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        pq.push({0, k});
+        pq.push({0, src});
+
         while(!pq.empty())
         {
             auto p = pq.top();
             pq.pop();
+
             int currTime = p.first;
-            int node = p.second;
+            int currNode = p.second;
 
-            if(vis[node])
-            continue;
-
-            for(auto neighbour : adj[node])
+            for(auto pair : adj[currNode])
             {
-                int edgeTime = neighbour.first;
-                int adjNode = neighbour.second;
-                if(time[adjNode] > edgeTime + currTime)
+                int nbr = pair.second;
+                int travelTime = pair.first;
+
+                if(currTime + travelTime < time[nbr])
                 {
-                    time[adjNode] = edgeTime + currTime;
-                    pq.push({time[adjNode], adjNode});
+                    time[nbr] = currTime + travelTime;
+                    pq.push({time[nbr], nbr});
                 }
             }
-
-            // mark the node as visited after exploring all neighbours
-            vis[node] = true;
         }
+
+        // for 1 based indexing
+        time[0] = 0;
         
         int maxTime = 0;
-        // Check if all nodes are reachable
-        for (int i = 1; i <= n; i++) 
-        {
-            if (time[i] == INT_MAX) 
-            return -1;
-            maxTime = max(maxTime,time[i]);
-        }
-        return maxTime;
+        for(int t : time)
+        maxTime = max(maxTime, t);
+
+        return maxTime == INT_MAX ? -1 : maxTime;
     }
 };
