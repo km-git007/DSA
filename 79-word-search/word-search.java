@@ -1,14 +1,14 @@
 class Solution {
     
     private int n, m;
-    private String targetWord;
+    private char[] targetWord;
     private int directions[][]=new int[][]{{-1,0},{0,-1},{0,1},{1,0}};
-    private boolean dfs(int row,int col,int index,char[][] board)
+    private boolean dfs(int row, int col, int index, char[][] board)
     {
-        if(index == targetWord.length())
+        if(index == targetWord.length)
         return true;
 
-        if(row < 0 || row >= n || col < 0 || col >=m || board[row][col] != targetWord.charAt(index))
+        if(row < 0 || row >= n || col < 0 || col >=m || board[row][col] != targetWord[index])
         return false;
 
         char c = board[row][col];
@@ -29,9 +29,9 @@ class Solution {
 
     public boolean exist(char[][] board, String word) 
     {
-        n=board.length;
-        m=board[0].length;
-        targetWord = word;
+        n = board.length;
+        m = board[0].length;
+        targetWord = word.toCharArray();
         for(int i=0;i<n;i++)
         {
             for(int j=0;j<m;j++)
