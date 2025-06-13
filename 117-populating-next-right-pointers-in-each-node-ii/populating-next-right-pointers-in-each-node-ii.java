@@ -24,9 +24,6 @@ class Node {
 class Solution {
     public Node connect(Node root) 
     {
-        if(root == null)
-        return root;
-
         Node curr = root;
         while(curr != null)
         {
@@ -45,7 +42,6 @@ class Solution {
                     tail.next = curr.right;
                     tail = tail.next;
                 }
-                // move the current
                 curr = curr.next;
             }
             curr = dummy.next;
