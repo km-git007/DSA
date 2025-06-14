@@ -14,9 +14,8 @@
  * }
  */
 class Solution {
-
-    private Set<Integer> set = new HashSet<>();
-    private List<TreeNode> list = new ArrayList<>();
+    private Set<Integer> set;
+    private List<TreeNode> res;
     private TreeNode solve(TreeNode root)
     {
         if(root == null)
@@ -28,10 +27,10 @@ class Solution {
         if(set.contains(root.val))
         {
             if(root.left != null)
-            list.add(root.left);
+            res.add(root.left);
 
             if(root.right != null)
-            list.add(root.right);
+            res.add(root.right);
 
             return null;
         }
@@ -41,13 +40,18 @@ class Solution {
 
     public List<TreeNode> delNodes(TreeNode root, int[] to_delete) 
     {
-        for(int num : to_delete)
-        set.add(num);
+        res = new ArrayList<>();
+        if(root == null)
+        return res;
 
-        if(!set.contains(root.val))
-        list.add(root);
+        set = new HashSet<>();
+        for(int node : to_delete)
+        set.add(node);
 
         solve(root);
-        return list;
+        if(!set.contains(root.val))
+        res.add(root);
+
+        return res;
     }
 }
