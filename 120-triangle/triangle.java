@@ -1,9 +1,9 @@
 class Solution {
     private static final int INF = Integer.MAX_VALUE;
     private List<List<Integer>> dp;
-    public void initializeDP() 
+    public void initializeDP(int n) 
     {
-        for (int i = 0; i < 200; i++) 
+        for (int i = 0; i < n; i++) 
         {
             List<Integer> row = new ArrayList<>();
             for(int j = 0; j <= i; j++)
@@ -32,8 +32,7 @@ class Solution {
     public int minimumTotal(List<List<Integer>> triangle) 
     {
         dp = new ArrayList<>();
-        initializeDP();
-
+        initializeDP(triangle.size());
         return solve(0, 0, triangle);
     }
 }
