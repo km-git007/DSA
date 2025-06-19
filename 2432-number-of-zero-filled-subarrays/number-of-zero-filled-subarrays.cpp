@@ -2,22 +2,18 @@ class Solution {
 public:
     long long zeroFilledSubarray(vector<int>& nums) 
     {
-        long long count = 0;
-        int i = 0;
-        while(i < nums.size())
+        long long count = 0, zeros = 0;
+        for (int num : nums) 
         {
-            if(nums[i] == 0)
+            if (num == 0) 
             {
-                int length = 1;
-                while(i < nums.size() && nums[i] == 0)
-                {
-                    count += length;
-                    length++;
-                    i++;
-                }
+                zeros++;
+                count += zeros;  // Add subarrays ending here
+            } 
+            else 
+            {
+                zeros = 0;  // Reset on non-zero
             }
-            else
-            i++;
         }
         return count;
     }
