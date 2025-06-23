@@ -1,18 +1,26 @@
 class Solution {
 
     private int[] color;
-    private boolean dfs(int node, int[][] graph) 
+    private boolean bfs(int node, int[][] graph) 
     {
-        for(int adjNode : graph[node])
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(node);
+        color[node] = 1;
+        while (!queue.isEmpty()) 
         {
-            if(color[adjNode] == -1)
+            int currNode = queue.poll();
+            for(int adjNode : graph[currNode])
             {
-                color[adjNode] = color[node] == 1 ? 0 : 1;
-                if(!dfs(adjNode, graph))
-                return false;
+                if(color[adjNode] == -1)
+                {
+                    color[adjNode] = 1 - color[currNode];
+                    queue.add(adjNode);
+                }
+                else if(color[adjNode] == color[currNode])  // Conflict found
+                {
+                    return false;  // Only return false on conflict
+                }
             }
-            else if(color[adjNode] == color[node])
-            return false;  
         }
         return true;
     }
@@ -27,8 +35,7 @@ class Solution {
         {
             if (color[i] == -1) 
             {
-                color[i] = 1;
-                if(!dfs(i, graph))
+                if(!bfs(i, graph))
                 return false;
             }
         }
