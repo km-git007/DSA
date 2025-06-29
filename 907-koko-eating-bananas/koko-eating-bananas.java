@@ -4,7 +4,7 @@ class Solution {
         int time = 0;
         for(int pile : piles)
         {
-            time += pile / speed + (pile % speed == 0 ? 0 : 1);
+            time += Math.ceil(pile * 1.0 / speed);
             if(time > allotedTime)
             return false;
         }
@@ -16,8 +16,7 @@ class Solution {
         int start = 1;
         int end = Arrays.stream(piles).max().getAsInt();
         int minEatingSpeed = end;
-        
-        while (start <= end) 
+        while(start <= end) 
         {
             int mid = start + (end - start) / 2;
             if(validSpeed(piles, h, mid)) 
