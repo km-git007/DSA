@@ -27,7 +27,7 @@ class Solution {
         Node curr = root;
         while(curr != null)
         {
-            Node dummy = new Node(-1);
+            Node dummy = new Node(0);
             Node tail = dummy;
             while(curr != null)
             {
@@ -42,6 +42,7 @@ class Solution {
                     tail.next = curr.right;
                     tail = tail.next;
                 }
+                // move the curr pointer ahead
                 curr = curr.next;
             }
             curr = dummy.next;
