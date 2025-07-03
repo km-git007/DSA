@@ -9,19 +9,18 @@
  * }
  */
 class Solution {
-    public ListNode reverseList(ListNode head,int steps)
+    public ListNode reverseList(ListNode head, int steps)
     {
-        ListNode curr=head;
-        ListNode prev=null;
-        for(int i=0;i<steps;i++)
+        ListNode curr = head, prev = null;
+        for(int i = 0; i < steps; i++)
         {
-            ListNode nxt=curr.next;
-            curr.next=prev;
-            prev=curr;
-            curr=nxt;
+            ListNode nxt = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nxt;
         }
         // most important step
-        head.next=curr;  
+        head.next = curr;  
         return prev;
     }
 
@@ -30,7 +29,7 @@ class Solution {
         if(left == right)
         return head;
         
-        ListNode dummy=new ListNode(-1);
+        ListNode dummy = new ListNode(-1);
         dummy.next = head;
 
         ListNode curr = dummy;
