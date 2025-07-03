@@ -9,29 +9,21 @@
  * }
  */
 class Solution {
-
-    // private List<ListNode> nodeList;
-    private int size;
-    private Map<Integer, ListNode> nodeMap;
+    private final List<ListNode> nodeList = new ArrayList<>();
     private final Random rand = new Random();
     public Solution(ListNode head) 
     {
-        // nodeList = new ArrayList<>();
-        nodeMap = new HashMap<>();
-        int index = 0;
-        while(head != null)
+        while (head != null) 
         {
-            nodeMap.put(index, head);
+            nodeList.add(head);
             head = head.next;
-            index++;
         }
-        size = index;
     }
-    
+
     public int getRandom() 
     {
-        int randomIndex = rand.nextInt(size);
-        return nodeMap.get(randomIndex).val;
+        int randomIndex = rand.nextInt(nodeList.size());
+        return nodeList.get(randomIndex).val;
     }
 }
 
