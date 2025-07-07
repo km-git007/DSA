@@ -1,46 +1,36 @@
 class ProductOfNumbers {
+private:
+    // Stores cumulative product of the stream
+    vector<int> prefixProduct;
+    int size = 0;
+
 public:
-    int lastZeroIndex;
-    vector<int> prod;
-    ProductOfNumbers() 
-    {
-        lastZeroIndex = -1;
+    ProductOfNumbers() {
+        // Initialize the product list with 1 to handle multiplication logic
+        prefixProduct.push_back(1);
+        size = 0;
     }
-    
-    void add(int num) 
-    {
-        if(prod.empty() || prod.back() == 0 || num == 0)
-        {
-            prod.push_back(num);
-            // if the number is zero than update the zero index
-            if(num == 0)
-            lastZeroIndex = prod.size() - 1;
 
-            return;
+    void add(int num) {
+        if (num == 0) {
+            // If num is 0, reset the cumulative products since multiplication
+            // with 0 invalidates previous products
+            prefixProduct = {1};
+            size = 0;
+        } else {
+            // Append the cumulative product of the current number with the last
+            // product
+            prefixProduct.push_back(prefixProduct[size] * num);
+            size++;
         }
-
-        // multiply the num with the last entry
-        prod.push_back(num * prod.back());
     }
-    
-    int getProduct(int k) 
-    {
-        int index = prod.size() - 1;
-        // if a zero is present in the k elements
-        if(lastZeroIndex > index - k)
-        return 0;
 
-        // the zero is present just before last k elements
-        if(lastZeroIndex == index - k)
-        return prod.back();
+    int getProduct(int k) {
+        // Check if the requested product length exceeds the size of the valid
+        // product list
+        if (k > size) return 0;
 
-        return prod.back() / prod[index - k];
+        // Compute the product of the last k elements using division
+        return prefixProduct[size] / prefixProduct[size - k];
     }
 };
-
-/**
- * Your ProductOfNumbers object will be instantiated and called as such:
- * ProductOfNumbers* obj = new ProductOfNumbers();
- * obj->add(num);
- * int param_2 = obj->getProduct(k);
- */
