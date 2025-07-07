@@ -2,23 +2,22 @@ class Solution {
 public:
     int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) 
     {
-        int maxExtraSatisfaction=0,extraSatisfaction=0,satisfaction=0;
-        int i=0;
-        for(int j=0;j<grumpy.size();j++)
+        int n = customers.size(), satisfaction = 0, maxExtra = 0, extra = 0;
+        for(int i = 0; i < n; i++)
         {
-            if(grumpy[j]!=1)
-            satisfaction+=customers[j];
-            else
-            extraSatisfaction+=customers[j];
+            if(!grumpy[i])
+            satisfaction += customers[i];
 
-            if(j-i+1==minutes)
+            else
+            extra += customers[i];
+
+            if(i - minutes + 1 >= 0)
             {
-                maxExtraSatisfaction=max(maxExtraSatisfaction,extraSatisfaction);
-                if(grumpy[i]==1)
-                extraSatisfaction-=customers[i];
-                i++;
+                maxExtra = max(maxExtra, extra);
+                if(grumpy[i - minutes + 1])
+                extra -= customers[i - minutes + 1];
             }
         }
-        return satisfaction+maxExtraSatisfaction;
+        return satisfaction + maxExtra;
     }
 };
