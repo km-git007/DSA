@@ -1,29 +1,29 @@
 class Solution {
 public:
-    int countOfSubarraysWithAtleastK(vector<int>& a, int k)
+    int countOfSubarraysWithAtleastK(vector<int>& nums, int k)
     {
-        unordered_map<int,int> m;
-        int n=a.size();
-        int i=0,j=0,count=0;
-        while(j<n)
+        unordered_map<int, int> map;
+        int i = 0, count = 0, n = nums.size();
+        for(int j = 0; j < n; j++)    
         {
-            m[a[j]]++;
-            while(m.size()==k)
+            map[nums[j]]++;
+            while(map.size() >= k)
             {
-                count+=n-j;             //total subarays starting from i and having grater than or equal to k elements.
-                m[a[i]]--;
-                if(m[a[i]]==0)
-                m.erase(a[i]);
+                count += n - j;
+
+                map[nums[i]]--;
+                if(map[nums[i]] == 0)
+                map.erase(nums[i]);
+
                 i++;
             }
-            j++;
         }
         return count;
     }
 
-    int subarraysWithKDistinct(vector<int>& a, int k) 
+    int subarraysWithKDistinct(vector<int>& nums, int k) 
     {
-        return countOfSubarraysWithAtleastK(a,k)-countOfSubarraysWithAtleastK(a,k+1);
+        return countOfSubarraysWithAtleastK(nums, k) - countOfSubarraysWithAtleastK(nums, k + 1);
     }
     
 };
