@@ -6,11 +6,6 @@ public:
         return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
     }
 
-    bool isDigit(char ch)
-    {
-        return ch >= '0' && ch <= '9';
-    }
-
     bool isValid(string word) 
     {
         if(word.length() < 3)
@@ -25,7 +20,7 @@ public:
             else if(isVowel(ch))
             hasVowel = true;
 
-            else if(!isDigit(ch))
+            else if(!isdigit(ch))
             hasConsonant = true;
         }
         return hasConsonant && hasVowel;
