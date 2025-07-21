@@ -1,34 +1,33 @@
 class Solution {
 public:
-    int findPeakElement(vector<int>& a) 
-    {
-        int n=a.size();
-        if(n==1)                    //a[]={1} 
-        return 0;
+    int binarySearch(vector<int>& nums, int low, int high) {
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
 
-        else if(a[0]>=a[1])         //a[]={3,1}  or  a[]={12,10,3,4,8,9,14,0}
-        return 0;
+            if (nums[mid] == nums[mid - 1] && nums[mid] == nums[mid + 1]) {
+                int left = binarySearch(nums, low, mid - 1);
+                if (left != -1) return left;
+                return binarySearch(nums, mid + 1, high);
+            }
 
-        else if(a[n-1]>=a[n-2])     //a[]={1,3}  or a[]={2,10,3,4,8,9,14,20}
-        return n-1;
-    
-        int low=1;
-        int high=n-2;
+            if (nums[mid] >= nums[mid - 1] && nums[mid] >= nums[mid + 1])  
+                return mid;
 
-        while(low<=high)
-        {
-            int mid=low+(high-low)/2;
-
-            // '=' sign used for arrays like a[]={1,3,3,3,3,3,0} //
-            if(a[mid]>a[mid-1] and a[mid]>a[mid+1] )  
-            return mid;                              
-
-            else if(a[mid]<a[mid+1])
-            low=mid+1;
+            else if (nums[mid] < nums[mid + 1])
+                low = mid + 1;
             else
-            high=mid-1;
+                high = mid - 1;
         }
+        return -1;
+    }
 
-            return -1;
+    int findPeakElement(vector<int>& nums) {
+        int n = nums.size();
+
+        if (n == 1) return 0;
+        if (nums[0] >= nums[1]) return 0;
+        if (nums[n - 1] >= nums[n - 2]) return n - 1;
+
+        return binarySearch(nums, 1, n - 2);
     }
 };
