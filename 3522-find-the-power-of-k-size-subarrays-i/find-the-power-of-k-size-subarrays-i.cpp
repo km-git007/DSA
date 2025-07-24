@@ -2,10 +2,10 @@ class Solution {
 public:
     vector<int> resultsArray(vector<int>& nums, int k) 
     {
-        int n = nums.size();
-        if(n == 1 || k == 1)
+        if(k == 1)
         return nums;
-
+        
+        int n = nums.size();
         vector<int> res(n - k + 1);
         int count = 1, i = 0;
         for(int j = 1; j < n; j++)
