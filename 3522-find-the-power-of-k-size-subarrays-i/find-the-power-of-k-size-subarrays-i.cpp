@@ -15,7 +15,7 @@ public:
             else
             count = 1;
 
-            if(j >= k - 1)
+            if(j - i + 1 == k)
             {
                 if(count >= k)
                 res[i++] = nums[j];
