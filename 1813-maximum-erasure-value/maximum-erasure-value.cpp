@@ -7,7 +7,6 @@ public:
         int score = 0, maxscore = 0;
         for(int j = 0; j < n; j++)
         {
-            score += nums[j];
             while(set.count(nums[j]))
             {
                 score -= nums[i];
@@ -15,6 +14,7 @@ public:
                 i++;
             }
             set.insert(nums[j]);
+            score += nums[j];
             maxscore = max(score, maxscore);
         }
         return maxscore;
