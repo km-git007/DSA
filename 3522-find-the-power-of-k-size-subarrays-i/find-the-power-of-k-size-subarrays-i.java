@@ -1,28 +1,36 @@
 class Solution {
+
     public int[] resultsArray(int[] nums, int k) 
     {
-        if(nums.length == 1 || k == 1)
-        return nums;
-
-        int count = 1, i = 0;
-        int[] ans = new int[nums.length - k + 1];
-        for(int j = 1; j < nums.length; j++)
+        int length = nums.length;
+        int[] result = new int[length - k + 1];
+        Deque<Integer> indexDeque = new ArrayDeque<>();
+        for (int currentIndex = 0; currentIndex < length; currentIndex++) 
         {
-            if(nums[j] == nums[j-1] + 1)
-            count++;
-            else
-            count = 1;
+            // Check if current element breaks the consecutive and sorted condition
+            if(!indexDeque.isEmpty() &&nums[currentIndex] != nums[currentIndex - 1] + 1)
+            indexDeque.clear(); // Invalidate the entire deque if condition breaks
 
-            if(j - i + 1 == k)
+            // Add current element index to the deque
+            indexDeque.offerLast(currentIndex);
+
+            // Check if the window is of size k and update result
+            if (currentIndex >= k - 1) 
             {
-                if(count >= k)
-                ans[i] = nums[j];
-                else
-                ans[i] = -1;
+                // Valid window of size >= k
+                if(indexDeque.size() >= k)  
+                result[currentIndex - k + 1] = nums[indexDeque.peekLast()];
 
-                i++;
+                // Not valid, return -1
+                else
+                result[currentIndex - k + 1] = -1; 
+
+                // Remove elements that are out of the window
+                if(!indexDeque.isEmpty() && indexDeque.peekFirst() < currentIndex - k + 1) 
+                indexDeque.pollFirst();
             }
         }
-        return ans;
+
+        return result;
     }
 }
