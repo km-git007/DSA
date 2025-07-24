@@ -2,17 +2,17 @@ class Solution {
 public:
     int maximumUniqueSubarray(vector<int>& nums) 
     {
-        unordered_set<int> seen;
+        bool seen[10001];
         int i = 0, n = nums.size();
         int score = 0, maxscore = 0;
         for(int j = 0; j < n; j++)
         {
-            while(seen.count(nums[j]))
+            while(seen[nums[j]])
             {
                 score -= nums[i];
-                seen.erase(nums[i++]);
+                seen[nums[i++]] = false;
             }
-            seen.insert(nums[j]);
+            seen[nums[j]] = true;
             score += nums[j];
             maxscore = max(score, maxscore);
         }
