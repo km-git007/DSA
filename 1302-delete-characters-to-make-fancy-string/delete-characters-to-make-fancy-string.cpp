@@ -2,14 +2,18 @@ class Solution {
 public:
     string makeFancyString(string s) 
     {
-        string res = "";
-        for(char ch : s)
+        // i for writing and j for reading
+        int i = 0;
+        for(int j = 0; j < s.length(); j++) 
         {
-            if(res.size() >= 2 && ch == res.back() && ch == res[res.size() - 2])
-            res.pop_back();
+            s[i] = s[j];
 
-            res.push_back(ch);
+            if(i >= 2 && s[i - 2] == s[j] && s[i - 1] == s[j]) {
+                continue;
+            }
+                
+            i++;
         }
-        return res;
+        return s.substr(0, i);
     }
 };
