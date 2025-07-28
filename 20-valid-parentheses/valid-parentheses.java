@@ -1,31 +1,29 @@
 class Solution {
-
-    public boolean check(char c,StringBuilder s)
-    {
-        if(c==')' && s.charAt(s.length()-1)!='(')
-        return false;
-        else if(c=='}' && s.charAt(s.length()-1)!='{')
-        return false;
-        else if(c==']' && s.charAt(s.length()-1)!='[')
-        return false;
-
+    private boolean isValid(Deque<Character> stack, char ch) {
+        if(ch == ')' && stack.peek() != '('){
+            return false;
+        }
+        else if(ch == ']' && stack.peek() != '['){
+            return false;
+        }
+        else if(ch == '}' && stack.peek() != '{'){
+            return false;
+        }
+        
+        stack.pop();
         return true;
-    } 
+    }
 
-    public boolean isValid(String str) 
-    {
-        StringBuilder s=new StringBuilder("");
-        for(int i=0;i<str.length();i++)
-        {
-            if(str.charAt(i)=='(' || str.charAt(i)=='{' || str.charAt(i)=='[')
-            s.append(str.charAt(i));
-            else
-            {
-                if(s.isEmpty() || !check(str.charAt(i),s))
+    public boolean isValid(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for(char ch : s.toCharArray()) {
+            if(ch == '(' || ch == '[' || ch == '{') {
+                stack.push(ch);
+            }
+            else if(stack.isEmpty() || !isValid(stack, ch)){
                 return false;
-                s.deleteCharAt(s.length()-1);
             }
         }
-        return s.isEmpty();
+        return stack.isEmpty();
     }
 }
