@@ -14,15 +14,21 @@
  * }
  */
 class Solution {
-    private boolean solve(TreeNode p, TreeNode q){
-        if (p == null && q == null) return true;
+    private boolean solve(TreeNode p, TreeNode q)
+    {
+        // both are null
+        if(p == null && q == null) 
+        return true;
         
-        if ((p == null && q != null) || (p != null && q == null) ) return false;
+        //one null and other not null
+        if(p == null || q == null) 
+        return false;
         
         return p.val == q.val && solve(p.left, q.right) && solve(p.right, q.left);
     }
 
-    public boolean isSymmetric(TreeNode root) {
+    public boolean isSymmetric(TreeNode root) 
+    {
         return solve(root.left, root.right);
     }
 }
