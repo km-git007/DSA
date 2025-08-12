@@ -9,29 +9,31 @@ class Node {
 */
 
 class Solution {
-    public Node flatten(Node head) 
-    {
-        Node curr = head;
-        while(curr != null)
-        {
-            if(curr.child != null)
-            {
-                // find the tail in the child chain
-                Node tail = curr.child;
-                while(tail.next != null)
-                tail =tail.next;
+    public Node flatten(Node head) {
+        if (head == null) {
+            return null;
+        }
 
-                // connect the tail to the curr.next
-                if(curr.next != null)
-                {
-                    tail.next = curr.next;
-                    curr.next.prev = tail;
+        Node curr = head;
+        while(curr != null) {
+            if (curr.child != null) {
+                Node nextNode = curr.next;
+                
+                // find the tail of the child
+                Node childTail = curr.child;
+                while (childTail.next != null) {
+                    childTail = childTail.next;
+                }
+                
+                // connect child tail with the nextNode
+                if(nextNode != null) {
+                    childTail.next = nextNode;
+                    nextNode.prev = childTail;
                 }
 
-                // Connect the current node to its child
+                // connect child with current
                 curr.next = curr.child;
                 curr.child.prev = curr;
-                // Clear the child pointer
                 curr.child = null;
             }
             curr = curr.next;
