@@ -14,27 +14,27 @@
  * }
  */
 class Solution {
-    private int K, res;
+    private int kthSmallestElement, k;
     private void solve(TreeNode root)
     {
-        if(root == null || K <= 0)
+        if(root == null) 
         return;
-        
+
         solve(root.left);
         
-        if(K > 0) 
-        {
-            res = root.val;  
-            K--;              
+        if(k > 0){
+            kthSmallestElement = root.val;
+            k--;
+        }else {
+            return;
         }
         
         solve(root.right);
     }
 
-    public int kthSmallest(TreeNode root, int k) 
-    {
-        K = k;
+    public int kthSmallest(TreeNode root, int K) {
+        k = K;
         solve(root);
-        return res;
+        return kthSmallestElement;
     }
 }
