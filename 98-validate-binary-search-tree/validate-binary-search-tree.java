@@ -14,23 +14,14 @@
  * }
  */
 class Solution {
-    private long prev;
-    private boolean check(TreeNode root)
-    {
-        if(root == null)
-        return true;
+    private boolean validateTree(TreeNode root, long minimum, long maximum){
+        if(root == null) return true;
+        if(root.val <= minimum || root.val >= maximum) return false;
 
-        if(!check(root.left) || root.val <= prev)
-        return false;
-
-        prev = root.val;
-
-        return check(root.right);
+        return validateTree(root.left, minimum, root.val) && validateTree(root.right, root.val, maximum);
     }
 
-    public boolean isValidBST(TreeNode root) 
-    {
-        prev = Long.MIN_VALUE;
-        return check(root);
+    public boolean isValidBST(TreeNode root) {
+        return validateTree(root, Long.MIN_VALUE, Long.MAX_VALUE);
     }
 }
