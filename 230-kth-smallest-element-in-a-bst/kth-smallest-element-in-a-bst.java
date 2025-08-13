@@ -1,40 +1,35 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
-    private int kthSmallestElement, k;
-    private void solve(TreeNode root)
-    {
-        if(root == null) 
-        return;
-
-        solve(root.left);
+    public int kthSmallest(TreeNode root, int k) {
+        TreeNode curr = root;
+        int count = 0;
         
-        if(k > 0){
-            kthSmallestElement = root.val;
-            k--;
-        }else {
-            return;
+        while (curr != null) {
+            if (curr.left == null) {
+                // Process current node
+                count++;
+                if (count == k) return curr.val;
+                curr = curr.right;
+            } else {
+                // Find inorder predecessor
+                TreeNode predecessor = curr.left;
+                while (predecessor.right != null && predecessor.right != curr) {
+                    predecessor = predecessor.right;
+                }
+                
+                if (predecessor.right == null) {
+                    // Create thread
+                    predecessor.right = curr;
+                    curr = curr.left;
+                } else {
+                    // Remove thread and process current
+                    predecessor.right = null;
+                    count++;
+                    if (count == k) return curr.val;
+                    curr = curr.right;
+                }
+            }
         }
         
-        solve(root.right);
-    }
-
-    public int kthSmallest(TreeNode root, int K) {
-        k = K;
-        solve(root);
-        return kthSmallestElement;
+        return -1; // Should never reach here
     }
 }
