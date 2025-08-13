@@ -14,31 +14,22 @@
  * }
  */
 class Solution {
-
-    private int maxSum;
-    //solve(root) returns the maximum sum of a path that can be extended upwards 
-    // (either by taking the left or right subtree).
-    private int solve(TreeNode root)
-    {
-        if(root == null)
-        return 0;
-
-        int leftSum = solve(root.left);
-        int rightSum = solve(root.right);
-
-        int onlyOne = Math.max(leftSum, rightSum) + root.val;
-        int rootLeftRight = leftSum + rightSum + root.val;
-        int onlyRoot = root.val;
-
-        maxSum = Math.max(Math.max(maxSum, rootLeftRight), Math.max(onlyOne, onlyRoot));
+private int maxPathSum;
+    private int maxPathSumNodeToLeaf(TreeNode root){
+        if(root == null) return 0;
         
-        return  Math.max(onlyOne, onlyRoot);
+        int leftSum = maxPathSumNodeToLeaf(root.left);
+        int rightSum = maxPathSumNodeToLeaf(root.right);
+        
+        int maxChildSum = Math.max(leftSum, rightSum);
+        maxPathSum = Math.max(Math.max(leftSum + rightSum + root.val, maxPathSum), Math.max(root.val,maxChildSum + root.val));
+        
+        return Math.max(maxChildSum + root.val, root.val);
     }
-
-    public int maxPathSum(TreeNode root) 
-    {
-        maxSum = Integer.MIN_VALUE;
-        solve(root);
-        return maxSum;
+    
+    public int maxPathSum(TreeNode root) {
+        maxPathSum = Integer.MIN_VALUE;
+        maxPathSumNodeToLeaf(root);
+        return maxPathSum;
     }
 }
