@@ -14,41 +14,29 @@
  * }
  */
 class Solution {
-    private int result, target;
-    private int solve(TreeNode root)
-    {
-        if(root == null)
-        return 0;
-
-        int leftHeight = solve(root.left);
-        int rightHeight = solve(root.right);
-
-        // update the result
-        result = Math.max(result, Math.max(leftHeight, rightHeight));
-
-        if(root.val == target)
-        return -1;
-
-        if(leftHeight < 0)
-        {
-            result = Math.max(result, Math.abs(leftHeight) + rightHeight);
-            return leftHeight - 1;
+    private int timeToInfectTree;
+    private int calculateTimeToInfectTree(TreeNode root, int startNode){
+        if(root == null) return 0;
+        
+        int leftHeight = calculateTimeToInfectTree(root.left, startNode);
+        int rightHeight = calculateTimeToInfectTree(root.right, startNode);
+        
+        if(root.val == startNode){
+            timeToInfectTree = Math.max(leftHeight, rightHeight);
+            return -1;
         }
-
-        if(rightHeight < 0)
-        {
-            result = Math.max(result, Math.abs(rightHeight) + leftHeight);
-            return rightHeight - 1;
+        
+        if(leftHeight < 0 || rightHeight < 0){
+            timeToInfectTree = Math.max(timeToInfectTree, Math.abs(leftHeight) + Math.abs(rightHeight));
+            return Math.min(leftHeight, rightHeight) - 1;
         }
-        // return height
-        return 1 + Math.max(leftHeight, rightHeight);
+        
+        return Math.max(leftHeight, rightHeight) + 1;
     }
-
-    public int amountOfTime(TreeNode root, int start) 
-    {
-        result = 0;
-        target = start;
-        solve(root);
-        return result;
+    
+    public int amountOfTime(TreeNode root, int start) {
+        timeToInfectTree = 0;
+        calculateTimeToInfectTree(root, start);
+        return timeToInfectTree;
     }
 }
