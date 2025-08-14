@@ -14,29 +14,62 @@
  * }
  */
 class Solution {
-    private int timeToInfectTree;
-    private int calculateTimeToInfectTree(TreeNode root, int startNode){
-        if(root == null) return 0;
-        
-        int leftHeight = calculateTimeToInfectTree(root.left, startNode);
-        int rightHeight = calculateTimeToInfectTree(root.right, startNode);
-        
-        if(root.val == startNode){
-            timeToInfectTree = Math.max(leftHeight, rightHeight);
-            return -1;
+
+    public Solution()
+    {
+        adjacencyList = new ArrayList[100001];
+        // Initialize each element of the array as a new ArrayList
+        for(int i = 0; i < adjacencyList.length; i++) 
+        adjacencyList[i] = new ArrayList<>();
+
+        minTime = 0;
+        visited = new boolean[adjacencyList.length];
+    }
+
+    private void buildAdjacencyList(TreeNode root)
+    {
+        if(root == null)
+        return;
+
+        if(root.left!=null)
+        {
+            adjacencyList[root.left.val].add(root.val);
+            adjacencyList[root.val].add(root.left.val);
+        }
+
+        if(root.right!=null)
+        {
+            adjacencyList[root.right.val].add(root.val);
+            adjacencyList[root.val].add(root.right.val);
         }
         
-        if(leftHeight < 0 || rightHeight < 0){
-            timeToInfectTree = Math.max(timeToInfectTree, Math.abs(leftHeight) + Math.abs(rightHeight));
-            return Math.min(leftHeight, rightHeight) - 1;
-        }
-        
-        return Math.max(leftHeight, rightHeight) + 1;
+        buildAdjacencyList(root.left);
+        buildAdjacencyList(root.right);
     }
     
-    public int amountOfTime(TreeNode root, int start) {
-        timeToInfectTree = 0;
-        calculateTimeToInfectTree(root, start);
-        return timeToInfectTree;
+    private int minTime;
+    private boolean[] visited;
+    private List<Integer>[] adjacencyList;
+    private void dfs(int node,int time)
+    {
+        if(visited[node])
+        return;
+
+        // mark the node visited
+        visited[node] = true;
+        for(int adj : adjacencyList[node]) 
+        {
+            if(!visited[adj])
+            dfs(adj,time + 1);
+        }
+
+        minTime = Math.max(minTime,time);
+    }
+    
+    public int amountOfTime(TreeNode root, int start)
+    {
+        buildAdjacencyList(root);
+        dfs(start,0);
+        return minTime;
     }
 }
