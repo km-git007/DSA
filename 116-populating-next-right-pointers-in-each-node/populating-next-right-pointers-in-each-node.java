@@ -22,37 +22,20 @@ class Node {
 */
 
 class Solution {
-    public Node connect(Node root) 
-    {
-        if(root == null || root.left == null)
-        return root;
-
-        Node head = root;
-        while(root != null)
-        {
-            Node dummy = new Node(-1);
-            Node tail = dummy;
-            while(root != null)
-            {
-                // make connection between children
-                if(root.left != null)
-                {
-                    tail.next = root.left;
-                    tail = tail.next;
+    public Node connect(Node root) {
+                if(root == null) return null;
+        Node curr = root;
+        while(curr.left != null){
+            Node start = curr;
+            while(start != null){
+                start.left.next = start.right;
+                if(start.next != null) {
+                    start.right.next = start.next.left;
                 }
-                
-                if(root.right != null)
-                {
-                    tail.next = root.right;
-                    tail = tail.next;
-                }
-
-                root = root.next;
+                start = start.next;
             }
-
-            root = dummy.next;
+            curr = curr.left;
         }
-
-        return head;
+        return root;
     }
 }
