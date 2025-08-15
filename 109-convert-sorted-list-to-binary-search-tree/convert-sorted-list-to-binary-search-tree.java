@@ -24,32 +24,43 @@
  * }
  */
 class Solution {
-
-    public TreeNode solve(ListNode head,ListNode tail)
-    {
-        if(head==tail)
-        return null;
-
-        ListNode slow=head;
-        ListNode fast=head;
-        while(fast!=tail && fast.next!=tail)
-        {
-            slow=slow.next;
-            fast=fast.next.next;
+    private ListNode[] findMiddleNode(ListNode start) {
+        ListNode slow = start, fast = start;
+        ListNode prev = null;
+        while(fast != null && fast.next != null){
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
         }
-
-        TreeNode node=new TreeNode(slow.val);
-        node.left=solve(head,slow);
-        node.right=solve(slow.next,tail);
-
-        return node;
+        return new ListNode[]{slow, prev};
     }
 
-    public TreeNode sortedListToBST(ListNode head) 
-    {
-        if(head==null)
-        return null;
+    private TreeNode buildBST(ListNode start) {
+        if(start == null) return null;
 
-        return solve(head,null);
+        var middleAndPrev = findMiddleNode(start);
+        ListNode middle = middleAndPrev[0];
+        ListNode prev = middleAndPrev[1];
+
+        // create the new node
+        TreeNode newNode = new TreeNode(middle.val);
+
+        if(start == middle){
+            return newNode;
+        }
+
+        newNode.right = buildBST(middle.next);
+        // very essential step
+        middle.next = null;
+        if(prev != null){
+            prev.next = null;
+        }
+        newNode.left = buildBST(start);
+
+        return newNode;
+    }
+    
+    public TreeNode sortedListToBST(ListNode head) {
+        return buildBST(head);
     }
 }
