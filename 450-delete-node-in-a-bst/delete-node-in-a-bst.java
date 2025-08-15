@@ -14,48 +14,28 @@
  * }
  */
 class Solution {
-    private TreeNode findSuccessor(TreeNode root)
-    {
-        while(root.left != null)
-        root = root.left;
-
-        return root;
-    }
-
-    public TreeNode deleteNode(TreeNode root, int key) 
-    {
-        if(root == null)
-        return root;
-
-        if(root.val > key)
-        root.left = deleteNode(root.left, key);
-
-        else if(root.val < key)
-        root.right = deleteNode(root.right, key);
-
-        else
-        {
-            // root has no child
-            if(root.left == null && root.right == null)
-            return null;
-
-            // root has right child
-            else if(root.left == null)
-            return root.right;
-
-            // root has left child
-            else if(root.right == null)
-            return root.left;
-
-            // root has both child
-            else
-            {
-                TreeNode succ = findSuccessor(root.right);
-                root.val = succ.val;
-                root.right = deleteNode(root.right, succ.val);
-            }
+    private int findSuccessor(TreeNode root) {
+        while(root.left != null){
+            root = root.left;
         }
+        return root.val;
+    }
+    
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root == null) return null;
 
+        if(root.val == key){
+            if(root.left == null) return root.right;
+            if(root.right == null) return root.left;
+            
+            int successor = findSuccessor(root.right);
+            root.val = successor;
+            root.right = deleteNode(root.right, successor);
+        } else if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            root.left = deleteNode(root.left, key);
+        }
         return root;
     }
 }
