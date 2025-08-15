@@ -14,28 +14,17 @@
  * }
  */
 class Solution {
-    private TreeNode constructBST(int start, int end, int[] preorder) {
-        if(start > end) return null;
-        
-        TreeNode node = new TreeNode(preorder[start]);
-        int inorderSuccesorIndex = findInorderSuccessor(start + 1, preorder, node.val);
-        if(inorderSuccesorIndex != -1){
-            node.right = constructBST(inorderSuccesorIndex, end, preorder);
-            node.left = constructBST(start + 1, inorderSuccesorIndex - 1, preorder);
-        }else{
-            node.left = constructBST(start + 1, end, preorder);
-        }
-        return node;
+    private int index;
+    private TreeNode buildBST(int upperBound, int[] preorder) {
+        if(index == preorder.length || preorder[index] > upperBound) return null;
+        TreeNode root = new TreeNode(preorder[index++]);
+        root.left = buildBST(root.val, preorder);
+        root.right = buildBST(upperBound, preorder);
+        return root;
     }
-
-    private int findInorderSuccessor(int start, int[] preorder, int key) {
-        for(int i = start; i < preorder.length; i++){
-            if(preorder[i] > key) return i;
-        }
-        return -1;
-    }
-
+    
     public TreeNode bstFromPreorder(int[] preorder) {
-        return constructBST(0, preorder.length - 1, preorder);
+        index = 0;
+        return  buildBST(Integer.MAX_VALUE, preorder);
     }
 }
