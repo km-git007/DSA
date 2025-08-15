@@ -23,18 +23,22 @@ class Node {
 
 class Solution {
     public Node connect(Node root) {
-                if(root == null) return null;
         Node curr = root;
-        while(curr.left != null){
-            Node start = curr;
-            while(start != null){
-                start.left.next = start.right;
-                if(start.next != null) {
-                    start.right.next = start.next.left;
+        while(curr != null){
+            Node dummy = new Node(0);
+            Node tail = dummy;
+            while(curr != null){
+                if(curr.left != null) {
+                    tail.next = curr.left;
+                    tail = tail.next;
                 }
-                start = start.next;
+                if(curr.right != null) {
+                    tail.next = curr.right;
+                    tail = tail.next;
+                }
+                curr = curr.next;
             }
-            curr = curr.left;
+            curr = dummy.next;
         }
         return root;
     }
