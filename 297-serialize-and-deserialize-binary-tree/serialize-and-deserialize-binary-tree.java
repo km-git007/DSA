@@ -26,10 +26,25 @@ public class Codec {
         root.right = deserializationHelper(queue);
         return root;
     }
+
+    private int index;
+    private TreeNode deserializationHelper(String[] array) {
+        if(index >= array.length || array[index].equals("#")) {
+            index++;
+            return null;
+        }
+        
+        TreeNode root = new TreeNode(Integer.parseInt(array[index++]));
+        root.left = deserializationHelper(array);
+        root.right = deserializationHelper(array);
+        return root;
+    }
     
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        Queue<String> queue = new LinkedList<>(Arrays.asList(data.split(",")));
-        return deserializationHelper(queue);
+        String[] array = data.split(","); 
+        index = 0; 
+        return deserializationHelper(array);
     }
+
 }
