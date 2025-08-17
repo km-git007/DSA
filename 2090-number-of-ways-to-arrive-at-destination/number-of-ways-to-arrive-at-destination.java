@@ -27,15 +27,17 @@ class Solution {
         long[] time = new long[n];
         Arrays.fill(time, Long.MAX_VALUE);
         time[0] = 0;
+        boolean[] visited = new boolean[n];
         
         int MOD = 1000000007;        
         while(!queue.isEmpty()){
             long[] data = queue.poll();
             long currTime = data[0];
             int node = (int)data[1];
-            
-            if(currTime > time[node]) continue;
-            
+
+            if(visited[node]) continue;
+            visited[node] = true;
+                        
             for(int[] neighbor : adj[node]){ 
                 int travelTime = neighbor[0];  
                 int adjNode = neighbor[1];
