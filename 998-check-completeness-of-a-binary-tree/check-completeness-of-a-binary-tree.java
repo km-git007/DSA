@@ -14,28 +14,22 @@
  * }
  */
 class Solution {
+    private int calculateTotalNodes(TreeNode root){
+        if(root == null) return 0;
+        return 1 + calculateTotalNodes(root.left) + calculateTotalNodes(root.right);
+    }
+    
+    private boolean isValid(int nodeNumber, int total, TreeNode root){
+        if(root == null) return true;
+        
+        if(nodeNumber > total) return false;
+        
+        return isValid(2* nodeNumber, total, root.left) && 
+                isValid(2* nodeNumber + 1, total, root.right);
+        
+    }
     public boolean isCompleteTree(TreeNode root) {
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
-        boolean seenNull = false;
-        while(!queue.isEmpty()){
-            int size = queue.size();
-            for(int i = 0; i < size; i++){
-                TreeNode node = queue.poll();
-                
-                if(node != null && seenNull){
-                    return false;
-                }
-                
-                if(node == null){
-                    seenNull = true;
-                    continue;
-                }
-                
-                queue.add(node.left);
-                queue.add(node.right);
-            }
-        }
-        return true;
+        int totalNodes = calculateTotalNodes(root);
+        return isValid(1, totalNodes, root);
     }
 }
