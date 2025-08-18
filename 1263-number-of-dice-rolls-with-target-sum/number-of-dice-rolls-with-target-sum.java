@@ -1,32 +1,29 @@
 class Solution {
+    private int MOD = 1000000007;
+    private int totalFaces, totalDices;
+    private long[][] dp;
+    private long numberOfRolls(int diceNo, int target){
+        if(diceNo > totalDices || target < 0) return 0;
+        if(target == 0 ) return diceNo == totalDices ? 1 : 0;
 
-    private int MOD=1000000007;
-    int[][] dp=new int[31][1001];
-    private int solve(int n,int k,int target)
-    {
-        if(n == 0 && target == 0)
-        return 1;
+        if(dp[diceNo][target] != -1) return dp[diceNo][target];
 
-        if(n==0)
-        return 0;
-
-        if(dp[n][target]!=-1)
-        return dp[n][target];
-
-        int ways = 0;
-        for(int i = 1; i <= k; i++)
-        {
-            if(i <= target)
-            ways = (ways % MOD) + (solve(n-1, k, target - i) % MOD);
+        long ways = 0;
+        for(int face = 1; face <= totalFaces; face++){
+            ways = (ways + numberOfRolls(diceNo + 1, target - face)) % MOD;
         }
-        return dp[n][target] = ways % MOD;
+        return dp[diceNo][target] = ways;
     }
 
-    public int numRollsToTarget(int n, int k, int target) 
-    {
-        for(int i=0;i<31;i++)
-        Arrays.fill(dp[i],-1);
+    public int numRollsToTarget(int n, int k, int target) {
+        totalFaces = k;
+        totalDices = n;
 
-        return solve(n,k,target);
+        dp = new long[totalDices + 1][target + 1];
+        for(int dice = 0; dice <= totalDices; dice++){
+            Arrays.fill(dp[dice], -1);
+        }
+
+        return (int)numberOfRolls(0, target);
     }
 }
