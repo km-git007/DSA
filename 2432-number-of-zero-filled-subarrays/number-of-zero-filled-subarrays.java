@@ -1,24 +1,17 @@
 class Solution {
-    public long zeroFilledSubarray(int[] nums) 
-    {
-        long count = 0; // To count the total number of subarrays
-        long consecutiveZeros = 0; // To count consecutive zeros
-
-        for (int num : nums) 
-        {
-            if (num == 0) 
-            {
-                // Increment the count for each zero
-                consecutiveZeros++;
-                // Add all subarrays ending at this zero 
-                count += consecutiveZeros; 
-            } else 
-            {
-                // Reset if the current number is not zero
-                consecutiveZeros = 0; 
+    public long zeroFilledSubarray(int[] nums) {
+        long count = 0;
+        long subArrayLength = 1;
+        int index = 0;
+        while (index < nums.length){
+            while(index < nums.length && nums[index] == 0){
+                count += subArrayLength;
+                subArrayLength++;
+                index++;
             }
+            subArrayLength = 1;
+            index++;
         }
-
         return count;
     }
 }
