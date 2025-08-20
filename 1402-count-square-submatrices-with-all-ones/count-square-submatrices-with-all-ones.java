@@ -2,10 +2,7 @@ class Solution {
 
     public int solve(int i, int j, int[][] grid, int[][] dp) {
         // If the cell lies outside the grid, return 0.
-        if (i >= grid.length || j >= grid[0].length) {
-            return 0;
-        }
-        if (grid[i][j] == 0) {
+        if (i >= grid.length || j >= grid[0].length || grid[i][j] == 0) {
             return 0;
         }
 
