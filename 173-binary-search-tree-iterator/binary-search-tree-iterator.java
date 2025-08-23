@@ -14,35 +14,27 @@
  * }
  */
 class BSTIterator {
-
-    private Deque<TreeNode> stack;
-    private void inorderTraversal(TreeNode root)
-    {
-        while(root!=null)
-        {
-            stack.push(root);
-            root=root.left;
-        }
+    private List<TreeNode> arr;
+    private int index;
+    private void inorderTraversal(TreeNode root) {
+        if(root == null) return;
+        inorderTraversal(root.left);
+        arr.add(root);
+        inorderTraversal(root.right);
     }
 
-    public BSTIterator(TreeNode root) 
-    {
-        stack=new ArrayDeque<>();
+    public BSTIterator(TreeNode root) {
+        arr = new ArrayList<>();
         inorderTraversal(root);
+        index = 0;
     }
-    
-    public int next() 
-    {
-        TreeNode node=stack.pop();
 
-        inorderTraversal(node.right);
-
-        return node.val;
+    public int next() {
+        return  arr.get(index++).val;
     }
-    
-    public boolean hasNext() 
-    {
-        return !stack.isEmpty();
+
+    public boolean hasNext() {
+        return index < arr.size();
     }
 }
 
