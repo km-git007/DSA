@@ -9,29 +9,18 @@
  */
 
 class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null || root.val == p.val || root.val == q.val){
+            return root;
+        }
 
-    private TreeNode solve(TreeNode root,int mini,int maxi)
-    {
-        if(root==null)
+        if(root.val > p.val && root.val > q.val){
+            return lowestCommonAncestor(root.left, p, q);
+        }
+        else if(root.val < p.val && root.val < q.val){
+            return lowestCommonAncestor(root.right, p, q);
+        }
+
         return root;
-
-        if(root.val>=mini && root.val<=maxi)
-        return root;
-
-        TreeNode L=solve(root.left,mini,maxi);
-        TreeNode R=solve(root.right,mini,maxi);
-
-        if(L==null && R==null)
-        return null;
-
-        return (L==null)?R:L;
-    }
-
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) 
-    {
-        int mini=Math.min(p.val,q.val);
-        int maxi=Math.max(p.val,q.val);
-
-        return solve(root,mini,maxi);
     }
 }
