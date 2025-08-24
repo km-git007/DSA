@@ -12,7 +12,7 @@ class Trie {
         root = new TrieNode();
     }
     
-    private TrieNode root;
+    private final TrieNode root;
     public void insert(String word) {
         TrieNode node = root;
         for (char c : word.toCharArray()) {
