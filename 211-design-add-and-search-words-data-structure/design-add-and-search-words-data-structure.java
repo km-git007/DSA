@@ -29,14 +29,10 @@ class WordDictionary {
     }
     
     private boolean searchWord(TrieNode node, String word) {
-        for (int i = 0; i < word.length(); i++) {
+        for (int i = 0; i < word.length(); i++) 
+        {
             char c = word.charAt(i);
-            if(c != '.'){
-                if(node.children[c - 'a'] == null){
-                    return false;
-                }
-                node = node.children[c - 'a'];
-            }else{
+            if(c == '.'){
                 for(char ch = 'a'; ch <= 'z' && ch != c; ch++){
                     String newWord = ch + word.substring(i + 1);
                     if(searchWord(node, newWord)){
@@ -45,6 +41,12 @@ class WordDictionary {
                 }
                 return false;
             }
+
+            if(node.children[c - 'a'] == null){
+                return false;
+            }
+
+            node = node.children[c - 'a'];
         }
         return node.isEnd;
     }
