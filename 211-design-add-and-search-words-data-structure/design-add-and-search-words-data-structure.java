@@ -28,14 +28,13 @@ class WordDictionary {
         insert(word);
     }
     
-    private boolean searchWord(TrieNode node, String word) {
-        for (int i = 0; i < word.length(); i++) 
+    private boolean searchWord(TrieNode node, int index, String word) {
+        for (int i = index; i < word.length(); i++)
         {
             char c = word.charAt(i);
             if(c == '.'){
                 for(char ch = 'a'; ch <= 'z' && ch != c; ch++){
-                    String newWord = ch + word.substring(i + 1);
-                    if(searchWord(node, newWord)){
+                    if(node.children[ch - 'a'] != null && searchWord(node.children[ch - 'a'], i + 1, word)){
                         return true;
                     }
                 }
@@ -52,6 +51,6 @@ class WordDictionary {
     }
     
     public boolean search(String word) {
-        return searchWord(root, word);
+        return searchWord(root, 0, word);
     }
 }
