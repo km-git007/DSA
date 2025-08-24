@@ -33,7 +33,7 @@ class WordDictionary {
         {
             char c = word.charAt(i);
             if(c == '.'){
-                for(char ch = 'a'; ch <= 'z' && ch != c; ch++){
+                for(char ch = 'a'; ch <= 'z'; ch++){
                     if(node.children[ch - 'a'] != null && searchWord(node.children[ch - 'a'], i + 1, word)){
                         return true;
                     }
