@@ -7,60 +7,58 @@ class TreeNode{
 }
 
 class Solution {
-    private TreeNode buildTree(int[] parents)
-    {
-        TreeNode root = new TreeNode(0);
+    private TreeNode buildTree(int[] parents){
         Map<Integer, TreeNode> map = new HashMap<>();
+        TreeNode root = new TreeNode(0);
         map.put(0, root);
-
-        for(int i = 1; i < parents.length; i++)
-        {
-            int nodeVal = parents[i];
-            map.putIfAbsent(nodeVal, new TreeNode(nodeVal));
-
-            TreeNode node = map.get(nodeVal);
-
+        for(int i = 1; i < parents.length; i++){
+            map.putIfAbsent(parents[i], new TreeNode(parents[i]));
+            TreeNode parent = map.get(parents[i]);
+            
             map.putIfAbsent(i, new TreeNode(i));
-
-            if(node.left == null)
-            node.left = map.get(i);
-
-            else
-            node.right = map.get(i);
+            TreeNode child = map.get(i);
+            if(parent.left == null){
+                parent.left = child;
+            }else{
+                parent.right = child;
+            }
         }
         return root;
     }
-
+    
+    private int sizeOfTree(TreeNode root){
+        if(root == null) return 0;
+        return 1 + sizeOfTree(root.left) + sizeOfTree(root.right);
+    }
+    
     private long maxScore = 0; 
-    private int totalNodes, count = 0;
-    private int dfs(TreeNode root)
-    {
-        if(root == null)
+    private int treeSize, count = 0;
+    private int dfs(TreeNode root){
+        if(root == null) 
         return 0;
 
-        int left = dfs(root.left);
-        int right = dfs(root.right);
-        int rest = totalNodes - left - right - 1;
+        int leftScore = dfs(root.left);
+        int rightScore = dfs(root.right);
+        int rest = treeSize - leftScore - rightScore - 1;
 
         long scoreOfNode = 1;
-        if (left > 0) scoreOfNode *= left;
-        if (right > 0) scoreOfNode *= right;
+        if (leftScore > 0) scoreOfNode *= leftScore;
+        if (rightScore > 0) scoreOfNode *= rightScore;
         if (rest > 0) scoreOfNode *= rest;
 
-        if(scoreOfNode > maxScore) {
+        if(scoreOfNode > maxScore){
             maxScore = scoreOfNode;
             count = 1;
-        }else if (scoreOfNode == maxScore) {
+        }else if(scoreOfNode == maxScore){
             count++;
         }
-        return 1 + left + right;
+
+        return 1 + leftScore + rightScore;
     }
 
-    public int countHighestScoreNodes(int[] parents) 
-    {
+    public int countHighestScoreNodes(int[] parents) {
         TreeNode root = buildTree(parents);
-        totalNodes = parents.length;
-
+        treeSize = sizeOfTree(root);
         dfs(root);
         return count;
     }
