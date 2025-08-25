@@ -14,27 +14,25 @@
  * }
  */
 class Solution {
-
-    private int prev, minDistance;
+    private TreeNode prev;
+    private int minDiff = 1000000;
     private void solve(TreeNode root)
     {
         if(root == null)
         return;
-        
+
         solve(root.left);
-        
-        minDistance = Math.min(minDistance, root.val - prev);
-        prev = root.val;
+
+        if(prev != null)
+        minDiff = Math.min(minDiff, root.val - prev.val);
+
+        prev = root;
 
         solve(root.right);
     }
-    
-    public int minDiffInBST(TreeNode root) 
-    {
-        prev = Integer.MIN_VALUE / 2;
-        minDistance = Integer.MAX_VALUE;
 
+    public int minDiffInBST(TreeNode root) {
         solve(root);
-        return minDistance;
+        return minDiff;
     }
 }
