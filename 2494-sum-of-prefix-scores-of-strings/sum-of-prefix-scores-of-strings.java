@@ -1,61 +1,49 @@
-class Solution {
-
-    public Solution()
-    {
-        root=new Trie();
+class TrieNode {
+    TrieNode[] children;
+    boolean isEnd;
+    int prefixScore;
+    TrieNode() {
+        children = new TrieNode[26];
     }
+}
 
-    private class Trie
-    {
-        Trie[] children;
-        int count;
-        Trie()
-        {
-            count=0;
-            children=new Trie[26];
+class Solution {
+    Solution(){
+        root = new TrieNode();
+    }
+    private final TrieNode root;
+    private void insert(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            if (node.children[c - 'a'] == null) {
+                node.children[c - 'a'] = new TrieNode();
+            }
+            node = node.children[c - 'a'];
+            node.prefixScore++;
         }
+        node.isEnd = true;
     }
     
-    private Trie root;
-
-    private void insert(String word)
-    {
-        Trie curr=root;
-        for(char c : word.toCharArray())
-        {
-            if (curr.children[c-'a'] == null)
-            curr.children[c-'a']=new Trie(); 
-
-            curr=curr.children[c-'a'];
-            curr.count+=1;
+    private int getPrefixScore(String word) {
+        TrieNode node = root;
+        int prefixScore = 0;
+        for (char c : word.toCharArray()) {
+            node = node.children[c - 'a'];
+            prefixScore += node.prefixScore;
         }
+        return prefixScore;
     }
 
-    // returns the score of a word.
-    private int scoreOfWord(String word) 
-    {
-        Trie curr=root;
-        int score=0;
-        for(char c : word.toCharArray())
-        {
-            curr=curr.children[c-'a'];
-            score+=curr.count;
+    public int[] sumPrefixScores(String[] words) {
+        for(String word : words){
+            insert(word);
         }
-        return score;
-    }
-
-    public int[] sumPrefixScores(String[] words) 
-    {
-        for(String word : words)
-        insert(word);
-
-        int[] ans=new int[words.length];
-        int index=0;
-        for(String word : words)
-        {
-            int score=scoreOfWord(word);
-            ans[index++]=score;
+        
+        int [] prefixScores = new int[words.length];
+        int index = 0;
+        for(String word : words){
+            prefixScores[index++] = getPrefixScore(word);
         }
-        return ans;
+        return prefixScores;
     }
 }
