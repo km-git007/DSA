@@ -19,17 +19,16 @@ class Solution {
         node.isEnd = true;
     }
 
-    private String search(String word) {
+    private String findShortestPrefix(String word) {
         TrieNode node = root;
-        StringBuilder sb = new StringBuilder();
-        for (char c : word.toCharArray()) {
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
             if (node.children[c - 'a'] == null) {
                 return word;
             }
-            sb.append(c);
             node = node.children[c - 'a'];
             if(node.isEnd){
-                return sb.toString();
+                return word.substring(0, i + 1);
             }
         }
         // control would never reach here
@@ -50,7 +49,7 @@ class Solution {
         String[] res = new String[words.length];
         int index = 0;
         for(String word : words){
-            res[index++] = search(word);
+            res[index++] = findShortestPrefix(word);
         }
         return String.join(" ", res);
     }
