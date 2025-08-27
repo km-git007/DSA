@@ -1,24 +1,44 @@
 class Solution {
-    public int longestCommonSubsequence(String s, String t)
-    {
-        int[] prev = new int[t.length() + 1];
-        int[] curr = new int[t.length() + 1];
-        for(int i = 1; i <= s.length(); i++){
-            for(int j = 1; j <= t.length(); j++){
-                if(s.charAt(i - 1) == t.charAt(j - 1)){
-                    curr[j] = prev[j - 1] + 1;
-                }else{
-                    curr[j] = Math.max(prev[j], curr[j - 1]);
-                }
-            }
-            System.arraycopy(curr, 1, prev, 1, t.length());
+
+    public String reverseString(String s){
+        char[] ch =  s.toCharArray();
+        int l=0,r=ch.length-1;
+        while(l<r){
+            char temp = ch[l];
+            ch[l++] = ch[r];
+            ch[r--] = temp;
         }
-        return prev[t.length()];
+        return new String(ch);
+    }
+
+    public int lcs(String s){
+        String rs = reverseString(s);
+        int n=s.length();
+        int[] dp = new int[n+1];
+        
+        for(int i=1;i<=n;i++){
+            int prev = 0;
+            for(int j=1;j<=n;j++){
+                int tmp = dp[j];
+                if(s.charAt(i-1) == rs.charAt(j-1)){
+                    dp[j] = prev + 1;
+                } else {
+                    dp[j] = Math.max(dp[j],dp[j-1]);
+                }
+                prev = tmp;
+            }
+        }
+        return n - dp[n];
     }
 
     public int minInsertions(String s) {
-        String reversed = new StringBuilder(s).reverse().toString();
-        int lcs = longestCommonSubsequence(s, reversed);
-        return s.length() - lcs;
+        Callable<Integer> callable=()->lcs(s);
+        FutureTask<Integer>future=new FutureTask<>(callable);
+        new Thread(future).start();
+        try{
+            return future.get();
+        }catch(Exception e){
+            return 0;
+        }
     }
 }
