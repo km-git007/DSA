@@ -1,20 +1,16 @@
 class Solution {
-    private Integer[][] dp;
-    private int solve(int n, int m, String s, String t) {
-        if(m == 0) return 1;
-        if(n == 0) return 0;
-        
-        if(dp[n][m] != null) return dp[n][m];
-        
-        if(s.charAt(n - 1) == t.charAt(m - 1)) {
-            return dp[n][m] = solve(n - 1, m - 1, s, t) + solve(n - 1, m, s, t);
-        }
-
-        return dp[n][m] = solve(n - 1, m, s, t);
-    }
-
     public int numDistinct(String s, String t){
-        dp = new Integer[s.length() + 1][t.length() + 1];
-        return solve(s.length(), t.length(), s, t);
+        int[][] dp = new int[s.length() + 1][t.length() + 1];
+        for(int i = 0; i <= s.length(); i++){
+            for(int j = 0; j <= t.length(); j++){
+                if(j == 0) dp[i][j] = 1;
+                else if(i == 0) dp[i][j] = 0;
+                else if(s.charAt(i - 1) == t.charAt(j - 1)){
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+                }
+                else dp[i][j] = dp[i - 1][j];
+            }
+        }
+        return dp[s.length()][t.length()];
     }
 }
