@@ -1,50 +1,41 @@
 class RandomizedSet {
 
+    private Map<Integer, Integer> numMap;
+    private List<Integer> numList;
     private Random rand;
-    private List<Integer> list;
-    private Map<Integer,Integer> map;
-    public RandomizedSet() 
-    {
+    public RandomizedSet() {
+        numMap = new HashMap();
+        numList = new ArrayList<>();
         rand = new Random();
-        map = new HashMap<>();
-        list = new ArrayList<>();
     }
-    
-    public boolean insert(int val) 
-    {
-        if(map.containsKey(val))
-        return false;
 
-        list.add(val);
-        map.put(val, list.size() - 1);
-
+    public boolean insert(int val) {
+        if(numMap.containsKey(val)) return false;
+        numList.add(val);
+        numMap.put(val, numList.size() - 1);
         return true;
     }
     
-    public boolean remove(int val) 
-    {
-        if(!map.containsKey(val))
-        return false;
-
-        // get the index of the element
-        int index = map.get(val);
-
-
-        // replace the element at this index with the last element
-        list.set(index, list.get(list.size() - 1));
-        map.put(list.get(index), index);
-
-        // remove the last element from the list and map
-        list.remove(list.size() - 1);
-        map.remove(val);
-
+    
+    public boolean remove(int val) {
+        if(!numMap.containsKey(val)) return false;
+        // get index of the element to be removed
+        int index = numMap.get(val);
+        int lastElement = numList.getLast();
+        // swap the element with the last element
+        numList.set(index, lastElement);
+        // update in map
+        numMap.put(lastElement, index);
+        
+        // remove the element supposed to be removed from the map and list
+        numMap.remove(val);
+        numList.removeLast();
         return true;
     }
-    
-    public int getRandom() 
-    {
-        int randomIndex = rand.nextInt(list.size());
-        return list.get(randomIndex);
+
+    public int getRandom() {
+        int index = rand.nextInt(numList.size());
+        return numList.get(index);
     }
 }
 
