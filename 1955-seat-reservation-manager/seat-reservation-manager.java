@@ -1,21 +1,31 @@
 class SeatManager {
 
-    PriorityQueue<Integer> queue=new PriorityQueue<>();
-    public SeatManager(int n) 
-    {
-        for(int i=1;i<=n;i++)
-        queue.offer(i);
+    private boolean[] seats;
+    private Queue<Integer> availableSeats;
+    public SeatManager(int n) {
+        seats = new boolean[n + 1];
+        Arrays.fill(seats, true);
+        availableSeats = new PriorityQueue<>(Comparator.comparingInt(a -> a));
+        for (int i = 1; i < seats.length; i++) {
+            availableSeats.add(i);
+        }
     }
-    
-    public int reserve() 
-    {
-        int seatNumber=queue.poll(); 
-        return seatNumber;
+
+    public int reserve() {
+        while(!availableSeats.isEmpty()){
+            int index = availableSeats.poll();
+            if(seats[index]){
+                seats[index] = false;
+                return index;
+            }
+        }
+        // control won't reach here
+        return -1;
     }
-    
-    public void unreserve(int seatNumber) 
-    {
-        queue.offer(seatNumber);
+
+    public void unreserve(int seatNumber) {
+        seats[seatNumber] = true;
+        availableSeats.add(seatNumber);
     }
 }
 
