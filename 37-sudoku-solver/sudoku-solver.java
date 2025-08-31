@@ -39,8 +39,7 @@ class Solution {
         return false;
     }
 
-    public void solveSudoku(char[][] board)
-    {
+    public void solveSudoku(char[][] board){
         rows = new boolean[9][9];
         cols = new boolean[9][9];
         boxes = new boolean[9][9];
