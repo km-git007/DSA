@@ -1,27 +1,18 @@
 class Solution {
-    private Map<TreeNode, Integer> dp;
-    private int solve(TreeNode root){
-        if(root == null) return 0;
-
-        if(dp.containsKey(root)){
-            return dp.get(root);
-        }
-
-        int take = root.val;
-        if(root.left != null) {
-            take += solve(root.left.right) + solve(root.left.left);
-        }
-        if(root.right != null) {
-            take += solve(root.right.left) + solve(root.right.right);
-        }
-
-        int notTake = solve(root.left) + solve(root.right);
-        dp.put(root, Math.max(take, notTake));
-        return dp.get(root);
+    private int[] solve(TreeNode root){
+        if(root == null) return new int[2];
+        
+        int[] leftLoot = solve(root.left);
+        int[] rightLoot = solve(root.right);
+        
+        // loot the root 
+        int rob = root.val + leftLoot[1] + rightLoot[1];
+        int notRob = Math.max(leftLoot[0], leftLoot[1]) + Math.max(rightLoot[0], rightLoot[1]);
+        return  new int[]{rob, notRob};
     }
 
     public int rob(TreeNode root) {
-        dp = new HashMap<>();
-        return solve(root);
+        int[] res = solve(root);
+        return Math.max(res[0], res[1]);
     }
 }
