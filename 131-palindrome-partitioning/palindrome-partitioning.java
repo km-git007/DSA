@@ -1,39 +1,38 @@
 class Solution {
-    private boolean isPallindrome(String s,int start,int end)
-    {
-        while(start<=end)
-        {
-            if(s.charAt(start++)!=s.charAt(end--))
-            return false;
+    private List<List<String>> res;
+    private List<String> list;
+    private boolean isPalindrome(String s){
+        int start = 0, end = s.length() - 1;
+        while (start <= end){
+            if(s.charAt(start) != s.charAt(end)){
+                return false;
+            }
+            start++;
+            end--;
         }
         return true;
     }
-
-    List<List<String>> ans=new ArrayList<>();
-    List<String> list=new ArrayList<>();
-    private void solve(String s,int index)
-    {
-        if(index>=s.length())
-        {
-            ans.add(new ArrayList(list));
+    
+    private void generatePalindromePartition(String str) {
+        if(str.isEmpty()){
+            res.add(new ArrayList<>(list));
             return;
         }
-
-        for(int i=index+1;i<=s.length();i++)
-        {
-            if(isPallindrome(s,index,i-1))
-            {
-                String str=s.substring(index,i);
-                list.add(str);
-                solve(s,i);
-                list.remove(list.size()-1);
+        
+        for (int i = 0; i < str.length(); i++) {
+            String prefix = str.substring(0, i + 1);
+            if(isPalindrome(prefix)){
+                list.add(prefix);
+                generatePalindromePartition(str.substring(i + 1));
+                list.removeLast();
             }
         }
     }
-
-    public List<List<String>> partition(String s) 
-    {
-        solve(s,0);
-        return ans;
+    
+    public List<List<String>> partition(String s) {
+        res = new ArrayList<>();
+        list = new ArrayList<>();
+        generatePalindromePartition(s);
+        return res;
     }
 }
