@@ -27,10 +27,25 @@ class Solution {
     }
 
     public int numDistinct(String s, String t) {
-        dp = new int[s.length() + 1][t.length() + 1];
+        int[][] dp = new int[s.length() + 1][t.length() + 1];
         for(int i = 0; i <= s.length(); i++){
-            Arrays.fill(dp[i], -1);
+            for(int j = 0; j <= t.length(); j++){
+                if(j == 0){
+                    dp[i][j] = 1;
+                }
+                else if(i == 0){
+                    dp[i][j] = 0;
+                }
+                else{
+                    int count = 0;
+                    count += dp[i - 1][j];
+                    if(s.charAt(i - 1) == t.charAt(j - 1)){
+                        count += dp[i - 1][j - 1];
+                    }
+                    dp[i][j] = count;
+                }
+            }
         }
-        return countDistinctSubsequences(s.length(), t.length(), s, t);
+        return dp[s.length()][t.length()];
     }
 }
