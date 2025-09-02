@@ -1,29 +1,30 @@
 class Solution {
     private List<List<String>> res;
     private List<String> list;
-    private boolean isPalindrome(String s){
-        int start = 0, end = s.length() - 1;
-        while (start <= end){
-            if(s.charAt(start) != s.charAt(end)){
-                return false;
+    private boolean[][] dp;
+    private void precompute(String s){
+        int n = s.length();
+        // Precompute palindromes
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i; j < n; j++) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    if (j - i <= 2) dp[i][j] = true; // length 1 or 2
+                    else dp[i][j] = dp[i + 1][j - 1];
+                }
             }
-            start++;
-            end--;
         }
-        return true;
     }
     
-    private void generatePalindromePartition(String str) {
-        if(str.isEmpty()){
+    private void generatePalindromePartition(int start, String str) {
+        if(start == str.length()){
             res.add(new ArrayList<>(list));
             return;
         }
         
-        for (int i = 0; i < str.length(); i++) {
-            String prefix = str.substring(0, i + 1);
-            if(isPalindrome(prefix)){
-                list.add(prefix);
-                generatePalindromePartition(str.substring(i + 1));
+        for (int i = start; i < str.length(); i++) {
+            if(dp[start][i]){
+                list.add(str.substring(start, i + 1));
+                generatePalindromePartition(i + 1, str);
                 list.removeLast();
             }
         }
@@ -32,7 +33,9 @@ class Solution {
     public List<List<String>> partition(String s) {
         res = new ArrayList<>();
         list = new ArrayList<>();
-        generatePalindromePartition(s);
+        dp = new boolean[s.length()][s.length()];
+        precompute(s);
+        generatePalindromePartition(0, s);
         return res;
     }
 }
