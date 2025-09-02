@@ -1,34 +1,23 @@
 class Solution {
-
-    private HashSet<String> set = new HashSet<>();
-    private Boolean[] dp;
-    private boolean solve(int index, String s) 
-    {
-        if(index >= s.length())
-        return true;
-        
-        if(dp[index] != null)
-        return dp[index];
-
-        for(int i = index + 1; i <= s.length(); i++) 
-        {  
-            String prefix = s.substring(index, i);
-
-            // Check if the prefix is a valid word and recursively check the remaining string
-            if (set.contains(prefix) && solve(i, s))
-            return true;
+    private Set<String> wordSet;
+    private Map<String, Boolean> dp;
+    private boolean check(String word) {
+        if(wordSet.contains(word)) return true;
+        if(dp.containsKey(word)) return dp.get(word);
+        for(int i = 0; i < word.length(); i++){
+            String prefix = word.substring(0, i + 1);
+            String suffix = word.substring(i + 1);
+            if(wordSet.contains(prefix) && check(suffix)){
+                dp.put(word, true);
+                return true;
+            }
         }
-        // If no valid break found, return false
-        return dp[index] = false;
+        dp.put(word, false);
+        return false;
     }
-
-    public boolean wordBreak(String s, List<String> wordDict) 
-    {
-        for(String word : wordDict)
-        set.add(word);
-
-        dp = new Boolean[s.length() + 1];
-
-        return solve(0, s);
+    public boolean wordBreak(String s, List<String> wordDict) {
+        wordSet = new HashSet<>(wordDict);
+        dp = new HashMap<>();
+        return check(s);
     }
 }
