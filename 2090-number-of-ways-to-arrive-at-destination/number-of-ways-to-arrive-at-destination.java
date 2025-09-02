@@ -1,57 +1,56 @@
 class Solution {
+
+    private final int MOD = 1_000_000_007;
     private List<int[]>[] buildGraph(int n, int[][] roads){
         List<int[]>[] adj = new ArrayList[n];
-        for(int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             adj[i] = new ArrayList<>();
         }
-
         for(int[] road : roads){
-            int source = road[0];
-            int target = road[1];
-            int travelTime = road[2]; 
-            adj[source].add(new int[]{travelTime, target});
-            adj[target].add(new int[]{travelTime, source});
+            int node1 = road[0];
+            int node2 = road[1];
+            int time = road[2];
+            adj[node1].add(new int[]{time, node2});
+            adj[node2].add(new int[]{time, node1});
         }
         return adj;
     }
 
     public int countPaths(int n, int[][] roads) {
         var adj = buildGraph(n, roads);
-        
-        // Priority queue with long for distances
-        PriorityQueue<long[]> queue = new PriorityQueue<>(Comparator.comparingLong(a -> a[0]));
-        queue.offer(new long[]{0, 0});
-        
-        long[] ways = new long[n]; 
-        ways[0] = 1;
-        long[] time = new long[n];
-        Arrays.fill(time, Long.MAX_VALUE);
-        time[0] = 0;
+        long[] count = new long[n];
+        count[0] = 1;
+
+        long[] dist = new long[n];
+        Arrays.fill(dist, Long.MAX_VALUE);
+        dist[0] = 0;
+
         boolean[] visited = new boolean[n];
-        
-        int MOD = 1000000007;        
-        while(!queue.isEmpty()){
-            long[] data = queue.poll();
-            long currTime = data[0];
-            int node = (int)data[1];
+        // Use Long.compare for safe comparison of long values
+        PriorityQueue<long[]> pq = new PriorityQueue<>((a, b) -> Long.compare(a[0], b[0]));
+        pq.offer(new long[]{0, 0});
+        pq.offer(new long[]{0, 0});
+        while (!pq.isEmpty()) {
+            long[] curr = pq.poll();
+            long currDistance = curr[0];
+            int currNode = (int)curr[1];
 
-            if(visited[node]) continue;
-            visited[node] = true;
-                        
-            for(int[] neighbor : adj[node]){ 
-                int travelTime = neighbor[0];  
-                int adjNode = neighbor[1];
-                long newTime = currTime + (long)travelTime; 
+            if(visited[currNode]) continue;
+            visited[currNode] = true;
 
-                if(newTime < time[adjNode]){
-                    time[adjNode] = newTime;
-                    ways[adjNode] = ways[node];
-                    queue.offer(new long[]{newTime, adjNode});
-                } else if (newTime == time[adjNode]) {
-                    ways[adjNode] = (ways[adjNode] + ways[node]) % MOD;
+            for(var adjNode : adj[currNode]){
+                int nbr = adjNode[1];
+                int weight = adjNode[0];
+                if(currDistance + weight < dist[nbr]){
+                    dist[nbr] = currDistance + weight;
+                    count[nbr] = count[currNode];
+                    pq.offer(new long[]{dist[nbr], nbr});
+                }
+                else if(currDistance + weight == dist[nbr]){
+                    count[nbr] = (count[nbr] + count[currNode]) % MOD;
                 }
             }
         }
-        return (int)(ways[n - 1] % MOD);
+        return (int)count[n - 1] % MOD;
     }
 }
