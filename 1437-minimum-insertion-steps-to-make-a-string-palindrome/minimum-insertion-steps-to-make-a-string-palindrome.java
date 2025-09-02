@@ -1,44 +1,26 @@
 class Solution {
-
-    public String reverseString(String s){
-        char[] ch =  s.toCharArray();
-        int l=0,r=ch.length-1;
-        while(l<r){
-            char temp = ch[l];
-            ch[l++] = ch[r];
-            ch[r--] = temp;
+    private int[][] dp;
+    private int solve(int start, int end, String s){
+        if(start > end){
+            return 0;
         }
-        return new String(ch);
-    }
 
-    public int lcs(String s){
-        String rs = reverseString(s);
-        int n=s.length();
-        int[] dp = new int[n+1];
+        if(dp[start][end] != -1){
+            return dp[start][end];
+        }
         
-        for(int i=1;i<=n;i++){
-            int prev = 0;
-            for(int j=1;j<=n;j++){
-                int tmp = dp[j];
-                if(s.charAt(i-1) == rs.charAt(j-1)){
-                    dp[j] = prev + 1;
-                } else {
-                    dp[j] = Math.max(dp[j],dp[j-1]);
-                }
-                prev = tmp;
-            }
+        if(s.charAt(start) == s.charAt(end)){
+            return dp[start][end] = solve(start + 1, end - 1, s);
         }
-        return n - dp[n];
+
+        return dp[start][end] = 1 + Math.min(solve(start, end - 1, s), solve(start + 1, end, s));
     }
 
     public int minInsertions(String s) {
-        Callable<Integer> callable=()->lcs(s);
-        FutureTask<Integer>future=new FutureTask<>(callable);
-        new Thread(future).start();
-        try{
-            return future.get();
-        }catch(Exception e){
-            return 0;
+        dp = new int[s.length()][s.length()];
+        for(int i = 0; i < s.length(); i++){
+            Arrays.fill(dp[i],-1);
         }
+        return solve(0, s.length() - 1, s);
     }
 }
