@@ -1,41 +1,32 @@
 class Solution {
-    private Boolean[][] dp;
-    private boolean solve(int n, int m, String s1, String s2, String s3){
-        if(n == 0 && m == 0){
-            return true;
-        }
-
-        if(n == 0){
-            return s2.substring(0, m).equals(s3.substring(0, m));
-        }
-
-        if(m == 0){
-            return s1.substring(0, n).equals(s3.substring(0, n));
-        }
-
-        if(dp[n][m] != null){
-            return dp[n][m];
-        }
-        
-        if(s1.charAt(n - 1) == s2.charAt(m - 1) && s1.charAt(n - 1) == s3.charAt(m + n - 1)){
-            return dp[n][m] = solve(n - 1, m, s1, s2, s3) || solve(n, m - 1, s1, s2, s3);
-        }
-
-        if(s1.charAt(n - 1) == s3.charAt(m + n - 1)){
-            return dp[n][m] = solve(n - 1, m, s1, s2, s3);
-        }
-
-        if(s2.charAt(m - 1) == s3.charAt(m + n - 1)){
-            return dp[n][m] = solve(n, m - 1, s1, s2, s3);
-        }
-
-        return dp[n][m] = false;
-    }
     public boolean isInterleave(String s1, String s2, String s3) {
         if(s3.length() != s1.length() + s2.length())
         return false;
 
-        dp = new Boolean[s1.length() + 1][s2.length() + 1];
-        return solve(s1.length(), s2.length(), s1, s2, s3);
+        Boolean[][] dp = new Boolean[s1.length() + 1][s2.length() + 1];
+        dp[0][0] = true;
+        for(int i = 1; i <= s1.length(); i++){
+            dp[i][0] = s1.substring(0, i).equals(s3.substring(0, i));
+        }
+        
+        for(int j = 1; j <= s2.length(); j++){
+            dp[0][j] = s2.substring(0, j).equals(s3.substring(0, j));
+        }
+        
+        for(int i = 1; i <= s1.length(); i++){
+            for(int j = 1; j <= s2.length(); j++){
+                if(s1.charAt(i - 1) == s2.charAt(j - 1) && s1.charAt(i - 1) == s3.charAt(i + j - 1)){
+                    dp[i][j] = dp[i][j - 1] || dp[i - 1][j];
+                } else if (s1.charAt(i - 1) == s3.charAt(i + j - 1)) {
+                    dp[i][j] = dp[i - 1][j];
+                } else if (s2.charAt(j - 1) == s3.charAt(i + j - 1)) {
+                    dp[i][j] = dp[i][j - 1];
+                }
+                else {
+                    dp[i][j] = false;
+                }
+            }
+        }
+        return dp[s1.length()][s2.length()];
     }
 }
