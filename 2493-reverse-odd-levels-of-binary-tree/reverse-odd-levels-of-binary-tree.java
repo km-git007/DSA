@@ -1,38 +1,47 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
-    private void solve(TreeNode LeftNode, TreeNode RightNode, int level)
-    {
-        if(LeftNode == null || RightNode == null)
-        return;
 
-        if(level % 2 == 1)
-        {
-            int temp = LeftNode.val;
-            LeftNode.val = RightNode.val;
-            RightNode.val = temp;
-        }
-
-        solve(LeftNode.left, RightNode.right, level + 1);
-        solve(LeftNode.right, RightNode.left, level + 1);
+    private void swap(TreeNode node1, TreeNode node2) {
+        int temp = node1.val;
+        node1.val = node2.val;
+        node2.val = temp;
     }
 
-    public TreeNode reverseOddLevels(TreeNode root) 
-    {
-        solve(root.left, root.right, 1);
+    private void reverse(List<TreeNode> list) {
+        int start = 0;
+        int end = list.size() - 1;
+        while (start < end) {
+            swap(list.get(start), list.get(end));
+            start++;
+            end--;
+        }        
+    }
+    
+    public TreeNode reverseOddLevels(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        
+        boolean flag = false;
+        List<TreeNode> list;
+        while(!queue.isEmpty()){
+            int level = queue.size();
+            list = new ArrayList<>();
+            while(level-- > 0){
+                TreeNode node = queue.poll();
+                if (flag){
+                    list.add(node);
+                }
+                
+                if (node.left != null){
+                    queue.add(node.left);
+                }
+                
+                if (node.right != null){
+                    queue.add(node.right);
+                }
+            }
+            reverse(list);
+            flag = !flag;
+        }
         return root;
     }
 }
