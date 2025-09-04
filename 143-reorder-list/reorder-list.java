@@ -1,61 +1,46 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
 class Solution {
-    public ListNode reverseList(ListNode curr) 
-    {
-        ListNode prev=null;
-        while(curr!=null)
-        {
-            ListNode nxt=curr.next;
-            curr.next=prev;
-            prev=curr;
-            curr=nxt;
+    private ListNode findMiddle(ListNode head){
+        ListNode slow = head, fast = head, prev = null;
+        while(fast != null && fast.next != null){
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
         }
-        return prev;   
+        // disconnect the left half from the right
+        prev.next = null;
+        return slow;
     }
-    
-    public void reorderList(ListNode head) 
-    {
-        if(head.next==null)
-        return;
-        
-        ListNode slow=head;
-        ListNode fast=head;
-        ListNode prev=null;
-        while(fast!=null && fast.next!=null)
-        {
-            prev=slow;
-            slow=slow.next;
-            fast=fast.next.next;
+
+    private ListNode reverse(ListNode head){
+        ListNode prev = null, curr = head;
+        while(curr != null){
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
         }
-        prev.next=null;
-        
-        ListNode dummy=new ListNode(-1);
-        ListNode tail=dummy;
-        ListNode head2=reverseList(slow);
-        while(head!=null || head2!=null)
-        {
-            if(head!=null)
-            {
-                tail.next=head;
-                tail=head;
-                head=head.next;
-            }
-            if(head2!=null)
-            {
-                tail.next=head2;
-                tail=head2;
-                head2=head2.next;
-            }
+        return prev;
+    }
+
+    public void reorderList(ListNode head) {
+        if(head.next == null){
+            return;
         }
-        head=dummy.next;
+
+        ListNode mid = findMiddle(head);
+        ListNode head1 = reverse(mid);
+
+        ListNode dummy = new ListNode(0), tail = dummy;
+        while(head != null){
+            tail.next = head;
+            tail = tail.next;
+            head = head.next;
+
+            tail.next = head1;
+            tail = tail.next;
+            head1 = head1.next;
+        }
+
+        tail.next = head1;
     }
 }
