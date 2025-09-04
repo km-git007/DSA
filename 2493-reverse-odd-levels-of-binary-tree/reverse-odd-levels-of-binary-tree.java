@@ -1,47 +1,23 @@
 class Solution {
-
     private void swap(TreeNode node1, TreeNode node2) {
         int temp = node1.val;
         node1.val = node2.val;
         node2.val = temp;
     }
 
-    private void reverse(List<TreeNode> list) {
-        int start = 0;
-        int end = list.size() - 1;
-        while (start < end) {
-            swap(list.get(start), list.get(end));
-            start++;
-            end--;
-        }        
+
+    private void reverse(TreeNode left, TreeNode right, int level) {
+        if(left == null || right == null) return;
+        if(level % 2 == 1){
+            swap(left, right);
+        }
+        reverse(left.left, right.right, level + 1);
+        reverse(left.right, right.left, level + 1);
     }
     
     public TreeNode reverseOddLevels(TreeNode root) {
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
-        
-        boolean flag = false;
-        List<TreeNode> list;
-        while(!queue.isEmpty()){
-            int level = queue.size();
-            list = new ArrayList<>();
-            while(level-- > 0){
-                TreeNode node = queue.poll();
-                if (flag){
-                    list.add(node);
-                }
-                
-                if (node.left != null){
-                    queue.add(node.left);
-                }
-                
-                if (node.right != null){
-                    queue.add(node.right);
-                }
-            }
-            reverse(list);
-            flag = !flag;
-        }
+        if(root.left == null && root.right == null) return root;
+        reverse(root.left, root.right, 1);
         return root;
     }
 }
