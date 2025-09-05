@@ -15,21 +15,20 @@
  */
 class BSTIterator {
     private Deque<TreeNode> stack;
-    private void helper(TreeNode root) {
-        while(root != null) {
+    public BSTIterator(TreeNode root) {
+        stack = new ArrayDeque<>();
+        traverse(root);
+    }
+
+    private void traverse(TreeNode root) {
+        while (root != null) {
             stack.push(root);
             root = root.left;
         }
     }
-
-    public BSTIterator(TreeNode root) {
-        stack = new ArrayDeque<>();
-        helper(root);
-    }
-
     public int next() {
         TreeNode node = stack.pop();
-        helper(node.right);
+        traverse(node.right);
         return node.val;
     }
 
