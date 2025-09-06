@@ -33,10 +33,6 @@ class DSU{
             size[parentX] += size[parentY];
         }
     }
-
-    public int[] getParent(){
-        return parent;
-    }
 }
 
 class Solution {
@@ -44,23 +40,19 @@ class Solution {
     {
         int n = isConnected.length;
         DSU dsu = new DSU(n);
-        for(int i = 0; i < n; i++)
-        {
-            for(int j = 0; j < n; j++)
-            {
-                if(isConnected[i][j] == 0)
-                continue;
-
-                dsu.union(i, j);
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                if(isConnected[i][j] == 1){
+                    dsu.union(i, j);
+                }
             }
         }
 
         int count = 0;
-        int[] parent = dsu.getParent();
-        for(int i = 0; i < n; i++)
-        {
-            if(parent[i] == i)
-            count++;
+        for (int i = 0; i < n; i++) {
+            if (dsu.find(i) == i) { 
+                count++;
+            }
         }
         return count;
     }
