@@ -1,19 +1,23 @@
 class Solution {
+    private boolean canDetonate(int[] bomb1, int[] bomb2){
+        long x1 = bomb1[0], y1 = bomb1[1], r1 = bomb1[2];
+        long x2 = bomb2[0], y2 = bomb2[1];
+        return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) <= r1 * r1;
+    }
+
     private List<Integer>[] buildGraph(int[][] bombs){
         int n = bombs.length;
         List<Integer>[] adj = new ArrayList[n];
         for(int i = 0; i < n; i++){
             adj[i] = new ArrayList<>();
         }
-        
+
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++){
                 if(j == i){
                     continue;
                 }
-                long x1 = bombs[i][0], y1 = bombs[i][1], r1 = bombs[i][2];
-                long x2 = bombs[j][0], y2 = bombs[j][1];
-                if((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) <= r1 * r1){
+                if(canDetonate(bombs[i], bombs[j])){
                     adj[i].add(j);
                 }
             }
