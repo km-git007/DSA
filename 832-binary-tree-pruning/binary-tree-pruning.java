@@ -15,15 +15,18 @@
  */
 class Solution {
     public TreeNode pruneTree(TreeNode root) {
-        if(root == null) return null;
+        if(root == null)
+        return null;
 
-        TreeNode left = pruneTree(root.left);
-        TreeNode right = pruneTree(root.right);
+        TreeNode leftSubtree = pruneTree(root.left);
+        TreeNode rightSubtree = pruneTree(root.right);
 
-        root.left = left;
-        root.right = right;
+        root.left = leftSubtree;
+        root.right = rightSubtree;
 
-        if(left == null && right == null && root.val == 0) return null;
-        return  root;
+        if(leftSubtree != null || rightSubtree != null)
+        return root;
+
+        return root.val == 0 ? null : root;
     }
 }
