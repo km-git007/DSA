@@ -1,24 +1,21 @@
 class Solution {
-    private int solve(TreeNode root, int currMax, int currMin) {
-        if (root == null) {
-            // Return the maximum difference encountered so far
-            return currMax - currMin;
+    private int maxDifference;
+    private void solve(int minimum, int maximum, TreeNode root){
+        if(root == null){
+            return ;
         }
 
-        // Update currMax and currMin with the current node value
-        currMax = Math.max(currMax, root.val);
-        currMin = Math.min(currMin, root.val);
-
-        // Calculate the max difference in the left and right subtrees
-        int leftDiff = solve(root.left, currMax, currMin);
-        int rightDiff = solve(root.right, currMax, currMin);
-
-        // Return the maximum difference
-        return Math.max(leftDiff, rightDiff);
+        minimum = Math.min(minimum, root.val);
+        maximum = Math.max(maximum, root.val);
+        maxDifference = Math.max(maxDifference, Math.abs(maximum - minimum));
+        
+        solve(minimum, maximum, root.left);
+        solve(minimum, maximum, root.right);
     }
 
     public int maxAncestorDiff(TreeNode root) {
-        // Start the recursion with the root value as both max and min
-        return solve(root, root.val, root.val);
+        maxDifference = 0;
+        solve(root.val, root.val, root);
+        return maxDifference;
     }
 }
