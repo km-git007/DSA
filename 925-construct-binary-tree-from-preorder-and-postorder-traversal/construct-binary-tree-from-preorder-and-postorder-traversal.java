@@ -14,34 +14,38 @@
  * }
  */
 class Solution {
-    private Map<Integer, Integer> map;
-    private TreeNode solve(int[] preorder, int[] postorder, int preStart, int preEnd, int postStart)
-    {
+    private Map<Integer, Integer> indexMap;
+    private TreeNode solve(int preStart, int preEnd, int postStart, int[] preorder, int[] postorder){
         if(preStart > preEnd)
         return null;
 
-        TreeNode node = new TreeNode(preorder[preStart]);
+        if(preStart == preEnd){
+            return new TreeNode(preorder[preStart]);
+        }
+        
 
-        if(preStart == preEnd)
-        return node;
+        TreeNode root = new TreeNode(preorder[preStart]);
 
-        int pos = map.get(preorder[preStart + 1]);
-        int numLeftTree = pos - postStart + 1;
+        // next element in preorder is the root of the left subtree
+        int leftRootVal = preorder[preStart + 1];
 
-        node.left = solve(preorder, postorder, preStart + 1, preStart + numLeftTree, postStart);
-        node.right = solve(preorder, postorder, preStart + numLeftTree + 1, preEnd, pos + 1);
+        // find it in postorder
+        int leftRootIndex = indexMap.get(leftRootVal);
 
-        return node;
+        // number of nodes in left subtree
+        int leftSize = leftRootIndex - postStart + 1;  
+
+        root.left = solve(preStart + 1, preStart + leftSize, postStart, preorder, postorder);
+        root.right = solve(preStart + leftSize + 1, preEnd, postStart + leftSize, preorder, postorder);
+
+        return root;
     }
-
-    public TreeNode constructFromPrePost(int[] preorder, int[] postorder) 
-    {
-        map = new HashMap<>();
-
-        int n = postorder.length;
-        for(int i = 0; i < n; i++)
-        map.put(postorder[i], i);
-
-        return solve(preorder, postorder, 0, n - 1, 0);
+    
+    public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
+        indexMap = new HashMap<>();
+        for(int i = 0; i < postorder.length; i++){
+            indexMap.put(postorder[i], i);
+        }
+        return solve(0, preorder.length - 1, 0, preorder, postorder);
     }
 }
