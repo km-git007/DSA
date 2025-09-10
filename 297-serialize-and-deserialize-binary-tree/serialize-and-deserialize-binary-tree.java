@@ -1,13 +1,14 @@
 public class Codec {
 
     private void serializationHelper(TreeNode root, StringBuilder builder) {
-        if(root == null) {
+        if(root == null){
             builder.append("#,");
-        }else{
-            builder.append(String.valueOf(root.val)).append(",");
-            serializationHelper(root.left, builder);
-            serializationHelper(root.right, builder);
+            return;
         }
+
+        builder.append(String.valueOf(root.val)).append(",");
+        serializationHelper(root.left, builder);
+        serializationHelper(root.right, builder);
     }
 
     // Encodes a tree to a single string.
