@@ -1,38 +1,37 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
-    private String hasDuplicate(TreeNode root, List<TreeNode> res, Map<String, Integer> map){
-        if(root == null){
-            return "N";
+    private Map<String, Integer> tripletToId; // maps (val, leftID, rightID) -> ID
+    private Map<Integer, Integer> freq;       // counts occurrences of each ID
+    private List<TreeNode> res;
+    private int idCounter;
+
+    private int getId(TreeNode root) {
+        if (root == null) return 0; // 0 = null ID
+
+        int leftId = getId(root.left);
+        int rightId = getId(root.right);
+
+        String triplet = root.val + "," + leftId + "," + rightId;
+
+        int uid = tripletToId.getOrDefault(triplet, -1);
+        if (uid == -1) {
+            uid = ++idCounter;
+            tripletToId.put(triplet, uid);
         }
 
-        String left = hasDuplicate(root.left, res, map);
-        String right = hasDuplicate(root.right, res, map);
-
-        String key = String.valueOf(root.val) + "#" + left + "#" + right;
-        if(map.containsKey(key) && map.get(key) == 1){
+        freq.put(uid, freq.getOrDefault(uid, 0) + 1);
+        if (freq.get(uid) == 2) { // add only once
             res.add(root);
         }
-        map.put(key, map.getOrDefault(key, 0) + 1);
-        return key;
+
+        return uid;
     }
 
     public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
-        List<TreeNode> res = new ArrayList<>();
-        hasDuplicate(root, res, new HashMap<>());
+        tripletToId = new HashMap<>();
+        freq = new HashMap<>();
+        res = new ArrayList<>();
+        idCounter = 0;
+        getId(root);
         return res;
     }
 }
