@@ -10,32 +10,34 @@ class Node {
 
 class Solution {
     public Node flatten(Node head) {
-        if (head == null) {
-            return null;
-        }
-
         Node curr = head;
-        while(curr != null) {
-            if (curr.child != null) {
-                Node nextNode = curr.next;
-                
-                // find the tail of the child
-                Node childTail = curr.child;
-                while (childTail.next != null) {
-                    childTail = childTail.next;
-                }
-                
-                // connect child tail with the nextNode
-                if(nextNode != null) {
-                    childTail.next = nextNode;
-                    nextNode.prev = childTail;
-                }
-
-                // connect child with current
-                curr.next = curr.child;
-                curr.child.prev = curr;
-                curr.child = null;
+        while(curr != null){
+            while(curr != null && curr.child == null){
+                curr = curr.next;
             }
+
+            if(curr == null)
+            break;
+
+            Node next = curr.next;
+            Node ptr = curr.child;
+            // make connections
+            ptr.prev = curr;
+            curr.next = ptr;
+            curr.child = null;
+
+            //find tail
+            while(ptr.next != null){
+                ptr = ptr.next;
+            }
+
+            // connect tail to the next node
+            ptr.next = next;
+            if(next != null){
+                next.prev = ptr;
+            }
+
+            // mover forward
             curr = curr.next;
         }
         return head;
