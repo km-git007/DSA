@@ -15,24 +15,21 @@
  */
 class Solution {
     private int moves;
-    private int solve(TreeNode root)
-    {
-        if(root==null)
-        return 0;
-
-        int Left=solve(root.left);
-        int Right=solve(root.right);
-
-        moves+=Math.abs(Left)+Math.abs(Right);
-
-        int extraCandies=root.val+Left+Right-1;
-        return extraCandies;
+    private int extraCandies(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        
+        int left = extraCandies(root.left);
+        int right = extraCandies(root.right);
+        
+        moves += Math.abs(left) + Math.abs(right);
+        return left + right + root.val - 1;
     }
-
-    public int distributeCoins(TreeNode root) 
-    {
-        moves=0;
-        solve(root);
+    
+    public int distributeCoins(TreeNode root) {
+        moves = 0;
+        extraCandies(root);
         return moves;
     }
 }
