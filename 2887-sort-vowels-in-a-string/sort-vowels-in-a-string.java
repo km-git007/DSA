@@ -1,26 +1,35 @@
 class Solution {
-
+    // Returns true if the character is a vowel.
+    boolean isVowel(Character c) {
+        return c == 'a' || c == 'e' || c == 'o'|| c == 'u'|| c == 'i' 
+            || c == 'A' || c == 'E' || c == 'O'|| c == 'U'|| c == 'I';
+    }
+    
     public String sortVowels(String s) {
-        char[] arr = s.toCharArray();
-        Arrays.sort(arr);
-        StringBuilder sb = new StringBuilder(s);
-        int i = 0, j = 0;
+        List<Character> temp = new ArrayList<>();
 
-        Set<Character> vowels = Set.of('a','e','i','o','u','A','E','I','O','U');
-        while(i < s.length() && j < s.length()){
-            while(i < s.length() && !vowels.contains(sb.charAt(i))){
-                i++;
-            }
-
-            while(j < s.length() && !vowels.contains(arr[j])){
-                j++;
-            }
-
-            if(i < s.length() && j < s.length()){
-                sb.setCharAt(i, arr[j]);
-                i++; j++;
+        // Store the vowels in the temporary string.
+        for (char c : s.toCharArray()) {
+            if (isVowel(c)) {
+                temp.add(c);
             }
         }
-        return sb.toString();
+        
+        // Sort the temporary string characters in ascending order.
+        Collections.sort(temp);
+
+        StringBuilder ans = new StringBuilder();
+        int j = 0;
+        for (int i = 0; i < s.length(); i++) {
+            // If the character is a vowel, replace it with the character in the string temp.
+            if (isVowel(s.charAt(i))) {
+                ans.append(temp.get(j));
+                j++;
+            } else {
+                ans.append(s.charAt(i));
+            }
+        }
+        
+        return ans.toString();
     }
-}
+};
