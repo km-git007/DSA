@@ -1,18 +1,19 @@
 class Solution {
-    public int numSubarraysWithSum(int[] nums, int goal) 
-    {
-        int pSum = 0, count = 0;
-        Map<Integer, Integer> map = new HashMap<>();
-        map.put(0, 1);
-        for(int i = 0; i < nums.length; i++)
-        {
-            pSum += nums[i];
-
-            if(map.containsKey(pSum - goal))
-            count += map.get(pSum - goal);
-
-            map.put(pSum, map.getOrDefault(pSum, 0) + 1);
+    private int numSubarraysWithSumAtLeastK(int[] nums, int k) {
+        int count = 0, i = 0, sum = 0;
+        for (int j = 0; j < nums.length; j++) {
+            sum += nums[j];
+            while(sum >= k && i <= j) {
+                count += nums.length - j;
+                sum -= nums[i];
+                i++;
+            }
         }
         return count;
+    }
+
+    public int numSubarraysWithSum(int[] nums, int goal) 
+    {
+        return numSubarraysWithSumAtLeastK(nums, goal) - numSubarraysWithSumAtLeastK(nums, goal + 1);
     }
 }
