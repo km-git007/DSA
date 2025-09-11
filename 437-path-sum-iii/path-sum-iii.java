@@ -14,37 +14,30 @@
  * }
  */
 class Solution {
-
-    private int paths, target;
-    private HashMap<Long, Long> map;
-    private void solve(TreeNode root, long sum)
-    {
-        if(root == null)
-        return;
+    private int count;
+    private Map<Long, Long> map;
+    private void solve(TreeNode root, long sum, long target) {
+        if(root == null){
+            return;
+        }
 
         sum += root.val;
-
-        if(map.containsKey(sum - target))
-        paths += map.get(sum - target);
-
+        if(map.containsKey(sum - target)){
+            count += map.get(sum - target);
+        }
         map.put(sum, map.getOrDefault(sum, 0L) + 1);
 
-        solve(root.left, sum);
-        solve(root.right, sum);
+        solve(root.left, sum, target);
+        solve(root.right, sum, target);
 
-        map.put(sum, map.get(sum) - 1);
-        if(map.get(sum) == 0)
-        map.remove(sum);
-
+        map.put(sum, map.getOrDefault(sum, 0L) - 1);
     }
 
-    public int pathSum(TreeNode root, int targetSum) 
-    {
-        paths = 0;
-        target = targetSum;
+    public int pathSum(TreeNode root, int targetSum) {
+        count = 0;
         map = new HashMap<>();
         map.put(0L, 1L);
-        solve(root, 0);
-        return paths;
+        solve(root, 0, targetSum);
+        return count;
     }
 }
