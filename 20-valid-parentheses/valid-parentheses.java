@@ -1,22 +1,19 @@
 class Solution {
-    public boolean isValid(String s) 
-    {
+    public boolean isValid(String s) {
         Deque<Character> stack = new ArrayDeque<>();
         Map<Character, Character> matchingBrackets = Map.of(
                 ')', '(',
                 ']', '[',
                 '}', '{'
         );
-        for(char ch : s.toCharArray()) 
-        {
-            if(ch == '(' || ch == '[' || ch == '{')
-            stack.push(ch);
-            
-            else 
-            {
-                if(stack.isEmpty() || stack.peek() != matchingBrackets.get(ch))
-                return false;
-
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            if(!matchingBrackets.containsKey(ch)){
+                stack.push(ch);
+            }else{
+                if(stack.isEmpty() || stack.peek() != matchingBrackets.get(ch)){
+                    return false;
+                }
                 stack.pop();
             }
         }
