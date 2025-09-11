@@ -5,26 +5,37 @@ class Solution {
             || c == 'A' || c == 'E' || c == 'O'|| c == 'U'|| c == 'I';
     }
     
-    public String sortVowels(String s) {
-        List<Character> temp = new ArrayList<>();
-
-        // Store the vowels in the temporary string.
-        for (char c : s.toCharArray()) {
-            if (isVowel(c)) {
-                temp.add(c);
-            }
+    public String sortVowels(String s){
+        Map<Character, Integer> map = new HashMap<>();
+        // Store the vowels count in map.
+        for(char c : s.toCharArray()){
+            if(isVowel(c))
+            map.put(c, map.getOrDefault(c, 0) + 1);
         }
-        
-        // Sort the temporary string characters in ascending order.
-        Collections.sort(temp);
 
+        // Sorted string having all the vowels.
+        String sortedVowel = "AEIOUaeiou";
         StringBuilder ans = new StringBuilder();
         int j = 0;
         for (int i = 0; i < s.length(); i++) {
             // If the character is a vowel, replace it with the character in the string temp.
-            if (isVowel(s.charAt(i))) {
-                ans.append(temp.get(j));
-                j++;
+            if(isVowel(s.charAt(i))){
+                while(j < sortedVowel.length() && !map.containsKey(sortedVowel.charAt(j))){
+                    j++;
+                }
+
+                // if(j >= sortedVowel.length()){
+                //     continue;
+                // }
+
+                char ch = sortedVowel.charAt(j);
+                ans.append(ch);
+                map.put(ch, map.get(ch) - 1);
+
+                if(map.get(ch) == 0){
+                    map.remove(ch);
+                    j++;
+                }
             } else {
                 ans.append(s.charAt(i));
             }
