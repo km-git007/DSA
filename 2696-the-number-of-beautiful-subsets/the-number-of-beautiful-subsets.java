@@ -1,29 +1,28 @@
 class Solution {
-
-    HashMap<Integer,Integer> map=new HashMap<>();
-    private int solve(int index,int[] nums,int k)
-    {
-        if(index==nums.length)
-        return 1;
-
-        int subsets=solve(index+1,nums,k);
-        // if(!map.containsKey(nums[index]+k) && !map.containsKey(nums[index]-k))
-        // since array is sorted no need to find the larger element
-        if(!map.containsKey(nums[index]-k))
-        {
-            map.put(nums[index],map.getOrDefault(nums[index],0)+1);
-            subsets+=solve(index+1,nums,k);
-            map.put(nums[index],map.get(nums[index])-1);
-
-            if(map.get(nums[index])==0) 
-            map.remove(nums[index]);
+    private int count;
+    private Set<Integer> set;
+    private void solve(int index, int[] nums, int k){
+        if(index >= nums.length){
+            count++;
+            return;
         }
-        return subsets;
+
+        //skip
+        solve(index + 1, nums, k);
+
+        //pick
+        if(!set.contains(nums[index] - k)){
+            set.add(nums[index]);
+            solve(index + 1, nums, k);
+            set.remove(nums[index]);
+        }
     }
 
-    public int beautifulSubsets(int[] nums, int k) 
-    {
+    public int beautifulSubsets(int[] nums, int k) {
+        count = 0;
+        set = new HashSet<>();
         Arrays.sort(nums);
-        return solve(0,nums,k)-1;
+        solve(0, nums, k);
+        return count - 1;
     }
 }
