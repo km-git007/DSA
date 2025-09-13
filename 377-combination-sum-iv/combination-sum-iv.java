@@ -1,32 +1,26 @@
 class Solution {
-
-    int[] dp = new int[1001];
-    private int solve(int[] nums, int target)
-    {
+    private Integer[] dp;
+    private int solve(int[] nums, int target){
         if(target == 0)
         return 1;
 
-        if(target < 0)
-        return 0;
-
-        if(dp[target] != -1)
-        return dp[target];
-
-        int comb = 0;
-        for(int i = 0; i < nums.length; i++)
-        {
-            if(nums[i] > target)
-            break;
-
-            comb += solve(nums, target - nums[i]);
+        if(dp[target] != null){
+            return dp[target];
         }
-        return dp[target] = comb;
+
+        int count = 0;
+        for(int num : nums){
+            if(num > target){
+                break;
+            }
+            count += solve(nums, target - num);
+        }
+        return dp[target] = count;
     }
 
-    public int combinationSum4(int[] nums, int target) 
-    {
+    public int combinationSum4(int[] nums, int target) {
+        dp = new Integer[target + 1];
         Arrays.sort(nums);
-        Arrays.fill(dp, -1);
         return solve(nums, target);
     }
 }
