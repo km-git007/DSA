@@ -1,32 +1,29 @@
 class Solution {
     private List<List<Integer>> res;
     private List<Integer> temp;
-    private void solve(int[] candidates, int target, int index)
-    {
-        if(target == 0)
-        {
-            res.add(new ArrayList<>(temp));
+    private void solve(int index, int[] nums, int target){
+        if(target == 0){
+            res.add(new ArrayList(temp));
             return;
         }
 
-        for(int i = index; i < candidates.length; i++)
-        {
-            if(candidates[i] > target)
-            break;
+        if(index >= nums.length || target < 0)
+        return;
 
-            temp.add(candidates[i]);
-            solve(candidates, target - candidates[i], i);
-            temp.remove(temp.size() - 1);
+        for(int i = index; i < nums.length; i++){
+            temp.add(nums[i]);
+            solve(i, nums, target - nums[i]);
+            temp.removeLast();
         }
     }
 
-    public List<List<Integer>> combinationSum(int[] candidates, int target) 
+    public List<List<Integer>> combinationSum(int[] nums, int target) 
     {
         res = new ArrayList<>();
         temp = new ArrayList<>();
         
-        Arrays.sort(candidates);
-        solve(candidates, target, 0);
+        Arrays.sort(nums);
+        solve(0, nums, target);
         return res;
     }
 }
