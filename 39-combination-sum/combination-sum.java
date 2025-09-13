@@ -7,10 +7,13 @@ class Solution {
             return;
         }
 
-        if(index >= nums.length || target < 0)
+        if(index >= nums.length)
         return;
 
         for(int i = index; i < nums.length; i++){
+            if(nums[i] > target)
+            break;
+            
             temp.add(nums[i]);
             solve(i, nums, target - nums[i]);
             temp.removeLast();
