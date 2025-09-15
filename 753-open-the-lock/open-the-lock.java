@@ -2,14 +2,12 @@ class Solution {
     public int openLock(String[] deadends, String target) {
         Set<String> deadendsSet = new HashSet<>(Arrays.asList(deadends));
         if(deadendsSet.contains("0000")){
-           return -1; 
+            return -1;
         }
-        
+
         Queue<String> queue = new LinkedList<>();
-        Set<String> visited = new HashSet<>();
         queue.offer("0000");
-        visited.add("0000");
-        
+
         int minimumTurns = 0;
         while(!queue.isEmpty()){
             int levelSize = queue.size();
@@ -22,21 +20,21 @@ class Solution {
                 StringBuilder sb = new StringBuilder(curr);
                 for(int j = 0; j < 4; j++){
                     char ch = sb.charAt(j);
-                    
+
                     char prevChar = (char) (((ch - '0' + 9) % 10) + '0');
                     sb.setCharAt(j, prevChar);
                     String prev = sb.toString();
-                    if(!deadendsSet.contains(prev) && !visited.contains(prev)){
+                    if(!deadendsSet.contains(prev)){
                         queue.offer(prev);
-                        visited.add(prev);
+                        deadendsSet.add(prev);
                     }
-                    
+
                     char nextChar = (char) (((ch - '0' + 1) % 10) + '0');
                     sb.setCharAt(j, nextChar);
                     String next = sb.toString();
-                    if(!deadendsSet.contains(next) && !visited.contains(next)){
+                    if(!deadendsSet.contains(next)){
                         queue.offer(next);
-                        visited.add(next);
+                        deadendsSet.add(next);
                     }
                     // undo
                     sb.setCharAt(j, ch);
