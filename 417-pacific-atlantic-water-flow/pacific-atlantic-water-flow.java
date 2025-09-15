@@ -1,65 +1,63 @@
 class Solution {
-    int n, m;
-    int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // right, down, left, up
-    public void bfs(int[][] heights, int[][] vis, Queue<int[]> q) 
-    {
-        while (!q.isEmpty()) 
-        {
-            int[] cell = q.poll();
-            int x = cell[0], y = cell[1];
-
-            for (int[] dir : dirs) 
-            {
-                int nx = x + dir[0], ny = y + dir[1];
-
-                if (nx < 0 || ny < 0 || nx >= m || ny >= n || vis[nx][ny] == 1 || heights[nx][ny] < heights[x][y]) 
-                continue;
-
-                vis[nx][ny] = 1;
-                q.offer(new int[]{nx, ny});
+    private int n, m;
+    private final int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    private boolean isValidCell(int row, int col){
+        return row >= 0 && row < n && col >= 0 && col < m;
+    }
+    
+    private void BFS(int[][] heights, boolean[][] visited, Queue<int[]> queue){
+        while(!queue.isEmpty()){
+            int[] curr = queue.poll();
+            int i = curr[0];
+            int j = curr[1];
+            for(int[] d : directions){
+                int row = d[0] + i;
+                int col = d[1] + j;
+                if(isValidCell(row, col) && !visited[row][col] && heights[i][j] <= heights[row][col]){
+                    visited[row][col] = true;
+                    queue.offer(new int[]{row, col});
+                }
             }
         }
     }
+    
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        n = heights.length;
+        m = heights[0].length;
+        boolean[][] pacific = new boolean[n][m];
+        boolean[][] atlantic = new boolean[n][m];
 
-    public List<List<Integer>> pacificAtlantic(int[][] heights) 
-    {
-        m = heights.length;
-        n = heights[0].length;
-
-        int[][] pacific = new int[m][n];
-        int[][] atlantic = new int[m][n];
-
-        Queue<int[]> pq = new LinkedList<>();
-        Queue<int[]> aq = new LinkedList<>();
-
-        for (int i = 0; i < m; i++) 
-        {
-            pacific[i][0] = 1;
-            pq.offer(new int[]{i, 0});
-            
-            atlantic[i][n - 1] = 1;
-            aq.offer(new int[]{i, n - 1});
+        Queue<int[]> queue = new LinkedList<>();
+        for(int i = 0; i < n; i++){
+            queue.offer(new int[]{i, 0});
+            pacific[i][0] = true;
         }
 
-        for (int j = 0; j < n; j++) 
-        {
-            pacific[0][j] = 1;
-            pq.offer(new int[]{0, j});
-
-            atlantic[m - 1][j] = 1;
-            aq.offer(new int[]{m - 1, j});
+        for(int j = 0; j < m; j++){
+            queue.offer(new int[]{0, j});
+            pacific[0][j] = true;
         }
 
-        bfs(heights, pacific, pq);
-        bfs(heights, atlantic, aq);
+        BFS(heights, pacific, queue);
+        queue.clear();
 
+        for(int i = 0; i < n; i++){
+            queue.offer(new int[]{i, m - 1});
+            atlantic[i][m - 1] = true;
+        }
+
+        for(int j = 0; j < m; j++){
+            queue.offer(new int[]{n - 1, j});
+            atlantic[n - 1][j] = true;
+        }
+
+        BFS(heights, atlantic, queue);
         List<List<Integer>> res = new ArrayList<>();
-        for (int i = 0; i < m; i++) 
-        {
-            for (int j = 0; j < n; j++) 
-            {
-                if(pacific[i][j] == 1 && atlantic[i][j] == 1)
-                res.add(List.of(i, j));
+        for (int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++){
+                if(pacific[i][j] && atlantic[i][j]){
+                    res.add(List.of(i, j));
+                }
             }
         }
         return res;
