@@ -1,54 +1,48 @@
 class Solution {
-    public int openLock(String[] deadends, String target) 
-    {
-        Set<String> set = new HashSet<>();
-        for(var deadend : deadends)
-        set.add(deadend);
+    public int openLock(String[] deadends, String target) {
+        Set<String> deadendsSet = new HashSet<>(Arrays.asList(deadends));
+        if(deadendsSet.contains("0000")){
+           return -1; 
+        }
+        
+        Queue<String> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        queue.offer("0000");
+        visited.add("0000");
+        
+        int minimumTurns = 0;
+        while(!queue.isEmpty()){
+            int levelSize = queue.size();
+            for(int i = 0; i < levelSize; i++){
+                String curr = queue.poll();
+                if(curr.equals(target)){
+                    return minimumTurns;
+                }
 
-        if(set.contains("0000"))
-        return -1;
-
-        Queue<String> bfsQueue = new LinkedList<>();
-        bfsQueue.add("0000");
-
-        int turns = 0;
-        while(!bfsQueue.isEmpty())
-        {
-            int level = bfsQueue.size();
-            for(int i = 0; i < level; i++)
-            {
-                String curr = bfsQueue.poll();
-
-                if(curr.equals(target))
-                return turns;
-
-                for(int j = 0; j < 4; j++)
-                {
-                    char ch = curr.charAt(j);
-
+                StringBuilder sb = new StringBuilder(curr);
+                for(int j = 0; j < 4; j++){
+                    char ch = sb.charAt(j);
+                    
                     char prevChar = (char) (((ch - '0' + 9) % 10) + '0');
+                    sb.setCharAt(j, prevChar);
+                    String prev = sb.toString();
+                    if(!deadendsSet.contains(prev) && !visited.contains(prev)){
+                        queue.offer(prev);
+                        visited.add(prev);
+                    }
+                    
                     char nextChar = (char) (((ch - '0' + 1) % 10) + '0');
-
-                    StringBuilder prev = new StringBuilder(curr);
-                    prev.setCharAt(j, prevChar);
-                    String prevComb = prev.toString();
-                    if(!set.contains(prevComb))
-                    {
-                        bfsQueue.add(prevComb);
-                        set.add(prevComb);
+                    sb.setCharAt(j, nextChar);
+                    String next = sb.toString();
+                    if(!deadendsSet.contains(next) && !visited.contains(next)){
+                        queue.offer(next);
+                        visited.add(next);
                     }
-
-                    StringBuilder next = new StringBuilder(curr);
-                    next.setCharAt(j, nextChar);
-                    String nextComb = next.toString();
-                    if(!set.contains(nextComb))
-                    {
-                        bfsQueue.add(nextComb);
-                        set.add(nextComb);
-                    }
+                    // undo
+                    sb.setCharAt(j, ch);
                 }
             }
-            turns++;
+            minimumTurns++;
         }
         return -1;
     }
