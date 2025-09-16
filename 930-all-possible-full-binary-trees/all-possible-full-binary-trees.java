@@ -14,11 +14,16 @@
  * }
  */
 class Solution {
+    private List<TreeNode>[] dp;
     private List<TreeNode> generate(int n){
         List<TreeNode> res = new ArrayList<>();
         if(n == 1){
             res.add(new TreeNode(0));
             return res;
+        }
+        
+        if(dp[n] != null){
+            return dp[n];
         }
         
         for(int i = 1; i <= n - 2; i += 2){
@@ -33,13 +38,14 @@ class Solution {
                 }
             }
         }
-        return res;
+        return dp[n] = res;
     }
 
     public List<TreeNode> allPossibleFBT(int n) {
         if(n % 2 == 0){
             return new ArrayList<TreeNode>();
         }
+        dp = new ArrayList[n + 1];
         return generate(n);
     }
 }
