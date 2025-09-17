@@ -19,15 +19,16 @@ class Solution {
             return null;
         }
 
-        root.left = trimBST(root.left, low, high);
-        root.right = trimBST(root.right, low, high);
+        if(root.val >= low && root.val <= high) {
+            root.left = trimBST(root.left, low, high);
+            root.right = trimBST(root.right, low, high);
+            return root;
+        }
 
-        if(root.val < low) {
-            return root.right;
-        }else if(root.val > high) {
-            return root.left;
+        else if(root.val < low) {
+            return trimBST(root.right, low, high);
         }
         
-        return root;
+        return trimBST(root.left, low, high);
     }
 }
