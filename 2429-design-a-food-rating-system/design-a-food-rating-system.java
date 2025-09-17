@@ -1,4 +1,4 @@
-class Food{
+class Food implements Comparable<Food> {
     String name, cuisine;
     int rating;
     Food() {}
@@ -7,26 +7,27 @@ class Food{
         this.cuisine = cuisine;
         this.rating = rating;
     }
+
+    @Override
+    public int compareTo(Food o) {
+        if (this.rating == o.rating) {
+            return this.name.compareTo(o.name); // lexicographically smaller first
+        }
+        return Integer.compare(o.rating, this.rating); // higher rating first
+    }
 }
 
 class FoodRatings {
 
     Map<String, Food> foodMap;
     Map<String, TreeSet<Food>> cuisineMap;
-    Comparator<Food> foodComparator = (f1, f2) -> {
-        if (f1.rating == f2.rating) {
-            return f1.name.compareTo(f2.name); // lexicographically smaller first
-        }
-        return Integer.compare(f2.rating, f1.rating); // higher rating first
-    };
-
     public FoodRatings(String[] foods, String[] cuisines, int[] ratings) {
         foodMap = new HashMap<>();
         cuisineMap = new HashMap<>();
         for(int i = 0; i < foods.length; i++) {
             Food food = new Food(foods[i], cuisines[i], ratings[i]);
             foodMap.put(food.name, food);
-            cuisineMap.putIfAbsent(cuisines[i], new TreeSet<>(foodComparator));
+            cuisineMap.putIfAbsent(cuisines[i], new TreeSet<>());
             cuisineMap.get(cuisines[i]).add(food);
         }
     }
@@ -35,12 +36,12 @@ class FoodRatings {
         if(!foodMap.containsKey(food)) {
             return;
         }
-        
+
         // get hold of the old-food
         Food oldFood = foodMap.get(food);
         //remove it from the cuisineMap
         cuisineMap.get(oldFood.cuisine).remove(oldFood);
-        
+
         //change the rating
         oldFood.rating = newRating;
         //put the updated food in cuisineMap
