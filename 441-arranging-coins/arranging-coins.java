@@ -1,14 +1,20 @@
 class Solution {
+    private boolean isValid(long n, long k) {
+        long sum = (k * (k + 1)) / 2;
+        return sum <= n;
+    }
+
     public int arrangeCoins(int n) {
-        int coins = 1;
-        int res = 0;
-        while (n > 0) {
-            n -= coins;
-            coins += 1;
-            if(n >= 0){
-                res++;
+        long start = 1, end = n, res = n;
+        while (start <= end) {
+            long mid = start + (end - start) / 2;
+            if(isValid(n, mid)){
+                res = mid;
+                start = mid + 1;
+            }else {
+                end = mid - 1;
             }
         }
-        return res;
+        return (int)res;
     }
 }
