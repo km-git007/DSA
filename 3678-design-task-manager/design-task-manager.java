@@ -56,6 +56,7 @@ class TaskManager {
        while(!taskQueue.isEmpty()) {
            Task t = taskQueue.poll();
            if(!t.isRemoved) {
+               idToTaskMap.remove(t.taskId);
                return t.userId;
            }
        }
