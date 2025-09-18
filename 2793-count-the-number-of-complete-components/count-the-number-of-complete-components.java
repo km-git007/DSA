@@ -1,84 +1,49 @@
-class DSU {
-
-    int[] parent, size;
-
-    public DSU(int n)
-    {
-        this.parent = new int[n];
-        this.size = new int[n];
-        for(int i = 0; i < n; i++) {
-            parent[i] = i;
-            size[i] = 1;
-        }
-    }
-
-    public int find(int x){
-        if(parent[x] == x) return x;
-        return parent[x] = find(parent[x]);
-    }
-
-    public int getSize(int x) {
-        return size[find(x)];
-    }
-
-    public void  union(int x, int y)
-    {
-        int parentX = find(x);
-        int parentY = find(y);
-        if(parentX == parentY) return;
-
-        if(size[parentX] <= size[parentY]) {
-            parent[parentX] = parentY;
-            size[parentY] += size[parentX];
-        }
-        else {
-            parent[parentY] = parentX;
-            size[parentX] += size[parentY];
-        }
-    }
-}
-
 class Solution {
-    private boolean isCompleteComponent(DSU dsu, int node, Map<Integer, Integer> map)
-    {
-        // total nodes in the subGraph
-        int totalNodes = dsu.getSize(node);
-        //total edges expected in a complete component
-        int expectedEdges = (totalNodes * (totalNodes - 1)) / 2;
+    private int n;
+    private List<Integer>[] adj;
+    private void buildGraph(int[][] edges){
+        for(int i = 0; i < n; i++){
+            adj[i] = new ArrayList<>();
+        }
 
-        // for component having size '1' we use getOrDefault.
-        return map.getOrDefault(node, 0) == expectedEdges;
+        for(int[] edge : edges){
+            adj[edge[0]].add(edge[1]);
+            adj[edge[1]].add(edge[0]);
+        }
     }
 
-    public int countCompleteComponents(int n, int[][] edges) 
-    {
-        DSU dsu = new DSU(n);
+    private int[] dfs(int node, boolean[] vis){
+        vis[node] = true;
 
-        for(int[] edge : edges)
-        {
-            int x = edge[0];
-            int y = edge[1];
-
-            dsu.union(x, y);
+        int edges = adj[node].size();
+        int count = 1;
+        for(int nbr : adj[node]){
+            if(!vis[nbr]){
+                int[] res = dfs(nbr, vis);
+                edges += res[0];
+                count += res[1];
+            }
         }
+        return new int[]{edges, count};
+    }
 
-        // map to store total number of edges in a component
-        Map<Integer, Integer> map = new HashMap<>();
-        // Count edges in each component
-        for (int[] edge : edges) 
-        {
-            int root = dsu.find(edge[0]);
-            map.put(root, map.getOrDefault(root, 0) + 1);
-        }
+    public int countCompleteComponents(int N, int[][] edges) {
+        n = N;
+        adj = new ArrayList[n];
+        buildGraph(edges);
 
-        // Check if each component is complete
-        int completeCount = 0;
-        for (int vertex = 0; vertex < n; vertex++) 
-        {
-            // If vertex is root
-            if(dsu.find(vertex) == vertex && isCompleteComponent(dsu, vertex, map))
-            completeCount++;
+        boolean[] vis = new boolean[n];
+        int completeComponents = 0;
+        for(int node = 0; node < n; node++){
+            if(vis[node]){
+                continue;
+            }
+            int[] res = dfs(node, vis);
+            int totalEdges = res[0], count = res[1];
+            if(totalEdges == count * (count - 1)){
+                completeComponents++;
+            }
         }
-        return completeCount;
+        return completeComponents;
     }
 }
