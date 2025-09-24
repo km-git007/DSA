@@ -4,8 +4,7 @@ public:
     {
         unordered_map<int,int> m;
         int maxFreq=0;
-        for(int i=0;i<a.size();i++)
-        {
+        for(int i=0;i<a.size();i++){
             m[a[i]]++;
             maxFreq=max(m[a[i]],maxFreq);
         }
