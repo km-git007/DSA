@@ -18,15 +18,16 @@ class Node {
 */
 
 class Solution {
-    public int maxDepth(Node root) 
-    {
-        if(root == null)
-        return 0;
+    public int maxDepth(Node root) {
+        if(root == null){
+            return 0;
+        }
 
-        int maxChildHeight = 0;
-        for(Node child : root.children)
-        maxChildHeight = Math.max(maxChildHeight, maxDepth(child));
+        int maxDepth = 0;
+        for(Node child : root.children){
+            maxDepth = Math.max(maxDepth, maxDepth(child));
+        }
 
-        return 1 + maxChildHeight;
+        return 1 + maxDepth;
     }
 }
