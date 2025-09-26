@@ -1,38 +1,39 @@
 class Solution {
-    
-    // Directions for moving up, down, left, and right
-    private static int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-    private int n,m;
-    private boolean check(int row, int col, int[][] grid) 
-    { 
-        return row >= 0 && row < n && col >= 0 && col < m && grid[row][col] == 1;
+    private int n, m, perimeter;
+    private final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    private void findPerimeter(int row, int col, int[][] grid){
+        if(row < 0 || col < 0 || row >= n || col >= m || grid[row][col] == 0){
+            perimeter++;
+            return;
+        }
+
+        if(grid[row][col] == -1){
+            return;
+        }
+
+        // mark the cell as visited
+        grid[row][col] = -1;
+
+        for(int[] dir : directions) {
+            int nextRow = row + dir[0];
+            int nextCol = col + dir[1];
+            findPerimeter(nextRow, nextCol, grid);
+        }
     }
 
-    public int islandPerimeter(int[][] grid) 
-    {
+    public int islandPerimeter(int[][] grid) {
         n = grid.length;
         m = grid[0].length;
-        int perimeter = 0;
-        for(int i = 0; i < n; i++)
-        {
-            for(int j = 0; j < m; j++)
-            {
-                int cellPeri = 0;
-                if(grid[i][j] == 1)
-                {
-                    // Explore neighbors
-                    for (int[] dir : directions) 
-                    {
-                        int row = i + dir[0];
-                        int col = j + dir[1];
-                        cellPeri += (check(row, col, grid) ? 0 : 1);
-                    }
-                    // add cell perimeter to total perimeter
-                    perimeter += cellPeri;
+        perimeter = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if(grid[i][j] == 1) {
+                    findPerimeter(i, j, grid);
+                    return perimeter; // stop immediately
                 }
             }
         }
-        // return perimeter
-        return perimeter ;
+
+        return -1;
     }
 }
