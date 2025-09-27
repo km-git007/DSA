@@ -31,6 +31,6 @@ class Solution {
             }
             stack.push(node);
         }
-        return root;
+        return stack.peekLast();
     }
 }
