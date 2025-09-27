@@ -25,10 +25,10 @@ class Solution {
             return root;
         }
 
-        else if(root.val < low) {
-            return trimBST(root.right, low, high);
+        else if(root.val < low){
+            return  trimBST(root.right, low, high);
         }
-        
-        return trimBST(root.left, low, high);
+
+        return  trimBST(root.left, low, high);
     }
 }
