@@ -14,23 +14,18 @@
  * }
  */
 class Solution {
-    private List<TreeNode>[] dp;
-    private List<TreeNode> generate(int n){
+    private List<TreeNode> solve(int n) {
         List<TreeNode> res = new ArrayList<>();
         if(n == 1){
             res.add(new TreeNode(0));
             return res;
         }
         
-        if(dp[n] != null){
-            return dp[n];
-        }
-        
-        for(int i = 1; i <= n - 2; i += 2){
-            var leftSubtree = generate(i);
-            var rightSubtree = generate(n - i - 1);
-            for(TreeNode leftRoot : leftSubtree){
-                for(TreeNode rightRoot : rightSubtree){
+        for (int i = 1; i <= n - 2; i += 2) {
+            List<TreeNode> leftFBTs = solve(i);
+            List<TreeNode> rightFBTs = solve(n - i - 1);
+            for (TreeNode leftRoot : leftFBTs) {
+                for (TreeNode rightRoot : rightFBTs) {
                     TreeNode node = new TreeNode(0);
                     node.left = leftRoot;
                     node.right = rightRoot;
@@ -38,14 +33,13 @@ class Solution {
                 }
             }
         }
-        return dp[n] = res;
+        return res;
     }
-
+    
     public List<TreeNode> allPossibleFBT(int n) {
-        if(n % 2 == 0){
-            return new ArrayList<TreeNode>();
+        if(n % 2 == 0) {
+            return new ArrayList<>();
         }
-        dp = new ArrayList[n + 1];
-        return generate(n);
+        return solve(n);
     }
 }
