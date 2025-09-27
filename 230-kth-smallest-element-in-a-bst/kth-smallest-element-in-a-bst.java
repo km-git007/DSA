@@ -1,35 +1,23 @@
 class Solution {
-    public int kthSmallest(TreeNode root, int k) {
-        TreeNode curr = root;
-        int count = 0;
+    private int k, res;
+    private void solve(TreeNode root){
+        if(root == null) return;
         
-        while (curr != null) {
-            if (curr.left == null) {
-                // Process current node
-                count++;
-                if (count == k) return curr.val;
-                curr = curr.right;
-            } else {
-                // Find inorder predecessor
-                TreeNode predecessor = curr.left;
-                while (predecessor.right != null && predecessor.right != curr) {
-                    predecessor = predecessor.right;
-                }
-                
-                if (predecessor.right == null) {
-                    // Create thread
-                    predecessor.right = curr;
-                    curr = curr.left;
-                } else {
-                    // Remove thread and process current
-                    predecessor.right = null;
-                    count++;
-                    if (count == k) return curr.val;
-                    curr = curr.right;
-                }
-            }
+        solve(root.left);
+        
+        if(k > 0) {
+            k--;
+            res = root.val;
+        }else{
+            return;
         }
-        
-        return -1; // Should never reach here
+
+        solve(root.right);
+    } 
+    
+    public int kthSmallest(TreeNode root, int k) {
+        this.k = k;
+        solve(root);
+        return res;
     }
 }
