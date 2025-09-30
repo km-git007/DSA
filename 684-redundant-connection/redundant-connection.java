@@ -1,7 +1,6 @@
 class DSU {
 
     int[] parent, rank;
-
     public DSU(int n) {
         this.parent = new int[n];
         this.rank = new int[n];
@@ -15,21 +14,19 @@ class DSU {
         return parent[x] = find(parent[x]);
     }
 
-    public int getParent(int x) {
-        return parent[x];
-    }
-
     public void  union(int x, int y)
     {
         int parentX = find(x);
         int parentY = find(y);
-        if(parentX == parentY) return;
 
-        if(rank[parentX] == rank[parentY]) {
+        if(parentX == parentY){
+            return;
+        }
+
+        if(rank[parentX] == rank[parentY]){
             parent[parentX] = parentY;
             rank[parentY]++;
-        }
-        else if(rank[parentX] < rank[parentY]) {
+        }else if(rank[parentX] < rank[parentY]) {
             parent[parentX] = parentY;
         }
         else {
