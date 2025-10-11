@@ -1,48 +1,41 @@
 class Solution {
-    private int n;
-    private boolean[][] vis;
-    private int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-    private boolean dfs(int row, int col, int time, int[][] grid)
-    {
-        if(row < 0 || col < 0 || row >= n || col >= n || vis[row][col] || grid[row][col] > time)
-        return false;
-
-        if(row == n - 1 && col == n - 1)
-        return true;
-        
-        // mark the cell as visited
-        vis[row][col] = true;
-
-        for(var dir : directions)
-        {
-            int r = row + dir[0];
-            int c = col + dir[1];
-            if(dfs(r, c, time, grid))
-            return true;
-        }
-
-        return false;
-    }
-
     public int swimInWater(int[][] grid) 
     {
-        n = grid.length;
+        int n = grid.length;
+        // Directions: Right, Down, Left, Up
+        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
         
-        int end = n * n - 1;
-        int start = 0;
-        int minTime = -1;
-        while(start <= end)
+        Queue<int[]> q = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        q.add(new int[]{grid[0][0], 0, 0});
+        grid[0][0] = -1; // Mark as visited
+
+        int minTime = 0;
+        while (!q.isEmpty()) 
         {
-            int mid = start + (end - start) / 2;
-            vis = new boolean[n][n];
-            if(dfs(0, 0, mid, grid))
+            int[] cell = q.poll();
+            int time = cell[0], row = cell[1], col = cell[2];
+
+            // update the minTime
+            minTime = Math.max(minTime, time);
+
+            // If we reach the bottom-right corner return the result
+            if (row == n - 1 && col == n - 1) 
+            return minTime;
+
+            // Explore all 4 directions
+            for (int[] dir : directions) 
             {
-                minTime = mid;
-                end = mid - 1;
+                int newRow = row + dir[0], newCol = col + dir[1];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < n && grid[newRow][newCol] != -1) 
+                {
+                    q.add(new int[]{grid[newRow][newCol], newRow, newCol});
+                    grid[newRow][newCol] = -1; // Mark as visited
+                }
             }
-            else
-            start = mid+1;
-        }  
-        return minTime; 
+        }
+
+        // Return whatever the fuck you want to
+        return -1; 
     }
 }
