@@ -1,77 +1,70 @@
 class Solution {
-public:
+private:
     int n, m;
-    vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    void dfs(int row, int col, vector<vector<int>>& grid, queue<pair<int,int>> &q)
-    {
-        if(row < 0 || row >= n || col < 0 || col >= m || grid[row][col] != 1)
-        return;
+    vector<pair<int,int>> directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+public:
+    void dfs(int row, int col, vector<vector<int>>& grid, vector<vector<bool>>& vis, queue<pair<int,int>>& queue){
+        if(row < 0 || col < 0 || row >= n || col >= m || grid[row][col] != 1 || vis[row][col]){
+            return;
+        }
 
-        //mark the cell
-        grid[row][col] = -1;
+        vis[row][col] = true;
+        queue.push({row, col});
 
-        // add to the queue
-        q.push({row, col});
-
-        for(auto [dx, dy] : directions)
-        {
-            int r = row + dx;
-            int c = col + dy;
-            dfs(r, c, grid, q);
+        for(auto dir : directions){
+            int newRow = row + dir.first;
+            int newCol = col + dir.second;
+            dfs(newRow, newCol, grid, vis, queue);
         }
     }
 
-    int bfs(vector<vector<int>>& grid, queue<pair<int,int>> &q)
-    {
-        int dist = 0;
-        while(!q.empty())
-        {
-            int levelSize = q.size();
-            while(levelSize--)
-            {
-                auto [row, col] = q.front();
-                q.pop();
+    int shortestBridge(vector<vector<int>>& grid) {
 
-                for(auto [dx, dy] : directions)
-                {
-                    int r = row + dx;
-                    int c = col + dy;
-                    if(r >= 0 && c >= 0 && r < n && c < m && grid[r][c] >= 0)
-                    {
-                        if(grid[r][c] == 1)
-                        return dist;
-
-                        q.push({r, c});
-                        grid[r][c] = -1;
-                    }
-                }
-            }
-            dist++;
-        }
-        return -1;
-    }
-
-    int shortestBridge(vector<vector<int>>& grid) 
-    {
         n = grid.size();
         m = grid[0].size();
 
-        queue<pair<int,int>> q;
-        
-        // Step 1: Find and mark the first island using DFS
-        bool found = false;
-        for (int i = 0; i < n && !found; i++) 
-        {
-            for (int j = 0; j < m && !found; j++) 
-            {
-                if (grid[i][j] == 1) 
-                {
-                    dfs(i, j, grid, q);
-                    found = true;  // Stop after marking one island
+        bool canExit = false;
+        vector<vector<bool>> vis(n, vector<bool>(m, false));
+        queue<pair<int,int>> queue;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(grid[i][j] == 1){
+                    canExit = true;
+                    dfs(i, j, grid, vis, queue);
+                    break;
                 }
+            }
+            if(canExit){
+                break;
             }
         }
 
-        return bfs(grid, q);
+        int steps = 0;
+        while(!queue.empty()){
+            int level = queue.size();
+            for(int i = 0; i < level; i++){
+                auto curr = queue.front();
+                queue.pop();
+                int row = curr.first;
+                int col = curr.second;
+
+                for(auto dir : directions){
+                    int newRow = row + dir.first;
+                    int newCol = col + dir.second;
+                    if(newRow < 0 || newCol < 0 || newRow >= n || newCol >= m || vis[newRow][newCol]){
+                        continue;
+                    }
+
+                    if(grid[newRow][newCol] == 1){
+                        return steps;
+                    }
+
+                    queue.push({newRow, newCol});
+                    vis[newRow][newCol] = true;
+                }
+            }
+            steps++;
+        }
+        return -1;
     }
 };
