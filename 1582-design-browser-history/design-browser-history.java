@@ -1,37 +1,28 @@
-class Node {
-    String siteName;
-    Node prev, next;
-    public Node(String siteName) {
-        this.siteName = siteName;
-    }
-}
-
 class BrowserHistory {
-    private Node curr;
+
+    int currentIndex;
+    List<String> history;
     public BrowserHistory(String homepage) {
-        curr = new Node(homepage);
+        currentIndex = 0;
+        history = new ArrayList<>();
+        history.add(homepage);
     }
 
     public void visit(String url) {
-        Node node = new Node(url);
-        curr.next = node;
-        node.prev = curr;
-
-        curr = curr.next;
+        // Clear the unwanted browser history
+        history.subList(currentIndex + 1, history.size()).clear();
+        history.add(url);
+        currentIndex++;
     }
 
     public String back(int steps) {
-        while(curr.prev != null && steps-- > 0){
-            curr = curr.prev;
-        }
-        return curr.siteName;
+        currentIndex = Math.max(currentIndex - steps, 0);
+        return history.get(currentIndex);
     }
 
     public String forward(int steps) {
-        while(curr.next != null && steps-- > 0){
-            curr = curr.next;
-        }
-        return curr.siteName;
+        currentIndex = Math.min(currentIndex + steps, history.size() - 1);
+        return history.get(currentIndex);
     }
 }
 
