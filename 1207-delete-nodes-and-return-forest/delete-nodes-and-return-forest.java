@@ -14,44 +14,36 @@
  * }
  */
 class Solution {
-    private Set<Integer> set;
-    private List<TreeNode> res;
-    private TreeNode solve(TreeNode root)
-    {
-        if(root == null)
-        return root;
+    private TreeNode solve(TreeNode root, Set<Integer> deleteSet, List<TreeNode> res){
+        if(root == null) return root;
 
-        root.left = solve(root.left);
-        root.right = solve(root.right);
+        root.left = solve(root.left, deleteSet, res);
+        root.right = solve(root.right, deleteSet, res);
 
-        if(set.contains(root.val))
-        {
-            if(root.left != null)
-            res.add(root.left);
-
-            if(root.right != null)
-            res.add(root.right);
-
+        if(deleteSet.contains(root.val)){
+            if(root.left != null){
+                res.add(root.left);
+            }
+            if(root.right != null){
+                res.add(root.right);
+            }
             return null;
         }
 
         return root;
     }
 
-    public List<TreeNode> delNodes(TreeNode root, int[] to_delete) 
-    {
-        res = new ArrayList<>();
-        if(root == null)
-        return res;
+    public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
+        Set<Integer> deleteSet = new HashSet<>();
+        for (int val : to_delete) {
+            deleteSet.add(val);
+        }
 
-        set = new HashSet<>();
-        for(int node : to_delete)
-        set.add(node);
-
-        solve(root);
-        if(!set.contains(root.val))
-        res.add(root);
-
+        List<TreeNode> res = new ArrayList<>();
+        solve(root, deleteSet, res);
+        if(!deleteSet.contains(root.val)){
+            res.add(root);
+        }
         return res;
     }
 }
