@@ -1,13 +1,18 @@
-class Solution {    
-    public int numTrees(int N) {
-        int[] dp = new int[N + 1];
-        dp[0] = 1;
-        
-        for(int n = 1; n <= N; n++) {
-            for(int root = 1; root <= n; root++) {
-                dp[n] += dp[root - 1] * dp[n - root];
-            }
+class Solution {
+    private Integer[] dp;
+    private int solve(int n){
+        if(n == 0) return 1;
+
+        if(dp[n] != null) return dp[n];
+
+        int count = 0;
+        for(int i = 1; i <= n; i++){
+            count += (solve(i - 1) * solve(n - i));
         }
-        return dp[N];
+        return dp[n] = count;
+    }
+    public int numTrees(int n) {
+        dp = new Integer[n + 1];
+        return solve(n);
     }
 }
