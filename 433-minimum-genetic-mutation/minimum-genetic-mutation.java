@@ -1,39 +1,41 @@
 class Solution {
+
     public int minMutation(String startGene, String endGene, String[] bank) {
         Set<String> geneBank = new HashSet<>(Arrays.asList(bank));
-        if(!geneBank.contains(endGene)){
+        if(!geneBank.contains(endGene)) {
             return -1;
         }
         
-        char[] mutations = {'A','C','G','T'};
+        Set<Character> mutationSet = new HashSet<>(List.of('A', 'C', 'G', 'T'));
+        
+        int mutationCount = 0;
         Queue<String> queue = new LinkedList<>();
         queue.add(startGene);
-        
-        int minimumMutation = 0;
-        while(!queue.isEmpty()){
-            int level = queue.size();
-            for(int i = 0; i < level; i++){
+        while(!queue.isEmpty()) {
+            int levelSize = queue.size();
+            for(int i = 0; i < levelSize; i++) {
                 String gene = queue.poll();
-                if(gene.equals(endGene)){
-                    return minimumMutation;
+                if(gene.equals(endGene)) {
+                    return mutationCount;
                 }
                 
-                StringBuilder currentGene = new StringBuilder(gene);
-                for(int j = 0; j < currentGene.length(); j++){
-                    char ch = currentGene.charAt(j);
-                    for (char mutation : mutations){
-                        currentGene.setCharAt(j, mutation);
-                        String mutatedGene = currentGene.toString();
-                        if(geneBank.contains(mutatedGene)){
-                            queue.add(mutatedGene);
-                            geneBank.remove(mutatedGene);
+                StringBuilder currGene = new StringBuilder(gene);
+                for(int index = 0; index < currGene.length(); index++) {
+                    char original = currGene.charAt(index);
+                    for(Character mutation : mutationSet) {
+                        currGene.setCharAt(index, mutation);
+                        String nextGene = currGene.toString();
+                        if(geneBank.contains(nextGene)) {
+                            queue.add(nextGene);
+                            geneBank.remove(nextGene);
                         }
-                        currentGene.setCharAt(j, ch);
                     }
+                    currGene.setCharAt(index, original);
                 }
             }
-            minimumMutation++;
+            mutationCount++;
         }
+        
         return -1;
     }
 }
