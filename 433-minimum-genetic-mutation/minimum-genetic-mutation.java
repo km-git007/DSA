@@ -1,13 +1,12 @@
 class Solution {
-
     public int minMutation(String startGene, String endGene, String[] bank) {
         Set<String> geneBank = new HashSet<>(Arrays.asList(bank));
         if(!geneBank.contains(endGene)) {
             return -1;
         }
-        
-        Set<Character> mutationSet = new HashSet<>(List.of('A', 'C', 'G', 'T'));
-        
+
+        char[] mutations = {'A','C','G','T'};
+
         int mutationCount = 0;
         Queue<String> queue = new LinkedList<>();
         queue.add(startGene);
@@ -18,11 +17,11 @@ class Solution {
                 if(gene.equals(endGene)) {
                     return mutationCount;
                 }
-                
+
                 StringBuilder currGene = new StringBuilder(gene);
                 for(int index = 0; index < currGene.length(); index++) {
                     char original = currGene.charAt(index);
-                    for(Character mutation : mutationSet) {
+                    for(char mutation : mutations) {
                         currGene.setCharAt(index, mutation);
                         String nextGene = currGene.toString();
                         if(geneBank.contains(nextGene)) {
@@ -35,7 +34,7 @@ class Solution {
             }
             mutationCount++;
         }
-        
+
         return -1;
     }
 }
