@@ -14,39 +14,28 @@
  * }
  */
 class Solution {
-
-    private class Pair 
-    {
-        int sum;
-        int count;
-        Pair(int sum, int count)
-        {
-            this.sum = sum;
-            this.count = count;
+    private int count;
+    private int[] solve(TreeNode root) {
+        if(root == null) {
+            return new int[]{0, 0};
         }
+        
+        int[] leftResult = solve(root.left);
+        int[] rightResult = solve(root.right);
+        
+        int subtreeSum = root.val +  leftResult[0] + rightResult[0];
+        int subtreeSize = 1 + leftResult[1] + rightResult[1];
+        
+        if(root.val == subtreeSum / subtreeSize) {
+            count++;
+        }
+        
+        return new int[]{subtreeSum, subtreeSize};
     }
-
-    private int ans = 0;
-    private Pair solve(TreeNode root)
-    {
-        if(root == null)
-        return new Pair(0,0);
-
-        Pair Left = solve(root.left);
-        Pair Right = solve(root.right);
-
-        int sum = root.val + Left.sum + Right.sum;
-        int nodeCount = Left.count + Right.count + 1;
-
-        if(sum / nodeCount == root.val) 
-        ans++;
-
-        return new Pair(sum, nodeCount); 
-    }
-
-    public int averageOfSubtree(TreeNode root) 
-    {
+    
+    public int averageOfSubtree(TreeNode root) {
+        count = 0;
         solve(root);
-        return ans;
+        return count;
     }
 }
