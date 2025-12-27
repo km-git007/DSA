@@ -14,22 +14,23 @@
  * }
  */
 class Solution {
+    private boolean isHeightBalanced;
     private int heightOfTree(TreeNode root){
-        if(root == null){
-            return 0;
-        }
+        if(root == null || !isHeightBalanced) return 0;
 
         int leftHeight = heightOfTree(root.left);
         int rightHeight = heightOfTree(root.right);
 
-        if(leftHeight == -1 || rightHeight == -1 || Math.abs(leftHeight - rightHeight) > 1){
-            return -1;
+        if(Math.abs(leftHeight - rightHeight) > 1){
+            isHeightBalanced = false;
         }
 
-        return 1 + Math.max(leftHeight, rightHeight);
+        return Math.max(leftHeight, rightHeight) + 1;
     }
 
     public boolean isBalanced(TreeNode root) {
-        return heightOfTree(root) >= 0;
+        isHeightBalanced = true;
+        heightOfTree(root);
+        return isHeightBalanced;
     }
 }
