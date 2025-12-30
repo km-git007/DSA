@@ -12,32 +12,24 @@ class Solution {
     public Node flatten(Node head) {
         Node curr = head;
         while(curr != null){
-            while(curr != null && curr.child == null){
-                curr = curr.next;
+            if(curr.child != null){
+
+                Node nextNode = curr.next;
+                Node tail = curr.child;
+
+                curr.next = curr.child;
+                curr.child.prev = curr;
+                curr.child = null;
+
+                while(tail.next != null){
+                    tail = tail.next;
+                }
+
+                tail.next = nextNode;
+                if(nextNode != null){
+                    nextNode.prev = tail;
+                }
             }
-
-            if(curr == null)
-            break;
-
-            Node next = curr.next;
-            Node ptr = curr.child;
-            // make connections
-            ptr.prev = curr;
-            curr.next = ptr;
-            curr.child = null;
-
-            //find tail
-            while(ptr.next != null){
-                ptr = ptr.next;
-            }
-
-            // connect tail to the next node
-            ptr.next = next;
-            if(next != null){
-                next.prev = ptr;
-            }
-
-            // mover forward
             curr = curr.next;
         }
         return head;
