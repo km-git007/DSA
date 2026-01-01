@@ -2,7 +2,7 @@ class Node
 {
     int key;
     int value;
-    Node prev,next;
+    Node prev, next;
     public Node(int key, int value)
     {
         this.key = key;
@@ -16,7 +16,7 @@ public class LRUCache {
     private final int CAPACITY;
 
     // head and tail are the dummy nodes
-    private final Node head,tail;
+    private final Node head, tail;
 
     // for O(1) lookup
     private Map<Integer,Node> map;
@@ -30,24 +30,16 @@ public class LRUCache {
         map = new HashMap<>();
     }
 
-    private void addAtHead(Node node)
-    {
-        head.next.prev = node;
-        node.next = head.next;
-        head.next = node;
-        node.prev = head;
-
-        // put in the map
-        map.put(node.key,node);
-    }
-
-    private void remove(Node node)
-    {
+    private void removeConnection(Node node){
         node.prev.next = node.next;
         node.next.prev = node.prev;
+    }
 
-        // remove from the map
-        map.remove(node.key);
+    private void addAtHead(Node node){
+        node.prev = head;
+        node.next = head.next;
+        head.next.prev = node;
+        head.next = node; 
     }
 
     public int get(int key)
@@ -57,33 +49,32 @@ public class LRUCache {
         }
 
         Node node = map.get(key);
-        remove(node);
+        removeConnection(node);
         addAtHead(node);
+
         return node.value;
     }
 
     public void put(int key, int value)
     {
-        Node node = map.get(key);
-        
-        // Key is already present
-        if(node != null){
+        if(map.containsKey(key)){
+            Node existingNode = map.get(key);
             // update the value
-            node.value = value;
-            remove(node);
-            addAtHead(node);
+            existingNode.value = value;
+            removeConnection(existingNode);
+            addAtHead(existingNode);
             return;
         }
 
-        // Key is not present then create a node
-        Node newNode = new Node(key, value);
-        
-        // Map is full so remove the tail node
-        if(map.size() >= CAPACITY){
-            remove(tail.prev);
+        Node node = new Node(key, value);
+        addAtHead(node);
+        map.put(key, node);
+
+        if(map.size() > CAPACITY){
+            Node lruNode = tail.prev;
+            removeConnection(lruNode);
+            map.remove(lruNode.key);
         }
-        // Map is not full
-        addAtHead(newNode);
     }
 
 }
