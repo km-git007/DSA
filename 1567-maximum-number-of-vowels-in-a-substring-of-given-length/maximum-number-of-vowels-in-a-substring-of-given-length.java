@@ -1,42 +1,26 @@
 class Solution {
-    public int maxVowels(String s, int k) 
+    private boolean isVowel(char ch) {
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+    }
+    
+    public int maxVowels(String s, int k)
     {
-        // build a set of vowels
-        Set<Character> set = helper();
-
-        int i = 0, count = 0, maxVowels = 0;
-        for(int j = 0; j < s.length(); j++)
-        {
-            if(set.contains(s.charAt(j)))
-            count++;
+        int maxVowels = 0, i = 0, count = 0;
+        for(int j = 0; j < s.length(); j++){
+            char ch = s.charAt(j);
+            if(isVowel(ch)){
+                count++;
+            }
             
-            if(j - i + 1 == k)
-            {
-               // update the maxVowels
-               maxVowels = Math.max(count, maxVowels);
-               
-               // no need to check further
-               if(maxVowels == k)
-               return k;
-
-               if(set.contains(s.charAt(i)))
-               count--;
-               
-               i++;
+            if(j - i + 1 == k){
+                maxVowels = Math.max(maxVowels, count);
+                ch = s.charAt(i);
+                if(isVowel(ch)){
+                    count--;
+                }
+                i++;
             }
         }
         return maxVowels;
-    }
-
-    private Set<Character> helper()
-    {
-        Set<Character> set = new HashSet<>();
-        set.add('a');
-        set.add('e');
-        set.add('i');
-        set.add('o');
-        set.add('u');
-
-        return set;
     }
 }
