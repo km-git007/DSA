@@ -9,23 +9,22 @@
  * }
  */
 class Solution {
-    public int numComponents(ListNode head, int[] nums) {
-        Set<Integer> set = new HashSet<>();
-        for (int num : nums) {
-            set.add(num);
-        }
+public int numComponents(ListNode head, int[] nums) {
+    Set<Integer> set = new HashSet<>();
+    for (int num : nums) set.add(num);
 
-        int components = 0;
-        while(head != null) {
-            if(set.contains(head.val)) {
+    int components = 0;
+    while (head != null) {
+        // If current is in set...
+        if (set.contains(head.val)) {
+            // ...check if it is the END of a component
+            // (i.e., next is null OR next is not in set)
+            if (head.next == null || !set.contains(head.next.val)) {
                 components++;
-                while (head != null && set.contains(head.val)) {
-                    head = head.next;
-                }
-            }else {
-                head = head.next;
             }
         }
-        return components;
+        head = head.next;
     }
+    return components;
+}
 }
