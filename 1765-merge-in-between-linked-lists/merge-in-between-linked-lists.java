@@ -9,40 +9,25 @@
  * }
  */
 class Solution {
-    private ListNode getTail(ListNode curr)
-    {
-        while(curr.next != null)
-        curr = curr.next;
-
-        return curr;
-    }
-
-    private ListNode getMid(ListNode curr, int steps)
-    {
-        while(steps > 0)
-        {
-            curr = curr.next;
-            steps--;
+    public ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        ListNode list2Head = list2;
+        while(list2.next != null) {
+            list2 = list2.next;
         }
-        return curr;
-    }
-
-    public ListNode mergeInBetween(ListNode head1, int a, int b, ListNode head2) 
-    {
-        ListNode dummy = new ListNode(0);
-        dummy.next = head1;
-
-        ListNode tail = getTail(head2);
-        ListNode curr = dummy;
-
-        // Move `curr` to the node before `a`
-        for(int i = 0; i < a; i++)
-        curr = curr.next;
-
-        ListNode mid = getMid(curr.next, b - a + 1);
-        curr.next = head2;
-        tail.next = mid;
-
-        return dummy.next;
+        
+        ListNode curr = list1;
+        for(int i = 1; i <= a - 1; i++) {
+            curr = curr.next;
+        }
+        
+        ListNode nextNode = curr.next;
+        curr.next = list2Head;
+        
+        for(int i = 1; i <= b - a + 1; i++) {
+            nextNode = nextNode.next;
+        }
+        list2.next = nextNode;
+        
+        return list1;
     }
 }
