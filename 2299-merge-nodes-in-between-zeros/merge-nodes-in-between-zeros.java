@@ -9,26 +9,22 @@
  * }
  */
 class Solution {
-    public ListNode mergeNodes(ListNode head) 
-    {
-        int sum=0;
-        ListNode curr=head.next;
-        ListNode dummy=new ListNode(-1);
-        ListNode tail=dummy;
-        while(curr!=null)
-        {
-            if(curr.val==0)
-            {
-                curr.val=sum;
-                tail.next=curr;
-                tail=curr;
-                sum=0;
+    public ListNode mergeNodes(ListNode head) {
+                int sum = 0;
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        
+        head = head.next;
+        while(head != null) {
+            while(head != null && head.val != 0){
+                sum += head.val;
+                head = head.next;
             }
-            else
-            sum+=curr.val;
-            curr=curr.next;
+            tail.next = new ListNode(sum);
+            tail = tail.next;
+            sum = 0;
+            head = head.next;
         }
-
-        return dummy.next;
+        return dummyHead.next;
     }
 }
