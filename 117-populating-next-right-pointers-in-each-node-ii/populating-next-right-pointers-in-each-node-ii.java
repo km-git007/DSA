@@ -22,18 +22,17 @@ class Node {
 */
 
 class Solution {
-    public Node connect(Node root) 
-    {
+    public Node connect(Node root) {
         Node curr = root;
         while(curr != null){
-            Node dummy = new Node(0);
+            Node dummy = new Node();
             Node tail = dummy;
             while(curr != null){
-                if(curr.left != null) {
+                if(curr.left != null){
                     tail.next = curr.left;
                     tail = tail.next;
                 }
-                if(curr.right != null) {
+                if(curr.right != null){
                     tail.next = curr.right;
                     tail = tail.next;
                 }
