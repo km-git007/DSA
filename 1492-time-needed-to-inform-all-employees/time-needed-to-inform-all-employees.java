@@ -7,9 +7,9 @@ class Solution {
         int maxTime = 0;
         List<Integer> subordinates = heirarchyMap.get(id);
         for(int i = 0; i < subordinates.size(); i++){
-            maxTime = Math.max(maxTime, informTime[id] + timeToInformAll(subordinates.get(i), heirarchyMap, informTime));
+            maxTime = Math.max(maxTime, timeToInformAll(subordinates.get(i), heirarchyMap, informTime));
         }
-        return maxTime;
+        return maxTime + informTime[id];
     }
 
     public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
