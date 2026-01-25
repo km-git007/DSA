@@ -1,47 +1,46 @@
 class Solution {
-    public boolean canFinish(int numCourses, int[][] prerequisites) 
-    {
-        List<Integer>[] adj = new ArrayList[numCourses];
-        // Initialize adjacency list
-        for(int i = 0; i < numCourses; i++) 
-        adj[i] = new ArrayList<>();
+    private void buildGraph(List<Integer>[] graph, int[][] prerequisites, int[] indegree){
+        for (int[] prerequisite : prerequisites) {
+            int priorCourse = prerequisite[1];
+            int course = prerequisite[0];
 
-        // Build adjacency list
-        for(int i = 0; i < prerequisites.length; i++) {
-            int course = prerequisites[i][0];
-            int prerequisite = prerequisites[i][1];
-            adj[prerequisite].add(course);
+            if (graph[priorCourse] == null) {
+                graph[priorCourse] = new ArrayList<>();
+            }
+            graph[priorCourse].add(course);
+            indegree[course]++;
         }
+    }
+    
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graph = new List[numCourses];
+        int[] indegree  = new int[numCourses];
+        buildGraph(graph, prerequisites, indegree);
 
-        // Build in-degree array
-        int[] inDegree = new int[numCourses];
-        for(int i = 0; i < numCourses; i++)
-        {
-            for(int neighbor : adj[i]) 
-            inDegree[neighbor]++;
-        }
-
-        // Add courses with in-degree 0 to the queue
         Queue<Integer> queue = new LinkedList<>();
-        for(int i = 0; i < numCourses; i++) 
-        {
-            if(inDegree[i] == 0) 
-            queue.add(i);
-        }
-
-        // Process courses
-        int finishedCourses = 0;
-        while(!queue.isEmpty()) 
-        {
-            int node = queue.poll();
-            finishedCourses++;
-            for(int neighbor : adj[node]) 
-            {
-                inDegree[neighbor]--;
-                if(inDegree[neighbor] == 0) 
-                queue.add(neighbor);
+        for(int i = 0; i < numCourses; i++) {
+            if(indegree[i] == 0) {
+                queue.add(i);
             }
         }
-        return numCourses==finishedCourses;
+
+        int processedCourses = 0;
+        while(!queue.isEmpty()) {
+            int course = queue.poll();
+            processedCourses++;
+            
+            if(graph[course] == null) {
+                continue;
+            }
+
+            for(int nextCourse : graph[course]) {
+                indegree[nextCourse]--;
+                if(indegree[nextCourse] == 0) {
+                    queue.add(nextCourse);
+                }
+            }
+        }
+
+        return processedCourses == numCourses;
     }
 }
