@@ -24,7 +24,7 @@ class Solution {
         }
 
         // {dist, node}
-        Queue<int[]> queue = new LinkedList<>();
+        Queue<int[]> queue = new PriorityQueue<>((a, b) -> a[0] - b[0]);
         queue.add(new int[]{0, 0});
         while(!queue.isEmpty()) {
             int[] curr = queue.poll();
