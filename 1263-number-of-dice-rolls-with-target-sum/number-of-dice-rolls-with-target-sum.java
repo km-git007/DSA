@@ -8,7 +8,7 @@ class Solution {
             for(int j = 1; j <= target; j++){
                 for(int face = 1; face <= k; face++){
                     if(j >= face){
-                        dp[i][j] = (dp[i][j] + dp[i - 1][j - face]) % MOD;
+                         dp[i][j] = (dp[i][j] % MOD + dp[i - 1][j - face] % MOD) % MOD;
                     }
                 }
             }
