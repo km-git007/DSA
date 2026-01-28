@@ -1,22 +1,28 @@
 class Solution {
-    public int rob(int[] nums) {
-        if (nums.length == 1) {
-            return nums[0];
-        }
-
-        int maxMoneyTwoHousesBack = nums[0];
-        int maxMoneyOneHouseBack = Math.max(nums[0], nums[1]);
-        
-        for (int i = 2; i < nums.length; i++) {
-            int maxMoneyAtCurrentHouse = Math.max(
-                maxMoneyOneHouseBack,                    // Skip current house
-                maxMoneyTwoHousesBack + nums[i]         // Rob current house
-            );
-            
-            maxMoneyTwoHousesBack = maxMoneyOneHouseBack;
-            maxMoneyOneHouseBack = maxMoneyAtCurrentHouse;
+    private int[] memo;
+    private int robFrom(int[] houses, int i) {
+        // Base case: no houses left
+        if (i < 0) {
+            return 0;
         }
         
-        return maxMoneyOneHouseBack;
+        // Return cached result
+        if (memo[i] != -1) {
+            return memo[i];
+        }
+        
+        // Rob current or skip current
+        int robCurrent = houses[i] + robFrom(houses, i - 2);
+        int skipCurrent = robFrom(houses, i - 1);
+        
+        // Cache and return
+        return memo[i] = Math.max(robCurrent, skipCurrent);
+    }
+    
+    public int rob(int[] houses) {
+        memo = new int[houses.length];
+        Arrays.fill(memo, -1);
+        
+        return robFrom(houses, houses.length - 1);
     }
 }
