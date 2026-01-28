@@ -1,31 +1,18 @@
 class Solution {
-    private final long MOD = 1_000_000_007;
-    private long[][] dp;
-    private long recur(int n, int k, int target){
-        if(n == 0 && target == 0){
-            return 1;
-        }
-
-        if(n < 0 || target < 0){
-            return 0;
-        }
-        
-        if(dp[n][target] != -1){
-            return dp[n][target];
-        }
-
-        long ways = 0;
-        for(int i = 1; i <= k; i++){
-            ways += recur(n - 1, k, target - i) % MOD;
-        }
-        return dp[n][target] = ways % MOD;
-    }
-
     public int numRollsToTarget(int n, int k, int target) {
-        dp = new long[n + 1][target + 1];
-        for(int i = 0; i <= n; i++){
-            Arrays.fill(dp[i], -1);
+        final int MOD = 1_000_000_007;
+        int[][] dp = new int[n + 1][target + 1];
+        // in '1' way you can get sum = 0 with '0' number of dices
+        dp[0][0] = 1;
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= target; j++){
+                for(int face = 1; face <= k; face++){
+                    if(j >= face){
+                        dp[i][j] = (dp[i][j] + dp[i - 1][j - face]) % MOD;
+                    }
+                }
+            }
         }
-        return (int)recur(n, k, target);
+        return dp[n][target];
     }
 }
