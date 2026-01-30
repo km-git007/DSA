@@ -12,19 +12,18 @@ class Solution {
             return false;
         }
 
-        board[row][col] = '#';
 
-        for(int[] dir : directions){
+        board[row][col] = '#';
+        for(int dir[] : directions){
             int newRow = row + dir[0];
             int newCol = col + dir[1];
             if(dfs(newRow, newCol, index + 1, board)){
                 return true;
             }
         }
-
+        
         board[row][col] = targetWord[index];
         return false;
-        
     }
 
     public boolean exist(char[][] board, String word) {
